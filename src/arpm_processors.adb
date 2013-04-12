@@ -21,9 +21,10 @@ package body ARPM_Processors is
 
     task body ARPM_Processor is 
         FileName : Unbounded_String;
+        R : ARPM_Files_Handlers.RC_Access;
     begin
         loop
-            ARPM_Files_Handlers.Files.Get(FileName);
+            ARPM_Files_Handlers.Files.Get(FileName,R);
             if FileName = Null_Unbounded_String then
                 exit;
             end if;

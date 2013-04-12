@@ -15,8 +15,16 @@ typedef struct {
     char* pkg_release;
 } my_rpm_struct;
 
+void read_config(int *errno, rpmRC *rc){
+    errno = 0;
+    *rc = rpmReadConfigFiles(NULL, NULL);
+    if (*rc != RPMRC_OK) {
+        *errno = 1;
+        return;
+    }
+}
 
-void  parse_rpm(char* filename, my_rpm_struct *mrs){
+void  parse_rpm(char* filename, rpmRC *rc, my_rpm_struct *mrs){
     // my struct to be returned
     // my_rpm_struct mrs; 
     mrs->errcode = 0;
@@ -25,16 +33,10 @@ void  parse_rpm(char* filename, my_rpm_struct *mrs){
     rpmts ts;
 
     FD_t fd;
-    rpmRC rc;
     Header hdr;
     char *pkg_name, *pkg_version, *pkg_release;
     rpmVSFlags vsflags = 0;
 
-    rc = rpmReadConfigFiles(NULL, NULL);
-    if (rc != RPMRC_OK) {
-        mrs->errcode = 100;
-        return;
-    }
 
     fd = Fopen(filename, "r.ufdio");
     if ((!fd) || Ferror(fd)) {
@@ -52,8 +54,8 @@ void  parse_rpm(char* filename, my_rpm_struct *mrs){
     vsflags |= RPMVSF_NOHDRCHK;
     (void) rpmtsSetVSFlags(ts, vsflags);
 
-    rc = rpmReadPackageFile(ts, fd, filename, &hdr);
-    if (rc != RPMRC_OK) {
+    *rc = rpmReadPackageFile(ts, fd, filename, &hdr);
+    if (*rc != RPMRC_OK) {
         mrs->errcode = 2;
         Fclose(fd);
         return;

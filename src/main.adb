@@ -4,7 +4,7 @@ with GNAT.OS_Lib; use GNAT.OS_Lib;
 with ARPM_Walkers; use ARPM_Walkers;
 with ARPM_Processors; use ARPM_Processors;
 procedure Main is 
-    threads : Positive := 1;
+    threads : Positive := 8;
     pool : array (1..threads) of ARPM_Processor;
 begin
     if Ada.Command_Line.Argument_Count /= 1 then
