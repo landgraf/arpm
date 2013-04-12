@@ -1,0 +1,21 @@
+package body ARPM_Files_Handlers is 
+    protected body Files is 
+        procedure Put(FileName : Unbounded_String) is 
+        begin
+            F.Append(FileName);
+        end Put;
+        entry Get(FileName : out Unbounded_String) when not F.Is_Empty or E is 
+        begin
+            if E then
+                FileName := Null_Unbounded_String;
+            else
+                FileName := F.First_Element;
+                F.Delete_First;
+            end if;
+        end Get;
+        entry Finish when F.Is_Empty is 
+        begin
+            E := True;
+        end Finish;
+    end Files;
+end ARPM_FIles_Handlers;

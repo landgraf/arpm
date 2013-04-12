@@ -1,0 +1,27 @@
+with Ada.Directories; use Ada.Directories;
+with Ada.Text_IO; use Ada.Text_IO;
+
+package body ARPM_Walkers is 
+    procedure Walk_Directory
+        (Directory : in String := ".";
+        Pattern   : in String := "*.rpm") -- empty pattern = all file names/subdirectory names
+    is
+        Search  : Search_Type;
+        Dir_Ent : Directory_Entry_Type;
+    begin
+        Start_Search (Search, Directory, Pattern);
+
+        while More_Entries (Search) loop
+            Get_Next_Entry (Search, Dir_Ent);
+            arpm_files_handlers.files.put(To_Unbounded_String(Full_Name (Dir_Ent)));
+        end loop;
+
+        End_Search (Search);
+    end Walk_Directory;
+
+    procedure Start(Dir : in String) is 
+    begin
+        Walk_Directory(Directory => Dir);
+        arpm_files_handlers.files.finish;
+    end Start;
+end ARPM_Walkers;
