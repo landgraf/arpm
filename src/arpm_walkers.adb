@@ -1,4 +1,5 @@
 with Ada.Directories; use Ada.Directories;
+with POSIX.Files;
 with Ada.Text_IO; use Ada.Text_IO;
 
 package body ARPM_Walkers is 
@@ -15,13 +16,14 @@ package body ARPM_Walkers is
             Get_Next_Entry (Search, Dir_Ent);
             arpm_files_handlers.files.put(To_Unbounded_String(Full_Name (Dir_Ent)));
         end loop;
-
         End_Search (Search);
     end Walk_Directory;
 
     procedure Start(Dir : in String) is 
     begin
-        Walk_Directory(Directory => Dir);
-        arpm_files_handlers.files.finish;
+        if POSIX.Files.Is_Directory(POSIX.To_POSIX_String(Dir)) then
+            Walk_Directory(Directory => Dir);
+        end if;
+            arpm_files_handlers.files.finish;
     end Start;
 end ARPM_Walkers;

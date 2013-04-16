@@ -1,81 +1,119 @@
 #include <stdio.h>
 #include <stdlib.h>
- 
+
 #include <rpm/rpmlib.h>
 #include <rpm/header.h>
 #include <rpm/rpmts.h>
 #include <rpm/rpmdb.h>
 #include <rpm/rpmlog.h>
 
-
-typedef struct {
-    int   errcode;
-    char* pkg_name;
-    char* pkg_version; 
-    char* pkg_release;
+typedef struct{
+    int error;
+    char* name;
+    char* version;
+    char* release;
+    int depends_count;
+    char** depends_on;
+    int provides_cound;
+    char** provides;
 } my_rpm_struct;
 
-void read_config(int *errno, rpmRC *rc){
-    errno = 0;
-    *rc = rpmReadConfigFiles(NULL, NULL);
-    if (*rc != RPMRC_OK) {
-        *errno = 1;
-        return;
+int read_config(){
+    rpmRC rc;
+    rc = rpmReadConfigFiles(NULL, NULL);
+    if (rc != RPMRC_OK) {
+        rpmlog(RPMLOG_NOTICE, "Unable to read RPM configuration.\n");
+        return rc;
+    }
+    return 0;
+}
+
+void  get_req(my_rpm_struct* myrpm, Header hdr, rpmtd td)
+{
+    int rc;
+    rpmtdReset(td);
+    rc = headerGet(hdr, RPMTAG_REQUIRENAME, td, HEADERGET_EXT);
+    myrpm->depends_count = rpmtdCount(td);
+    myrpm->depends_on = (char**)malloc(myrpm->depends_count*sizeof(char*));
+    int j;
+    for (j = 0; j < myrpm->depends_count; j++){
+        myrpm->depends_on[j] = (char*) rpmtdGetString(td);
+        rpmtdNext(td);
     }
 }
 
-void  parse_rpm(char* filename, rpmRC *rc, my_rpm_struct *mrs){
-    // my struct to be returned
-    // my_rpm_struct mrs; 
-    mrs->errcode = 0;
+char*  get_version(Header hdr, rpmtd td){
+    int rc;
+    rpmtdReset(td);
+    rc = headerGet(hdr, RPMTAG_VERSION, td, HEADERGET_EXT);
+    char* version = (char*) malloc(strlen(rpmtdGetString(td))+1);
+    strcpy(version,rpmtdGetString(td));
+    return version;
+}
 
+char* get_release(Header hdr, rpmtd td){
+    int rc;
+    rpmtdReset(td);
+    rc = headerGet(hdr, RPMTAG_RELEASE, td, HEADERGET_EXT);
+    char* release = (char*) malloc(strlen(rpmtdGetString(td))+1);
+    strcpy(release,rpmtdGetString(td));
+    return release;
+}
+
+char* get_name(Header hdr, rpmtd td){
+    int rc;
+    rpmtdReset(td);
+    rc = headerGet(hdr, RPMTAG_NAME, td, HEADERGET_EXT);
+    char* name = (char*) malloc(strlen(rpmtdGetString(td))+1);
+    strcpy(name,rpmtdGetString(td));
+    return name;
+}
+
+void parse_rpm (char* filename,my_rpm_struct* myrpm)
+{
     int i;
     rpmts ts;
 
     FD_t fd;
+    rpmRC rc;
     Header hdr;
-    char *pkg_name, *pkg_version, *pkg_release;
+    rpmtd td;
     rpmVSFlags vsflags = 0;
-
 
     fd = Fopen(filename, "r.ufdio");
     if ((!fd) || Ferror(fd)) {
-        mrs->errcode = 1;
+        rpmlog(RPMLOG_NOTICE, "Failed to open package file (%s)\n", Fstrerror(fd));
         if (fd) {
             Fclose(fd);
         }
-        return;
+        exit(1);
     }
 
-    ts = rpmtsCreate();
 
+    ts = rpmtsCreate();
     vsflags |= _RPMVSF_NODIGESTS;
     vsflags |= _RPMVSF_NOSIGNATURES;
     vsflags |= RPMVSF_NOHDRCHK;
     (void) rpmtsSetVSFlags(ts, vsflags);
 
-    *rc = rpmReadPackageFile(ts, fd, filename, &hdr);
-    if (*rc != RPMRC_OK) {
-        mrs->errcode = 2;
+    rc = rpmReadPackageFile(ts, fd, filename, &hdr);
+    if (rc != RPMRC_OK) {
+        rpmlog(RPMLOG_NOTICE, "Could not read package file %d\n", rc);
         Fclose(fd);
-        return;
+        exit(1);
     }
+    hdr = headerLink(hdr);
     Fclose(fd);
 
-    if (headerNVR(hdr, (const char **) &pkg_name,
-                (const char **) &pkg_version,
-                (const char **) &pkg_release))
-    {
-        mrs->errcode = 3;
-    } else {
-        mrs->pkg_name = pkg_name;
-        mrs->pkg_version = pkg_version;
-        mrs->pkg_release = pkg_release;
-        headerFreeData(pkg_name, RPM_STRING_TYPE);
-        headerFreeData(pkg_version, RPM_STRING_TYPE);
-        headerFreeData(pkg_release, RPM_STRING_TYPE);
-    }
+    td = rpmtdNew();
+    myrpm->name = get_name(hdr,td);
+    myrpm->version = get_version(hdr,td);
+    myrpm->release = get_release(hdr,td);
+    get_req(myrpm,hdr,td);
 
+    rpmtdFree(td);
     headerFree(hdr);
     rpmtsFree(ts);
-};
+    rpmFreeCrypto();
+
+}

@@ -1,12 +1,13 @@
 with Interfaces.C.Strings;  use Interfaces.C.Strings;
+with Interfaces.C;  use Interfaces.C;
+with ARPM_RPM_Internals; use ARPM_RPM_Internals;
 package ARPM_C_Bridge is 
-    type ARPM_C is record
-        errno : Integer := 0; 
-        pkg_name : chars_ptr := Null_Ptr;
-        pkg_version : chars_ptr := Null_Ptr;
-        pkg_release : chars_ptr := Null_Ptr;
-    end record;
-    procedure Parse_RPM(filename : in Chars_ptr; MyRPM : out ARPM_C);
-         pragma Import (C, Parse_RPM, "parse_rpm");
-    function Print(FileName : String) return String ;
+    procedure Parse_RPM(Filename : in Chars_Ptr; MyRPM : out My_RPM_Struct);
+        pragma Import(C, Parse_RPM, "parse_rpm");
+    function Read_Config return Interfaces.C.Int; 
+        pragma Import(C, Read_Config, "read_config");
+    function Test(Filename : String) return String;
+
+    procedure Free(MyRPM : in out My_RPM_Struct); 
+
 end ARPM_C_Bridge;

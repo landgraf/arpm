@@ -1,5 +1,6 @@
 with Ada.Strings.Unbounded; use Ada.Strings.Unbounded; 
 with arpm_c_bridge;
+with ARPM_RPM_INternals; use ARPM_RPM_Internals;
 with ARPM_Files_Handlers;
 with Ada.Text_Io ; use Ada.Text_IO;
 with POSIX.Files; use POSIX.Files;
@@ -10,21 +11,17 @@ package body ARPM_Processors is
     
 
     procedure Process(FileName : String) is 
-        Fd : File_Descriptor;
     begin
         if Is_File(To_POSIX_String(FileName)) then
-            Fd := Open(To_POSIX_String(FIleName), Mode => Read_Only); 
+            Put_Line(arpm_c_bridge.test(FileName));
         end if;
-        Put_Line(arpm_c_bridge.print(FileName));
-        Close(Fd);
     end Process;
 
     task body ARPM_Processor is 
         FileName : Unbounded_String;
-        R : ARPM_Files_Handlers.RC_Access;
     begin
         loop
-            ARPM_Files_Handlers.Files.Get(FileName,R);
+            ARPM_Files_Handlers.Files.Get(FileName);
             if FileName = Null_Unbounded_String then
                 exit;
             end if;
