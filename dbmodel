@@ -1,0 +1,4 @@
+|TABLE                  | packages
+|name                   | Text          |NULL   |||
+|version                | Text          |NULL   |||
+|release                | Text          |NULL   |||

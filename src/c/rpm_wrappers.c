@@ -14,7 +14,7 @@ typedef struct{
     char* release;
     int depends_count;
     char** depends_on;
-    int provides_cound;
+    int provides_count;
     char** provides;
 } my_rpm_struct;
 
@@ -38,6 +38,20 @@ void  get_req(my_rpm_struct* myrpm, Header hdr, rpmtd td)
     int j;
     for (j = 0; j < myrpm->depends_count; j++){
         myrpm->depends_on[j] = (char*) rpmtdGetString(td);
+        rpmtdNext(td);
+    }
+}
+
+void  get_provides(my_rpm_struct* myrpm, Header hdr, rpmtd td)
+{
+    int rc;
+    rpmtdReset(td);
+    rc = headerGet(hdr, RPMTAG_PROVIDENAME, td, HEADERGET_EXT);
+    myrpm->provides_count = rpmtdCount(td);
+    myrpm->provides = (char**)malloc(myrpm->provides_count*sizeof(char*));
+    int j;
+    for (j = 0; j < myrpm->provides_count; j++){
+        myrpm->provides[j] = (char*) rpmtdGetString(td);
         rpmtdNext(td);
     }
 }
@@ -110,6 +124,7 @@ void parse_rpm (char* filename,my_rpm_struct* myrpm)
     myrpm->version = get_version(hdr,td);
     myrpm->release = get_release(hdr,td);
     get_req(myrpm,hdr,td);
+    get_provides(myrpm,hdr,td);
 
     rpmtdFree(td);
     headerFree(hdr);

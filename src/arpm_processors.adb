@@ -13,7 +13,12 @@ package body ARPM_Processors is
     procedure Process(FileName : String) is 
     begin
         if Is_File(To_POSIX_String(FileName)) then
-            Put_Line(arpm_c_bridge.test(FileName));
+            for I in 1..3 loop 
+                Put_Line("=========================");
+            end loop;
+            if arpm_c_bridge.test(FileName) /= 0 then
+                Put_Line("Error while reading " & Filename);
+            end if;
         end if;
     end Process;
 
