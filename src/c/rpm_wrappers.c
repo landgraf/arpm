@@ -28,9 +28,14 @@ int read_config(){
     return 0;
 }
 
+void free_config(){
+    rpmFreeRpmrc();
+};
+
 void  get_req(my_rpm_struct* myrpm, Header hdr, rpmtd td)
 {
     int rc;
+    rpmtdFreeData(td);
     rpmtdReset(td);
     rc = headerGet(hdr, RPMTAG_REQUIRENAME, td, HEADERGET_EXT);
     myrpm->depends_count = rpmtdCount(td);
@@ -45,6 +50,7 @@ void  get_req(my_rpm_struct* myrpm, Header hdr, rpmtd td)
 void  get_provides(my_rpm_struct* myrpm, Header hdr, rpmtd td)
 {
     int rc;
+    rpmtdFreeData(td);
     rpmtdReset(td);
     rc = headerGet(hdr, RPMTAG_PROVIDENAME, td, HEADERGET_EXT);
     myrpm->provides_count = rpmtdCount(td);
@@ -58,6 +64,7 @@ void  get_provides(my_rpm_struct* myrpm, Header hdr, rpmtd td)
 
 char*  get_version(Header hdr, rpmtd td){
     int rc;
+    rpmtdFreeData(td);
     rpmtdReset(td);
     rc = headerGet(hdr, RPMTAG_VERSION, td, HEADERGET_EXT);
     char* version = (char*) malloc(strlen(rpmtdGetString(td))+1);
@@ -67,6 +74,7 @@ char*  get_version(Header hdr, rpmtd td){
 
 char* get_release(Header hdr, rpmtd td){
     int rc;
+    rpmtdFreeData(td);
     rpmtdReset(td);
     rc = headerGet(hdr, RPMTAG_RELEASE, td, HEADERGET_EXT);
     char* release = (char*) malloc(strlen(rpmtdGetString(td))+1);
@@ -76,6 +84,7 @@ char* get_release(Header hdr, rpmtd td){
 
 char* get_name(Header hdr, rpmtd td){
     int rc;
+    rpmtdFreeData(td);
     rpmtdReset(td);
     rc = headerGet(hdr, RPMTAG_NAME, td, HEADERGET_EXT);
     char* name = (char*) malloc(strlen(rpmtdGetString(td))+1);
@@ -116,7 +125,7 @@ void parse_rpm (char* filename,my_rpm_struct* myrpm)
         Fclose(fd);
         exit(1);
     }
-    hdr = headerLink(hdr);
+    //hdr = headerLink(hdr);
     Fclose(fd);
 
     td = rpmtdNew();
@@ -126,6 +135,7 @@ void parse_rpm (char* filename,my_rpm_struct* myrpm)
     get_req(myrpm,hdr,td);
     get_provides(myrpm,hdr,td);
 
+    // rpmFreeMacros (NULL);
     rpmtdFree(td);
     headerFree(hdr);
     rpmtsFree(ts);

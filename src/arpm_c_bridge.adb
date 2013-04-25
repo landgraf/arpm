@@ -1,5 +1,6 @@
 with Ada.Text_IO; use Ada.Text_IO;
 with Ada.Exceptions;
+with Ada.Unchecked_Deallocation;
 with ARPM_Files_Handlers;
 
 package body ARPM_C_Bridge is 
@@ -21,11 +22,32 @@ package body ARPM_C_Bridge is
                 return MyRPM;
         end  Create;
     end Constructors;
+
     procedure Free(MyRPM : in out My_RPM_Struct_Access) is 
+        procedure Free_Ptr is new Ada.Unchecked_Deallocation
+            (Object => My_RPM_Struct,
+             Name   => My_RPM_Struct_Access);
+
+        FREE_ERROR : exception;
     begin
+        for I in 1..MyRPM.Depends_Count loop
+            chars_ptr_Pointers.Decrement(MyRPM.Depend_On);
+            Free(MyRPM.Depend_On.all);
+            if MyRPM.Depend_On.all /= Null_Ptr then 
+                raise FREE_ERROR;
+            end if;
+        end loop;
+        for I in 1..MyRPM.Provides_Count loop
+            chars_ptr_Pointers.Decrement(MyRPM.Provides);
+            Free(MyRPM.Provides.all);
+            if MyRPM.Provides.all /= Null_Ptr then 
+                raise FREE_ERROR;
+            end if;
+        end loop;
         Free(MyRPM.Name);
         Free(MyRPM.Version);
         Free(MyRPM.Release);
+        Free_Ptr(MyRPM);
     exception
         when STORAGE_ERROR =>
             Put_Line("Unable to free memory");

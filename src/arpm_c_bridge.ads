@@ -9,9 +9,13 @@ package ARPM_C_Bridge is
     end Constructors;
 
     procedure Parse_RPM(Filename : in Chars_Ptr; MyRPM : out My_RPM_Struct);
-    pragma Import(C, Parse_RPM, "parse_rpm");
+        pragma Import(C, Parse_RPM, "parse_rpm");
+    
     function Read_Config return Interfaces.C.Int; 
-    pragma Import(C, Read_Config, "read_config");
+        pragma Import(C, Read_Config, "read_config");
+
+    procedure Free_Config; 
+        pragma Import(C, Free_Config, "free_config");
  
     procedure Test(MyRPM : in out My_RPM_Struct_Access; Error : out Integer);
     
