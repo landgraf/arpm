@@ -37,7 +37,7 @@ void  get_req(my_rpm_struct* myrpm, Header hdr, rpmtd td)
     myrpm->depends_on = (char**)malloc(myrpm->depends_count*sizeof(char*));
     int j;
     for (j = 0; j < myrpm->depends_count; j++){
-        strcpy(myrpm->depends_on[j]= (char*) malloc(strlen(rpmtdGetString(td))+1), rpmtdGetString(td));
+        myrpm->depends_on[j] = strdup((char*) rpmtdGetString(td));
         rpmtdNext(td);
     }
 }
@@ -51,7 +51,7 @@ void  get_provides(my_rpm_struct* myrpm, Header hdr, rpmtd td)
     myrpm->provides = (char**)malloc(myrpm->provides_count*sizeof(char*));
     int j;
     for (j = 0; j < myrpm->provides_count; j++){
-        strcpy(myrpm->provides[j]= (char*) malloc(strlen(rpmtdGetString(td))+1), rpmtdGetString(td));
+        myrpm->provides[j] = strdup((char*) rpmtdGetString(td));
         rpmtdNext(td);
     }
 }
