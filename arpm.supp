@@ -1,0 +1,16 @@
+{
+    NSS_Memory_Leak
+   Memcheck:Leak
+   fun:calloc
+   fun:error_get_my_stack
+   fun:nss_ClearErrorStack
+   fun:NSSArena_Create
+   fun:NSSTrustDomain_Create
+   fun:STAN_LoadDefaultNSS3TrustDomain
+   fun:nss_Init
+   fun:NSS_InitContext
+   fun:rpmInitCrypto
+   fun:rpmReadConfigFiles
+   fun:read_config
+   fun:_ada_main
+}
