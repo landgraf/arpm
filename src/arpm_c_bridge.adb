@@ -28,6 +28,8 @@ package body ARPM_C_Bridge is
             (Object => My_RPM_Struct,
              Name   => My_RPM_Struct_Access);
 
+        procedure C_Free(MyRPM : in Char_Star);
+            pragma Import(C, C_Free, "free");
         FREE_ERROR : exception;
     begin
         for I in 1..MyRPM.Depends_Count loop
@@ -37,6 +39,7 @@ package body ARPM_C_Bridge is
                 raise FREE_ERROR;
             end if;
         end loop;
+        C_Free(MyRPM.Depend_On);
         for I in 1..MyRPM.Provides_Count loop
             chars_ptr_Pointers.Decrement(MyRPM.Provides);
             Free(MyRPM.Provides.all);
@@ -44,6 +47,7 @@ package body ARPM_C_Bridge is
                 raise FREE_ERROR;
             end if;
         end loop;
+        C_Free(MyRPM.Provides);
         Free(MyRPM.Name);
         Free(MyRPM.Version);
         Free(MyRPM.Release);
@@ -51,6 +55,8 @@ package body ARPM_C_Bridge is
     exception
         when STORAGE_ERROR =>
             Put_Line("Unable to free memory");
+        when FREE_ERROR => 
+            Put_Line("Unable to free C pointers");
     end Free;
 
     procedure Test(MyRPM : in out My_RPM_Struct_Access; Error : out Integer) is 
