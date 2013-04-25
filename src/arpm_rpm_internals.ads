@@ -12,23 +12,13 @@ package ARPM_RPM_Internals is
     subtype Char_Star is chars_ptr_Pointers.Pointer;
     type Char_Star_Access is access all Char_Star;
     type My_RPM_Struct is limited record
-            --int error;
             Error : Interfaces.C.int := 0;
-            --    char* name;
             Name : Chars_Ptr;
-            --    char* version;
             Version : Chars_Ptr;
-            --    char* release;
             Release : Chars_Ptr;
-            --    int depends_count;
             Depends_Count : Interfaces.C.Int := 0;
-            --    char** depends_on;
-            -- FIXME
             Depend_On : char_star;
-            --    int provides_cound;
             Provides_Count : Interfaces.C.Int := 0;
-            --    char** provides;
-            --    FIXME
             Provides : char_star;
     end record;
     type My_RPM_Struct_Access is access all My_RPM_Struct;
