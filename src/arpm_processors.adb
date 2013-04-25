@@ -10,8 +10,8 @@ with POSIX; use POSIX;
 package body ARPM_Processors is 
     
 
-    procedure Process(FileName : String) is 
-        MyRPM : My_RPM_Struct_Access := new My_RPM_Struct;
+    procedure Process(FileName : in String) is 
+        MyRPM : My_RPM_Struct_Access;
         Status : Integer := Integer'Last;
     begin
         if Is_File(To_POSIX_String(FileName)) then

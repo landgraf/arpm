@@ -5,7 +5,6 @@
 #include <rpm/header.h>
 #include <rpm/rpmts.h>
 #include <rpm/rpmdb.h>
-#include <rpm/rpmlog.h>
 
 typedef struct{
     int error;
@@ -22,7 +21,6 @@ int read_config(){
     rpmRC rc;
     rc = rpmReadConfigFiles(NULL, NULL);
     if (rc != RPMRC_OK) {
-        rpmlog(RPMLOG_NOTICE, "Unable to read RPM configuration.\n");
         return rc;
     }
     return 0;
@@ -105,11 +103,11 @@ void parse_rpm (char* filename,my_rpm_struct* myrpm)
 
     fd = Fopen(filename, "r.ufdio");
     if ((!fd) || Ferror(fd)) {
-        rpmlog(RPMLOG_NOTICE, "Failed to open package file (%s)\n", Fstrerror(fd));
+        myrpm->error = 1;
         if (fd) {
             Fclose(fd);
         }
-        exit(1);
+        return;
     }
 
 
@@ -121,9 +119,9 @@ void parse_rpm (char* filename,my_rpm_struct* myrpm)
 
     rc = rpmReadPackageFile(ts, fd, filename, &hdr);
     if (rc != RPMRC_OK) {
-        rpmlog(RPMLOG_NOTICE, "Could not read package file %d\n", rc);
         Fclose(fd);
-        exit(1);
+        myrpm->error = 2;
+        return;
     }
     //hdr = headerLink(hdr);
     Fclose(fd);
@@ -141,5 +139,5 @@ void parse_rpm (char* filename,my_rpm_struct* myrpm)
     headerFree(hdr);
     rpmtsFree(ts);
     rpmFreeCrypto();
-
+    myrpm->error = 0; 
 }
