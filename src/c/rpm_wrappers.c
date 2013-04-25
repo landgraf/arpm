@@ -136,6 +136,7 @@ void parse_rpm (char* filename,my_rpm_struct* myrpm)
     get_provides(myrpm,hdr,td);
 
     // rpmFreeMacros (NULL);
+    rpmtdFreeData(td);
     rpmtdFree(td);
     headerFree(hdr);
     rpmtsFree(ts);

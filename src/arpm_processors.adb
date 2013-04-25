@@ -19,6 +19,7 @@ package body ARPM_Processors is
             arpm_c_bridge.test(MyRPM,status);
             if Status /= 0 then
                 Put_Line("Error while reading " & Filename & ". Status=" & Status'Img);
+                arpm_c_bridge.free(MyRPM);
             else
                 arpm_c_bridge.free(MyRPM);
             end if;
