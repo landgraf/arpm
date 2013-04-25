@@ -13,8 +13,7 @@ package ARPM_C_Bridge is
     function Read_Config return Interfaces.C.Int; 
     pragma Import(C, Read_Config, "read_config");
  
-    function Test(MyRPM : in out My_RPM_Struct_Access; Filename : String) 
-        return Integer;
+    procedure Test(MyRPM : in out My_RPM_Struct_Access; Error : out Integer);
     
     procedure Free(MyRPM : in out My_RPM_Struct_Access); 
 

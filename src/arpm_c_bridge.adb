@@ -26,25 +26,17 @@ package body ARPM_C_Bridge is
         Free(MyRPM.Name);
         Free(MyRPM.Version);
         Free(MyRPM.Release);
-        -- for I in 1..MyRPM.Depends_Count loop
-        --     Free(MyRPM.Depend_On.all);
-        --     chars_ptr_Pointers.Increment(MyRPM.Depend_On);
-        -- end loop;
-        -- for I in 1..MyRPM.Provides_Count loop
-        --     Free(MyRPM.Provides.all);
-        --     chars_ptr_Pointers.Increment(MyRPM.Provides);
-        -- end loop;
     exception
         when STORAGE_ERROR =>
             Put_Line("Unable to free memory");
     end Free;
 
-    function Test(MyRPM : in out My_RPM_Struct_Access; Filename : String) return Integer is 
-        File_Name : Chars_Ptr := New_String(Filename);
+    procedure Test(MyRPM : in out My_RPM_Struct_Access; Error : out Integer) is 
         Element : Chars_Ptr;
     begin
         if MyRPM.Error /= 0 then
-            return 1; 
+            Error :=  1; 
+            return;
         end if;
         pragma Debug(Put_Line("Name: " & Value(MyRPM.Name) & "  ; Version:" & Value(MyRPM.Version) & "  ; Release:" & Value(MyRPM.Release)));
         pragma Debug(Put_Line("Dependency count:" & MyRPM.Depends_Count'Img));
@@ -56,10 +48,11 @@ package body ARPM_C_Bridge is
             pragma Debug(Put_Line("Provides:" & Value(MyRPM.Provides.all)));
             chars_ptr_Pointers.Increment(MyRPM.Provides);
         end loop;
-        return 0;
+        Error := 0;
     exception 
         when others => 
             Put_Line("Fuck");
-            return 2;
+            Error := 2;
+            return;
     end Test;
 end ARPM_C_Bridge;
