@@ -11,13 +11,17 @@ package body ARPM_Processors is
     
 
     procedure Process(FileName : String) is 
+        MyRPM : My_RPM_Struct_Access := new My_RPM_Struct;
     begin
         if Is_File(To_POSIX_String(FileName)) then
+            MyRPM := arpm_c_bridge.constructors.create(FileName);
             for I in 1..3 loop 
-                Put_Line("=========================");
+                pragma Debug(Put_Line("========================="));
             end loop;
-            if arpm_c_bridge.test(FileName) /= 0 then
+            if arpm_c_bridge.test(MyRPM,FileName) /= 0 then
                 Put_Line("Error while reading " & Filename);
+            else
+                arpm_c_bridge.free(MyRPM);
             end if;
         end if;
     end Process;

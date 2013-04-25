@@ -10,7 +10,7 @@ package ARPM_RPM_Internals is
             Interfaces.C.Strings.Null_Ptr);
     --typedef struct{
     subtype Char_Star is chars_ptr_Pointers.Pointer;
-    type My_RPM_Struct is record
+    type My_RPM_Struct is limited record
             --int error;
             Error : Interfaces.C.int := 0;
             --    char* name;
