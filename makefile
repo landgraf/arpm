@@ -4,16 +4,16 @@ BUILD = $(BUILDER) ${FLAGS}
 DBNAME = db/arpm.db
 
 
-all: clean build_debug
+all: clean build
 debug :clean build_debug
 warn: clean build_all_warnings
 strip: clean build_strip
 
 build: 
-	${BUILD} -P gnat/arpm  -gnata -ggdb -g
+	${BUILD} -P gnat/arpm 
 
 build_debug:
-	${BUILD} -P gnat/arpm 
+	${BUILD} -P gnat/arpm  -gnata -ggdb -g
 
 
 build_all_warnings: 
