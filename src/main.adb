@@ -17,6 +17,5 @@ begin
         Put_Line("Directory name is not specified");
         OS_Exit(1);
     end if;
-    Put_Line(Argument(1));
     Start(Argument(1));
 end Main;
