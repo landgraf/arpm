@@ -17,16 +17,16 @@ build_debug:
 
 
 build_all_warnings: 
-	${BUILD} -Pgnat/adaims -gnata -gnatwu -cargs -O0 -g -v 
-
+	${BUILD} -Pgnat/arpm -gnata -gnatwu -cargs -O0 -g -v 
 
 clean_db:
 	rm -rf db/*
 		
 create_db: clean_db
+	@mkdir -p db/
 	gnatcoll_db2ada -dbmodel dbmodel -dbtype sqlite -dbname ${DBNAME} -createdb
 
-orm: create_db
+orm: create_db  clean build_debug
 	@mkdir -p src/db/generated/
 	cp dbmodel src/db/generated/
 	cd src/db/generated/ &&  gnatcoll_db2ada -dbmodel dbmodel -api Database -orm Orm && rm dbmodel
