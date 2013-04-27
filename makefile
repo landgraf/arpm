@@ -15,7 +15,6 @@ build:
 build_debug:
 	${BUILD} -P gnat/arpm  -gnata -ggdb -g
 
-
 build_all_warnings: 
 	${BUILD} -Pgnat/arpm -gnata -gnatwu -cargs -O0 -g -v 
 
@@ -26,7 +25,7 @@ create_db: clean_db
 	@mkdir -p db/
 	gnatcoll_db2ada -dbmodel dbmodel -dbtype sqlite -dbname ${DBNAME} -createdb
 
-orm: create_db  clean build_debug
+orm: create_db clean
 	@mkdir -p src/db/generated/
 	cp dbmodel src/db/generated/
 	cd src/db/generated/ &&  gnatcoll_db2ada -dbmodel dbmodel -api Database -orm Orm && rm dbmodel

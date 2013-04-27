@@ -11,7 +11,7 @@ package body ARPM_Walkers is
         Dir_Ent : Directory_Entry_Type;
     begin
         Start_Search (Search, Directory, Pattern);
-
+        -- FIXME name
         while More_Entries (Search) loop
             Get_Next_Entry (Search, Dir_Ent);
             arpm_files_handlers.files.put(To_Unbounded_String(Full_Name (Dir_Ent)));

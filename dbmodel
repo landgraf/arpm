@@ -1,4 +1,5 @@
-|TABLE                  | packages
-|name                   | Text          |NULL   |||
+|TABLE                  | rpm
+| id                    | AUTOINCREMENT | PK ||| 
+|name                   | Text          |NOT NULL     |||
 |version                | Text          |NULL   |||
 |release                | Text          |NULL   |||
