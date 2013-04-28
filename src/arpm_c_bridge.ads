@@ -17,10 +17,8 @@ package ARPM_C_Bridge is
     procedure Free_Config; 
         pragma Import(C, Free_Config, "free_config");
  
-    procedure Test(MyRPM : in out My_RPM_Struct_Access; Error : out Integer);
     
     procedure Free(MyRPM : in out My_RPM_Struct_Access); 
-    function Convert(MyRPM : in out My_RPM_Struct_Access) return ARPM_RPM_Access;
     procedure Convert(RPM : out ARPM_RPM_Access; MyRPM : in out My_RPM_Struct_Access);
 
 end ARPM_C_Bridge;
