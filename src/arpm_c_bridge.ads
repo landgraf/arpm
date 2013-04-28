@@ -20,5 +20,7 @@ package ARPM_C_Bridge is
     procedure Test(MyRPM : in out My_RPM_Struct_Access; Error : out Integer);
     
     procedure Free(MyRPM : in out My_RPM_Struct_Access); 
+    function Convert(MyRPM : in out My_RPM_Struct_Access) return ARPM_RPM_Access;
+    procedure Convert(RPM : out ARPM_RPM_Access; MyRPM : in out My_RPM_Struct_Access);
 
 end ARPM_C_Bridge;

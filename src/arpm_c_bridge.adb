@@ -2,6 +2,9 @@ with Ada.Text_IO; use Ada.Text_IO;
 with Ada.Exceptions;
 with Ada.Unchecked_Deallocation;
 with ARPM_Files_Handlers;
+with League.Strings; 
+with League.String_Vectors;
+with Internal_Codecs;
 
 package body ARPM_C_Bridge is 
 
@@ -59,6 +62,44 @@ package body ARPM_C_Bridge is
             Put_Line("Unable to free C pointers");
     end Free;
 
+    function Convert(MyRPM : in out My_RPM_Struct_Access) return ARPM_RPM_Access is 
+        RPM : ARPM_RPM_Access := new ARPM_RPM;
+        use Internal_Codecs;
+    begin
+        RPM.Name := String_To_US(Value(MyRPM.Name));
+        RPM.Version := String_To_US(Value(MyRPM.Version));
+        RPM.Release := String_To_US(Value(MyRPM.Release));
+        for I in 1..MyRPM.Depends_Count loop
+            pragma Debug(Put_Line("Depends on:" & Value(MyRPM.Depend_On.all)));
+            RPM.Depend_On.Append(String_To_US(Value(MyRPM.Depend_On.all)));
+            chars_ptr_Pointers.Increment(MyRPM.Depend_On);
+        end loop;
+        for I in 1..MyRPM.Provides_Count loop
+            pragma Debug(Put_Line("Provides:" & Value(MyRPM.Provides.all)));
+            RPM.Provides.Append(String_To_US(Value(MyRPM.Provides.all)));
+            chars_ptr_Pointers.Increment(MyRPM.Provides);
+        end loop;
+        return RPM;
+    end Convert;
+
+    procedure Convert(RPM : out ARPM_RPM_Access; MyRPM : in out My_RPM_Struct_Access) is
+        use Internal_Codecs;
+    begin
+        RPM.Name := String_To_US(Value(MyRPM.Name));
+        RPM.Version := String_To_US(Value(MyRPM.Version));
+        RPM.Release := String_To_US(Value(MyRPM.Release));
+        for I in 1..MyRPM.Depends_Count loop
+            pragma Debug(Put_Line("Depends on:" & Value(MyRPM.Depend_On.all)));
+            RPM.Depend_On.Append(String_To_US(Value(MyRPM.Depend_On.all)));
+            chars_ptr_Pointers.Increment(MyRPM.Depend_On);
+        end loop;
+        for I in 1..MyRPM.Provides_Count loop
+            pragma Debug(Put_Line("Provides:" & Value(MyRPM.Provides.all)));
+            RPM.Provides.Append(String_To_US(Value(MyRPM.Provides.all)));
+            chars_ptr_Pointers.Increment(MyRPM.Provides);
+        end loop;
+    end Convert;
+
     procedure Test(MyRPM : in out My_RPM_Struct_Access; Error : out Integer) is 
         Element : Chars_Ptr;
     begin
@@ -79,8 +120,9 @@ package body ARPM_C_Bridge is
         Error := 0;
     exception 
         when others => 
-            Put_Line("Fuck");
+            Put_Line("Exception in test");
             Error := 2;
             return;
     end Test;
+
 end ARPM_C_Bridge;

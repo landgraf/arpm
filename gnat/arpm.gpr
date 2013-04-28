@@ -1,5 +1,6 @@
 with "florist";
 with "gnatcoll_sqlite";
+with "matreshka_league";
 project ARPM is 
     for Source_Dirs use ("../src", "../src/c", "../src/db/generated");
     for Main use ("main.adb");
