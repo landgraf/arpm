@@ -26,6 +26,7 @@ package ARPM_RPM_Internals is
     type My_RPM_Struct_Access is access all My_RPM_Struct;
 
     type ARPM_RPM is record
+        Id  : Integer   := Integer'Last;
         Name : Universal_String := Empty_Universal_String;
         Version : Universal_String := Empty_Universal_String;
         Release : Universal_String := Empty_Universal_String;

@@ -1,5 +1,25 @@
 |TABLE                  | rpm
-| id                    | AUTOINCREMENT | PK ||| 
-|name                   | Text          |NOT NULL     |||
+|id                     | AUTOINCREMENT | PK    |||
+|name                   | Text          |NOT NULL  UNIQUE |||
 |version                | Text          |NULL   |||
 |release                | Text          |NULL   |||
+
+| TABLE                 | requires      
+| requires_Id                    | AUTOINCREMENT | PK |||
+| name                  | Text          | NOT NULL |||
+| flags                 | Text          | NULL  |||
+| epoch                 | Text          | NULL  |||
+| version               | Text          | NULL  |||
+| release               | Text          | NYLL  |||
+| pkgKey                | FK rpm(name)        | NOT NULL |||
+| default               | Boolean       | NULL |||
+
+| TABLE                 | provides
+| provides_Id                    | AUTOINCREMENT | PK |||
+| name                  | Text          | NOT NULL |||
+| flags                 | Text          | NULL  |||
+| epoch                 | Text          | NULL  |||
+| version               | Text          | NULL  |||
+| release               | Text          | NYLL  |||
+| pkgKey                | FK rpm(name)        | NOT NULL |||
+| default               | Boolean       | NULL |||

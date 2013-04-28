@@ -25,10 +25,10 @@ create_db: clean_db
 	@mkdir -p db/
 	gnatcoll_db2ada -dbmodel dbmodel -dbtype sqlite -dbname ${DBNAME} -createdb
 
-orm: create_db clean
+orm: create_db clean clean_db
 	@mkdir -p src/db/generated/
 	cp dbmodel src/db/generated/
 	cd src/db/generated/ &&  gnatcoll_db2ada -dbmodel dbmodel -api Database -orm Orm && rm dbmodel
 
 clean:
-	rm -rf bin/ obj/ lib/
+	rm -rf bin/ obj/ lib/ src/db/ganarated/* 

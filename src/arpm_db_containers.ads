@@ -5,4 +5,8 @@ with ARPM_RPM_Internals; use ARPM_RPM_Internals;
 package ARPM_DB_Containers is 
     procedure Save(MyRPM : in out ARPM_RPM_Access; DB : in Session_Type)
         with Pre => DB /= No_Session;
+    procedure Save_Depends(MYRPM : in out ARPM_RPM_Access; DB : in Session_Type)
+        with Pre => DB /= No_Session;
+    procedure Save_Provides(MYRPM : in out ARPM_RPM_Access; DB : in Session_Type) 
+        with Pre => DB /= No_Session;
 end ARPM_DB_Containers; 
