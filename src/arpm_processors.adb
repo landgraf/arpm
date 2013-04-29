@@ -29,7 +29,9 @@ package body ARPM_Processors is
                 exit;
             end if;
             if Is_File(To_POSIX_String(To_String(FileName))) then
-                MyRPM := arpm_c_bridge.constructors.create(To_String(FileName));
+                try_parse:
+                begin
+                    MyRPM := arpm_c_bridge.constructors.create(To_String(FileName));
                 if INteger(MyRPM.Error) = 0 then
                     -- RPM := arpm_c_bridge.convert(MyRPM);
                     arpm_c_bridge.convert(MyRPM => MyRPM, RPM => RPM);
@@ -37,6 +39,12 @@ package body ARPM_Processors is
                     arpm_db_containers.save_depends(RPM, DB);
                     arpm_db_containers.save_provides(RPM, DB);
                 end if;
+                exception
+                    when others =>
+                        -- Log and skip
+                        -- TODO
+                        null;
+                end try_parse;
                 ARPM_C_Bridge.Free(MyRPM);
             end if;
         end loop;
