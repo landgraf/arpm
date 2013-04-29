@@ -1,7 +1,5 @@
 with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
 with Ada.Containers.Vectors; use Ada.Containers;
-with GNATCOLL.SQL.Sessions; use GNATCOLL.SQL.Sessions;
-with GNATCOLL.SQL.Sqlite;
 
 package ARPM_Files_Handlers is 
     package Files_Container_Package is new Ada.Containers.Vectors(
@@ -9,14 +7,6 @@ package ARPM_Files_Handlers is
         );
     subtype Files_Container is Files_Container_Package.Vector;
 
-    protected Sessions is 
-        entry Wait_Session(DB : out Session_Type);
-        procedure Create_Session;
-        function Get_Session return Session_Type;
-        private
-        -- DB : Session_Type := No_Session; 
-        Setup : Boolean := False;
-    end Sessions;
     protected Files is 
         procedure Put(FileName : Unbounded_String);
         entry Get(FileName : out Unbounded_String);

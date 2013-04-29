@@ -1,5 +1,6 @@
 with "florist";
-with "gnatcoll_sqlite";
+with "matreshka_sql";
+with "matreshka_sql_sqlite3";
 with "matreshka_league";
 project ARPM is 
     for Source_Dirs use ("../src", "../src/c", "../src/db/generated");
@@ -9,7 +10,7 @@ project ARPM is
     for Languages use ("Ada", "C");
 
     package Linker is 
-        for Linker_Options use ("-lrpm", "-lrpmio", "-gnatcoll_sqlite");
-        for Switches ("main.adb") use ("-lrpm", "-lrpmio", "-lgnatcoll_sqlite");
+        for Linker_Options use ("-lrpm", "-lrpmio");
+        for Switches ("main.adb") use ("-lrpm", "-lrpmio");
     end Linker;
 end ARPM;

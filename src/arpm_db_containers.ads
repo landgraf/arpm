@@ -1,12 +1,13 @@
-with ORM; use ORM; 
-with GNATCOLL.SQL.Exec;
-with GNATCOLL.SQL.Sessions; use GNATCOLL.SQL.Sessions;
-with ARPM_RPM_Internals; use ARPM_RPM_Internals;
+with SQL.Databases; use SQL.Databases;
+with League.Strings; use League.Strings;
+with Matreshka.Internals.SQL_Drivers.SQLite3.Factory;
 package ARPM_DB_Containers is 
-    procedure Save(MyRPM : in out ARPM_RPM_Access; DB : in Session_Type)
-        with Pre => DB /= No_Session;
-    procedure Save_Depends(MYRPM : in out ARPM_RPM_Access; DB : in Session_Type)
-        with Pre => DB /= No_Session;
-    procedure Save_Provides(MYRPM : in out ARPM_RPM_Access; DB : in Session_Type) 
-        with Pre => DB /= No_Session;
-end ARPM_DB_Containers; 
+    type ARPM_DB_Container is record 
+        Handler : access SQL_Database;
+        Error  : Integer := Integer'Last;
+    end record;
+    type ARPM_DB_Container_Access is access all ARPM_DB_Container;
+    package Constructors is 
+        function Create(Name : in Universal_String) return ARPM_DB_Container_Access;
+    end Constructors;
+end ARPM_DB_Containers;

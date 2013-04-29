@@ -5,10 +5,9 @@ with ARPM_Walkers; use ARPM_Walkers;
 with ARPM_Processors; use ARPM_Processors;
 with ARPM_Files_Handlers;
 with ARPM_C_Bridge;
-with GNATCOLL.SQL.Sessions;
 
 procedure Main is 
-    threads : Positive := 8;
+    threads : Positive := 1;
     pool : array (1..threads) of ARPM_Processor;
     ERROR_RPM_CONFIG : exception;
 begin
@@ -21,6 +20,5 @@ begin
     end if;
     Start(Argument(1));
     ARPM_Files_Handlers.Workers.Is_Empty;
-    GNATCOLL.SQL.Sessions.Free;
 
 end Main;
