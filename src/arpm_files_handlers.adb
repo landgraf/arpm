@@ -35,6 +35,14 @@ package body ARPM_Files_Handlers is
         begin
             null;
         end Is_Empty;
-
     end Workers;
+    
+    protected body  KeyGenerator is 
+        procedure Next(Key : out Integer) is 
+        begin
+            Key := K; 
+            K := K + 1;
+        end Next;
+    end KeyGenerator;
+
 end ARPM_FIles_Handlers;

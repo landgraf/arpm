@@ -24,6 +24,7 @@ package body ARPM_Processors is
         DB_ERROR : exception;
     begin
         DB := ARPM_DB_Containers.Constructors.Create(String_To_US("db/arpm.db"));
+        DB.Handler.Transaction;
         if DB.Error /= 0 then
             raise DB_ERROR;
         end if;
@@ -38,14 +39,15 @@ package body ARPM_Processors is
                 if INteger(MyRPM.Error) = 0 then
                     -- RPM := arpm_c_bridge.convert(MyRPM);
                     arpm_c_bridge.convert(MyRPM => MyRPM, RPM => RPM);
-                    -- arpm_db_containers.save(RPM, DB);
+                    arpm_db_containers.save_main(RPM, DB);
                     -- arpm_db_containers.save_depends(RPM, DB);
                     -- arpm_db_containers.save_provides(RPM, DB);
                 end if;
                 ARPM_C_Bridge.Free(MyRPM);
             end if;
         end loop;
-        --DB.Commit;
+        DB.Handler.Commit;
+        DB.Handler.Close;
         ARPM_Files_Handlers.Workers.Decrease;
     exception
         when The_Event: others =>

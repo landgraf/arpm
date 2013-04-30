@@ -15,6 +15,7 @@ package ARPM_Files_Handlers is
         F : Files_Container;
         E : Boolean := False;
     end Files;
+
     protected Workers is 
         procedure Increase; 
         procedure Decrease;
@@ -23,4 +24,11 @@ package ARPM_Files_Handlers is
         Count : Integer := 0; 
         Started : Boolean := False;
     end Workers;
+
+    protected KeyGenerator is 
+        procedure Next(Key : out Integer);
+        private 
+        K : Integer := 0;
+    end KeyGenerator;
+
 end ARPM_FIles_Handlers;
