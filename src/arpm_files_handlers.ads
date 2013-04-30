@@ -1,5 +1,9 @@
 with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
 with Ada.Containers.Vectors; use Ada.Containers;
+with League.Strings; use League.Strings;
+with League.String_Vectors; use League.String_Vectors;
+with ARPM_DB_Types; use ARPM_DB_Types;
+
 
 package ARPM_Files_Handlers is 
     package Files_Container_Package is new Ada.Containers.Vectors(
@@ -31,4 +35,20 @@ package ARPM_Files_Handlers is
         K : Integer := 0;
     end KeyGenerator;
 
+    protected DB_Keys is 
+            procedure Add_Provide_Key(Key : in Universal_String);
+            function Has_Provide_Key(Key : in Universal_String) return Boolean;
+            procedure Add_Require_Key(Key : in Universal_String);
+            function Has_Require_Key(Key : in Universal_String) return Boolean;
+        private
+            Provides : Universal_String_Vector := Empty_Universal_String_Vector;
+            Requires :  Universal_String_Vector := Empty_Universal_String_Vector;
+    end DB_Keys;
+
+    protected DB is 
+            function Get_DB return ARPM_DB_Container_Access;
+            procedure Init_DB(FileName : in Universal_String);
+        private 
+            DB : ARPM_DB_Types.ARPM_DB_Container_Access;
+    end DB;
 end ARPM_FIles_Handlers;

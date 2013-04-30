@@ -7,7 +7,7 @@ with ARPM_Files_Handlers;
 with ARPM_C_Bridge;
 
 procedure Main is 
-    threads : Positive := 1;
+    threads : Positive := 8;
     pool : array (1..threads) of ARPM_Processor;
     ERROR_RPM_CONFIG : exception;
 begin

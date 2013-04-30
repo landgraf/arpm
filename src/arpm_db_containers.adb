@@ -10,33 +10,27 @@ package body ARPM_DB_Containers is
         (Item : Wide_Wide_String) return League.Strings.Universal_String
         renames League.Strings.To_Universal_String;
     
-    package body Constructors is 
-        procedure Create_Tables(DB : in ARPM_DB_Container_Access) is 
-               Q : SQL.Queries.SQL_Query := DB.Handler.Query;
-        begin
-               Q.Prepare
-                   (+"CREATE TABLE packages (pkgKey INTEGER, name CHARACTER VARYING, version FLOAT)");
-               Q.Execute;
-        end Create_Tables;
+    procedure Save_Provides(RPM : in ARPM_RPM_Access; DB : in ARPM_DB_Container_Access) is 
+        Q : SQL.Queries.SQL_Query := DB.Handler.Query;
+        Key : Integer; 
+    begin
+        for I in 1..Length(RPM.Provides) loop
+            if ARPM_Files_Handlers.DB_Keys.Has_Provide_Key(RPM.Provides.Element(I)) then 
+                -- update here 
+                -- FIXME
+                null;
+            else
+                Q.Prepare (+"INSERT INTO  provides ( name, version, release, provideKey) VALUES ( :name, :version, :release, :pkey)");
+                ARPM_Files_Handlers.KeyGenerator.Next (Key);
+                Q.Bind_Value (+":name", League.Holders.To_Holder(RPM.Provides.Element(I)));
+                Q.Bind_Value (+":version", League.Holders.To_Holder(To_Universal_string("Fixme")));
+                Q.Bind_Value (+":release", League.Holders.To_Holder(To_Universal_string("Fixme")));
+                Q.Bind_Value (+":pkey", League.Holders.Integers.To_Holder (Key));
+                Q.Execute;
+            end if;
+        end loop;
 
-        function Create(Name : in Universal_String) return ARPM_DB_Container_Access is 
-            DB : ARPM_DB_Container_Access := new ARPM_DB_Container;
-            DB_Driver : constant League.Strings.Universal_String
-                := League.Strings.To_Universal_String ("SQLITE3");
-            DB_Options : constant League.Strings.Universal_String
-                := Name;
-        begin
-            DB.Handler := new SQL_Database'(SQL.Databases.Create (DB_Driver, DB_Options));
-            DB.Handler.Open;
-            -- Create_Tables(DB);
-            DB.Error := 0;
-            return DB;
-        exception 
-            when others => 
-                Put_Line("Error:" & US_To_String(DB.Handler.Error_Message));
-                return DB;
-        end Create;
-    end Constructors;
+    end Save_Provides;
 
     procedure Save_Main(RPM : in ARPM_RPM_Access; DB : in ARPM_DB_Container_Access) is 
         Q : SQL.Queries.SQL_Query := DB.Handler.Query;
@@ -49,5 +43,6 @@ package body ARPM_DB_Containers is
         Q.Bind_Value (+":version", League.Holders.To_Holder(RPM.version));
         Q.Bind_Value (+":release", League.Holders.To_Holder(RPM.release));
         Q.Execute;
+        Save_Provides(RPM, DB);
     end Save_Main;
 end ARPM_DB_Containers;

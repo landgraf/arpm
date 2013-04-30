@@ -1,4 +1,6 @@
 with Ada.Text_Io; use Ada.Text_IO;
+with Matreshka.Internals.SQL_Drivers.SQLite3.Factory;
+with SQL.Databases; use SQL.Databases;
 package body ARPM_Files_Handlers is 
     protected body Files is 
         procedure Put(FileName : Unbounded_String) is 
@@ -45,4 +47,48 @@ package body ARPM_Files_Handlers is
         end Next;
     end KeyGenerator;
 
+    protected body DB_Keys is 
+            procedure Add_Provide_Key(Key : in Universal_String) is 
+            begin
+                Provides.Append(Key);
+            end Add_Provide_Key;
+            function Has_Provide_Key(Key : in Universal_String) return Boolean is 
+            begin
+                if Provides.Is_Empty or Index(Provides, Key) = 0 then
+                    return False;
+                end if;
+                return True;
+            end Has_Provide_Key;
+            procedure Add_Require_Key(Key : in Universal_String) is 
+            begin
+                Requires.Append(Key);
+            end Add_Require_Key;
+            function Has_Require_Key(Key : in Universal_String) return Boolean is 
+            begin
+                if Requires.Is_Empty or Requires.Index(Key) = 0 then
+                    return False;
+                end if;
+                return True;
+            end Has_Require_Key;
+    end DB_Keys;
+    protected body DB is 
+            function Get_DB return ARPM_DB_Container_Access is 
+            begin
+                return DB;
+            end Get_DB;
+            procedure Init_DB(FileName : in Universal_String) is 
+                DB_Driver : constant League.Strings.Universal_String
+                    := League.Strings.To_Universal_String ("SQLITE3");
+                DB_Options : constant League.Strings.Universal_String
+                    := FileName;
+            begin
+                DB := new ARPM_DB_Container;
+                DB.Handler := new SQL_Database'(SQL.Databases.Create (DB_Driver, DB_Options));
+                DB.Handler.Open;
+                -- Create_Tables(DB);
+                DB.Error := 0;
+            end Init_DB;
+    end DB;
+begin
+    DB.Init_DB(To_Universal_String("/tmp/db/arpm.db"));
 end ARPM_FIles_Handlers;

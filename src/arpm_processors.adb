@@ -8,6 +8,7 @@ with POSIX.Files; use POSIX.Files;
 with POSIX.IO; use POSIX.IO;
 with POSIX; use POSIX;
 with arpm_db_containers;
+with ARPM_DB_Types;
 
 
 with Internal_Codecs; use Internal_Codecs;
@@ -20,10 +21,10 @@ package body ARPM_Processors is
         MyRPM : My_RPM_Struct_Access;
         RPM : ARPM_RPM_Access := new ARPM_RPM;
         -- TODO configurable
-        DB : arpm_db_containers.ARPM_DB_Container_Access; 
+        DB : arpm_db_types.ARPM_DB_Container_Access; 
         DB_ERROR : exception;
     begin
-        DB := ARPM_DB_Containers.Constructors.Create(String_To_US("db/arpm.db"));
+        DB := ARPM_Files_Handlers.DB.Get_DB;
         DB.Handler.Transaction;
         if DB.Error /= 0 then
             raise DB_ERROR;
@@ -46,6 +47,7 @@ package body ARPM_Processors is
                 ARPM_C_Bridge.Free(MyRPM);
             end if;
         end loop;
+        Put_Line("Commit...");
         DB.Handler.Commit;
         DB.Handler.Close;
         ARPM_Files_Handlers.Workers.Decrease;
