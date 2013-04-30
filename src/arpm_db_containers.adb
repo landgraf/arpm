@@ -65,5 +65,6 @@ package body ARPM_DB_Containers is
         Q.Bind_Value (+":release", League.Holders.To_Holder(RPM.release));
         Q.Execute;
         Save_Provides(RPM, DB);
+        Save_Requires(RPM, DB);
     end Save_Main;
 end ARPM_DB_Containers;

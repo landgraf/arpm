@@ -1,3 +1,4 @@
+PRAGMA foreign_keys = ON;
 CREATE TABLE conflicts (  name TEXT,  flags TEXT,  epoch TEXT,  version TEXT,  release TEXT,  pkgKey INTEGER );
 CREATE TABLE db_info (dbversion INTEGER, checksum TEXT);
 CREATE TABLE files (  name TEXT,  type TEXT,  pkgKey INTEGER);
