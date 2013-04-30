@@ -31,6 +31,27 @@ package body ARPM_DB_Containers is
         end loop;
 
     end Save_Provides;
+    procedure Save_requires(RPM : in ARPM_RPM_Access; DB : in ARPM_DB_Container_Access) is 
+        Q : SQL.Queries.SQL_Query := DB.Handler.Query;
+        Key : Integer; 
+    begin
+        for I in 1..Length(RPM.requires) loop
+            if ARPM_Files_Handlers.DB_Keys.Has_require_Key(RPM.requires.Element(I)) then 
+                -- update here 
+                -- FIXME
+                null;
+            else
+                Q.Prepare (+"INSERT INTO  requires ( name, version, release, requireKey) VALUES ( :name, :version, :release, :pkey)");
+                ARPM_Files_Handlers.KeyGenerator.Next (Key);
+                Q.Bind_Value (+":name", League.Holders.To_Holder(RPM.requires.Element(I)));
+                Q.Bind_Value (+":version", League.Holders.To_Holder(To_Universal_string("Fixme")));
+                Q.Bind_Value (+":release", League.Holders.To_Holder(To_Universal_string("Fixme")));
+                Q.Bind_Value (+":pkey", League.Holders.Integers.To_Holder (Key));
+                Q.Execute;
+            end if;
+        end loop;
+
+    end Save_requires;
 
     procedure Save_Main(RPM : in ARPM_RPM_Access; DB : in ARPM_DB_Container_Access) is 
         Q : SQL.Queries.SQL_Query := DB.Handler.Query;

@@ -41,7 +41,7 @@ package body ARPM_Processors is
                     -- RPM := arpm_c_bridge.convert(MyRPM);
                     arpm_c_bridge.convert(MyRPM => MyRPM, RPM => RPM);
                     arpm_db_containers.save_main(RPM, DB);
-                    -- arpm_db_containers.save_depends(RPM, DB);
+                    -- arpm_db_containers.save_requires(RPM, DB);
                     -- arpm_db_containers.save_provides(RPM, DB);
                 end if;
                 ARPM_C_Bridge.Free(MyRPM);

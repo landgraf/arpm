@@ -35,14 +35,14 @@ package body ARPM_C_Bridge is
             pragma Import(C, C_Free, "free");
         FREE_ERROR : exception;
     begin
-        for I in 1..MyRPM.Depends_Count loop
-            chars_ptr_Pointers.Decrement(MyRPM.Depend_On);
-            Free(MyRPM.Depend_On.all);
-            if MyRPM.Depend_On.all /= Null_Ptr then 
+        for I in 1..MyRPM.requires_Count loop
+            chars_ptr_Pointers.Decrement(MyRPM.requires);
+            Free(MyRPM.requires.all);
+            if MyRPM.requires.all /= Null_Ptr then 
                 raise FREE_ERROR;
             end if;
         end loop;
-        C_Free(MyRPM.Depend_On);
+        C_Free(MyRPM.requires);
         for I in 1..MyRPM.Provides_Count loop
             chars_ptr_Pointers.Decrement(MyRPM.Provides);
             Free(MyRPM.Provides.all);
@@ -68,10 +68,10 @@ package body ARPM_C_Bridge is
         RPM.Name := String_To_US(Value(MyRPM.Name));
         RPM.Version := String_To_US(Value(MyRPM.Version));
         RPM.Release := String_To_US(Value(MyRPM.Release));
-        for I in 1..MyRPM.Depends_Count loop
-            pragma Debug(Put_Line("Depends on:" & Value(MyRPM.Depend_On.all)));
-            RPM.Depend_On.Append(String_To_US(Value(MyRPM.Depend_On.all)));
-            chars_ptr_Pointers.Increment(MyRPM.Depend_On);
+        for I in 1..MyRPM.requires_Count loop
+            pragma Debug(Put_Line("requires on:" & Value(MyRPM.requires.all)));
+            RPM.requires.Append(String_To_US(Value(MyRPM.requires.all)));
+            chars_ptr_Pointers.Increment(MyRPM.requires);
         end loop;
         for I in 1..MyRPM.Provides_Count loop
             pragma Debug(Put_Line("Provides:" & Value(MyRPM.Provides.all)));
