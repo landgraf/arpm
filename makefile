@@ -1,5 +1,5 @@
 BUILDER ?= gprbuild
-FLAGS ?= -p -f -gnat12
+FLAGS ?= -p -f -gnat12 
 BUILD = $(BUILDER) ${FLAGS}
 DBNAME = db/arpm.db
 
@@ -8,15 +8,19 @@ all: clean build
 debug :clean build_debug
 warn: clean build_all_warnings
 strip: clean build_strip
+prof: clean build_prof
 
 build: 
 	${BUILD} -P gnat/arpm 
 
+build_prof: 
+	${BUILD} -P gnat/arpm -ggdb -g -gnata -v -cargs -pg -largs -pg
+
 build_debug:
-	${BUILD} -P gnat/arpm  -gnata -ggdb -g
+	${BUILD} -P gnat/arpm  -gnata -ggdb -g -cargs -pg 
 
 build_all_warnings: 
-	${BUILD} -Pgnat/arpm -gnata -gnatwu -cargs -O0 -g -v 
+	${BUILD} -v -g -Pgnat/arpm -gnata -gnatwu -cargs -O0 -pg 
 
 clean_db:
 	rm -rf db/*
