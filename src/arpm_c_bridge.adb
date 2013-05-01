@@ -69,12 +69,10 @@ package body ARPM_C_Bridge is
         RPM.Version := String_To_US(Value(MyRPM.Version));
         RPM.Release := String_To_US(Value(MyRPM.Release));
         for I in 1..MyRPM.requires_Count loop
-            pragma Debug(Put_Line("requires on:" & Value(MyRPM.requires.all)));
             RPM.requires.Append(String_To_US(Value(MyRPM.requires.all)));
             chars_ptr_Pointers.Increment(MyRPM.requires);
         end loop;
         for I in 1..MyRPM.Provides_Count loop
-            pragma Debug(Put_Line("Provides:" & Value(MyRPM.Provides.all)));
             RPM.Provides.Append(String_To_US(Value(MyRPM.Provides.all)));
             chars_ptr_Pointers.Increment(MyRPM.Provides);
         end loop;
