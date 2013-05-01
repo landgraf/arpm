@@ -26,10 +26,16 @@ package body Internal_Codecs is
     end US_To_String;
 
    function String_To_US(Item : String) return Universal_String is
-    US : Universal_String;
-    S  : Ada.Streams.Stream_Element_Array := Str_to_Sea(Item);
-    begin
-         US := League.Text_Codecs.Codec_For_Application_Locale.Decode(S);
-    return US;
+        US : Universal_String;
+        S  : Ada.Streams.Stream_Element_Array := Str_to_Sea(Item);
+        begin
+             US := League.Text_Codecs.Codec_For_Application_Locale.Decode(S);
+        return US;
     end String_To_US;
+
+   function US_To_Sea (Item : Universal_String) return Ada.Streams.Stream_Element_Array is
+    begin
+        return To_Stream_Element_Array(League.Text_Codecs.Codec_For_Application_Locale.Encode(Item));
+    end US_To_Sea;
+
 end Internal_Codecs;
