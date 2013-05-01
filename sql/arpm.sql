@@ -1,4 +1,9 @@
 PRAGMA foreign_keys = ON;
+PRAGMA encoding = "UTF-8";
+PRAGMA default_cache_size = 4000;
+PRAGMA synchronous = OFF;
+PRAGMA temp_store = MEMORY;
+PRAGMA journal_mode = OFF;
 CREATE TABLE conflicts (  name TEXT,  flags TEXT,  epoch TEXT,  version TEXT,  release TEXT,  pkgKey INTEGER );
 CREATE TABLE db_info (dbversion INTEGER, checksum TEXT);
 CREATE TABLE files (  name TEXT,  type TEXT,  pkgKey INTEGER);
