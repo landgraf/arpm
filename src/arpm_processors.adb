@@ -9,6 +9,7 @@ with POSIX.IO; use POSIX.IO;
 with POSIX; use POSIX;
 with arpm_db_containers;
 with ARPM_DB_Types;
+with SQL;
 
 
 with Internal_Codecs; use Internal_Codecs;
@@ -40,9 +41,16 @@ package body ARPM_Processors is
                     MyRPM := arpm_c_bridge.constructors.create(To_String(FileName));
                 if INteger(MyRPM.Error) = 0 then
                     RPM := arpm_c_bridge.convert(MyRPM);
-                    arpm_db_containers.save_main(RPM, DB);
-                    arpm_db_containers.save_requires(RPM, DB);
-                    arpm_db_containers.save_provides(RPM, DB);
+                    try:
+                    begin
+                        arpm_db_containers.save_main(RPM, DB);
+                        arpm_db_containers.save_requires(RPM, DB);
+                        arpm_db_containers.save_provides(RPM, DB);
+                    exception
+                        when SQL_Event: SQL.SQL_ERROR =>
+                            pragma Debug(Put_Line("Failed to save " & US_To_String(RPM.Name)));
+                            pragma Debug(Put_Line("Reason " & Ada.Exceptions.Exception_Information(SQL_Event)));
+                    end try;
                     ARPM_RPM_Internals.Free(RPM);
                 end if;
                 ARPM_C_Bridge.Free(MyRPM);
@@ -50,7 +58,7 @@ package body ARPM_Processors is
         end loop;
         pragma Debug(Put_Line("Commit..."));
         DB.Handler.Commit;
-        DB.Handler.Close;
+        -- DB.Handler.Close;
         ARPM_Files_Handlers.Workers.Decrease;
     exception
         when The_Event: others =>
