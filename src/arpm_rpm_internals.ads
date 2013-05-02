@@ -21,8 +21,10 @@ package ARPM_RPM_Internals is
             Release : Chars_Ptr;
             requires_Count : Interfaces.C.Int := 0;
             requires : char_star;
+            requires_version : char_star;
             Provides_Count : Interfaces.C.Int := 0;
             Provides : char_star;
+            Provides_version : char_star;
     end record;
     type My_RPM_Struct_Access is access all My_RPM_Struct;
 
@@ -32,7 +34,9 @@ package ARPM_RPM_Internals is
         Version : Universal_String := Empty_Universal_String;
         Release : Universal_String := Empty_Universal_String;
         requires : Universal_String_Vector := Empty_Universal_String_Vector;
+        requires_version : Universal_String_Vector := Empty_Universal_String_Vector;
         Provides : Universal_String_Vector := Empty_Universal_String_Vector;
+        Provides_version : Universal_String_Vector := Empty_Universal_String_Vector;
     end record;
     type ARPM_RPM_Access is access all ARPM_RPM;
 

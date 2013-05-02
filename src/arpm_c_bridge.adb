@@ -37,20 +37,26 @@ package body ARPM_C_Bridge is
     begin
         for I in 1..MyRPM.requires_Count loop
             chars_ptr_Pointers.Decrement(MyRPM.requires);
+            chars_ptr_Pointers.Decrement(MyRPM.requires_version);
             Free(MyRPM.requires.all);
-            if MyRPM.requires.all /= Null_Ptr then 
+            Free(MyRPM.requires_version.all);
+            if MyRPM.requires.all /= Null_Ptr or MyRPM.requires_version.all /= Null_Ptr then 
                 raise FREE_ERROR;
             end if;
         end loop;
         C_Free(MyRPM.requires);
+        C_Free(MyRPM.requires_version);
         for I in 1..MyRPM.Provides_Count loop
             chars_ptr_Pointers.Decrement(MyRPM.Provides);
+            chars_ptr_Pointers.Decrement(MyRPM.Provides_version);
             Free(MyRPM.Provides.all);
-            if MyRPM.Provides.all /= Null_Ptr then 
+            Free(MyRPM.Provides_version.all);
+            if MyRPM.Provides.all /= Null_Ptr or MyRPM.Provides_Version.all /= Null_Ptr then 
                 raise FREE_ERROR;
             end if;
         end loop;
         C_Free(MyRPM.Provides);
+        C_Free(MyRPM.Provides_version);
         Free(MyRPM.Name);
         Free(MyRPM.Version);
         Free(MyRPM.Release);
@@ -74,11 +80,15 @@ package body ARPM_C_Bridge is
         RPM.Release := String_To_US(Value(MyRPM.Release));
         for I in 1..MyRPM.requires_Count loop
             RPM.requires.Append(String_To_US(Value(MyRPM.requires.all)));
+            RPM.requires_version.Append (String_To_US(Value(MyRPM.requires_version.all)));
             chars_ptr_Pointers.Increment(MyRPM.requires);
+            chars_ptr_Pointers.Increment(MyRPM.requires_version);
         end loop;
         for I in 1..MyRPM.Provides_Count loop
             RPM.Provides.Append(String_To_US(Value(MyRPM.Provides.all)));
+            RPM.Provides_version.Append(String_To_US(Value(MyRPM.Provides_Version.all)));
             chars_ptr_Pointers.Increment(MyRPM.Provides);
+            chars_ptr_Pointers.Increment(MyRPM.Provides_version);
         end loop;
         return RPM;
     exception

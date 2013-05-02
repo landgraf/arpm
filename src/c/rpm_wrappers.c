@@ -13,8 +13,10 @@ typedef struct{
     char* release;
     int depends_count;
     char** depends_on;
+    char** depends_version;
     int provides_count;
     char** provides;
+    char** provides_version;
 } my_rpm_struct;
 
 int read_config(){
@@ -30,6 +32,20 @@ void free_config(){
     rpmFreeRpmrc();
 };
 
+void get_requires_version(my_rpm_struct* myrpm, Header hdr, rpmtd td)
+{
+    int rc;
+    rpmtdFreeData(td);
+    rpmtdReset(td);
+    rc = headerGet(hdr, RPMTAG_REQUIREVERSION, td, HEADERGET_EXT);
+    myrpm->depends_version = (char**)malloc(myrpm->depends_count*sizeof(char*));
+    int j;
+    for (j = 0; j < myrpm->depends_count; j++){
+        myrpm->depends_version[j] = strdup((char*) rpmtdGetString(td));
+        rpmtdNext(td);
+    }
+
+}
 void  get_req(my_rpm_struct* myrpm, Header hdr, rpmtd td)
 {
     int rc;
@@ -44,7 +60,20 @@ void  get_req(my_rpm_struct* myrpm, Header hdr, rpmtd td)
         rpmtdNext(td);
     }
 }
+void get_provides_version(my_rpm_struct* myrpm, Header hdr, rpmtd td)
+{
+    int rc;
+    rpmtdFreeData(td);
+    rpmtdReset(td);
+    rc = headerGet(hdr, RPMTAG_PROVIDEVERSION, td, HEADERGET_EXT);
+    myrpm->provides_version = (char**)malloc(myrpm->provides_count*sizeof(char*));
+    int j;
+    for (j = 0; j < myrpm->provides_count; j++){
+        myrpm->provides_version[j] = strdup((char*) rpmtdGetString(td));
+        rpmtdNext(td);
+    }
 
+}
 void  get_provides(my_rpm_struct* myrpm, Header hdr, rpmtd td)
 {
     int rc;
@@ -131,7 +160,9 @@ void parse_rpm (char* filename,my_rpm_struct* myrpm)
     myrpm->version = get_version(hdr,td);
     myrpm->release = get_release(hdr,td);
     get_req(myrpm,hdr,td);
+    get_requires_version(myrpm, hdr, td);
     get_provides(myrpm,hdr,td);
+    get_provides_version(myrpm, hdr, td);
 
     // rpmFreeMacros (NULL);
     rpmtdFreeData(td);
