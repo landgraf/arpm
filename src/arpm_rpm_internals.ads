@@ -1,4 +1,5 @@
 with Interfaces.C; use Interfaces.C;
+with Ada.Unchecked_Deallocation;
 with Interfaces.C.Pointers;
 with Interfaces.C.Strings; use Interfaces.C.Strings;
 with League.Strings; use League.Strings;
@@ -34,5 +35,10 @@ package ARPM_RPM_Internals is
         Provides : Universal_String_Vector := Empty_Universal_String_Vector;
     end record;
     type ARPM_RPM_Access is access all ARPM_RPM;
+
+    procedure Free is new Ada.Unchecked_Deallocation
+        (Object => ARPM_RPM,
+         Name   => ARPM_RPM_Access);
+
 
 end ARPM_RPM_Internals;

@@ -42,6 +42,7 @@ package body ARPM_Processors is
                     arpm_db_containers.save_main(RPM, DB);
                     arpm_db_containers.save_requires(RPM, DB);
                     arpm_db_containers.save_provides(RPM, DB);
+                    ARPM_RPM_Internals.Free(RPM);
                 end if;
                 ARPM_C_Bridge.Free(MyRPM);
             end if;
