@@ -102,8 +102,8 @@ package body ARPM_Files_Handlers is
                 -- Q.Execute;
                 -- Q.Prepare(+"PRAGMA default_cache_size = 4000");
                 -- Q.Execute;
-                -- Q.Prepare(+"PRAGMA synchronous = OFF");
-                -- Q.Execute;
+                Q.Prepare(+"PRAGMA synchronous = OFF");
+                Q.Execute;
                 Q.Prepare(+"PRAGMA temp_store = MEMORY");
                 Q.Execute;
                 -- Q.Prepare(+"PRAGMA journal_mode = OFF");
