@@ -48,6 +48,7 @@ package ARPM_Files_Handlers is
     protected DB is 
             function Get_DB return ARPM_DB_Container_Access;
             procedure Init_DB(FileName : in Universal_String);
+            procedure Free;
         private 
             DB : ARPM_DB_Types.ARPM_DB_Container_Access;
     end DB;

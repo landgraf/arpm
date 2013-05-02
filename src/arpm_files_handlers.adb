@@ -88,6 +88,12 @@ package body ARPM_Files_Handlers is
                 -- Create_Tables(DB);
                 DB.Error := 0;
             end Init_DB;
+            procedure Free is 
+            begin
+                      DB.Handler.Close;
+                      Free_Handler(DB.Handler);
+                      Free(DB);
+            end Free;
     end DB;
 begin
     DB.Init_DB(To_Universal_String("/tmp/db/arpm.db"));

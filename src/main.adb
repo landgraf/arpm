@@ -20,5 +20,5 @@ begin
     end if;
     Start(Argument(1));
     ARPM_Files_Handlers.Workers.Is_Empty;
-
+    ARPM_Files_Handlers.DB.Free;
 end Main;
