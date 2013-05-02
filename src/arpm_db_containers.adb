@@ -18,24 +18,34 @@ package body ARPM_DB_Containers is
     end SHA256;
 
     procedure Save_Provides(RPM : in ARPM_RPM_Access; DB : in ARPM_DB_Container_Access) is 
-        Q : SQL.Queries.SQL_Query := DB.Handler.Query;
+        QP : SQL.Queries.SQL_Query := DB.Handler.Query;
+        QPP : SQL.Queries.SQL_Query := DB.Handler.Query;
     begin
-        Q.Prepare (+"INSERT INTO  provides ( name, version, release, provideKey) VALUES ( :name, :version, :release, :pkey)");
+        QP.Prepare (+"INSERT INTO  provides ( name, version, release, provideKey) VALUES ( :name, :version, :release, :pkey)");
+        QPP.Prepare (+"INSERT INTO packages_provides ( pkgKey, provideKey ) VALUES ( :pkgKey, :provideKey)");
         for I in 1..Length(RPM.Provides) loop
             if not ARPM_Files_Handlers.DB_Keys.Has_Provide_Key(RPM.Provides.Element(I)) then 
                 ARPM_Files_Handlers.DB_Keys.Add_Provide_Key (RPM.Provides.Element(I));
-                Q.Bind_Value (+":name", League.Holders.To_Holder(RPM.Provides.Element(I)));
-                Q.Bind_Value (+":version", League.Holders.To_Holder(To_Universal_string("Fixme")));
-                Q.Bind_Value (+":release", League.Holders.To_Holder(To_Universal_string("Fixme")));
-                Q.Bind_Value (+":pkey", League.Holders.To_Holder (SHA256(RPM.Provides.Element(I))));
-                Q.Execute;
-                Q.Finish;
+                QP.Bind_Value (+":name", League.Holders.To_Holder(RPM.Provides.Element(I)));
+                QP.Bind_Value (+":version", League.Holders.To_Holder(To_Universal_string("Fixme")));
+                QP.Bind_Value (+":release", League.Holders.To_Holder(To_Universal_string("Fixme")));
+                QP.Bind_Value (+":pkey", League.Holders.To_Holder (SHA256(RPM.Provides.Element(I))));
+                QP.Execute;
+                QP.Finish;
             end if;
+            QP.Execute;
+            QP.Finish;
+            QPP.Bind_Value(+":pkgKey", League.Holders.To_Holder (SHA256(RPM.Name)));
+            QPP.Bind_Value(+":provideKey", League.Holders.To_Holder (SHA256(RPM.Provides.Element(I))));
+            QPP.Execute; 
+            QPP.Finish;
         end loop;
     exception
         when The_Event: others =>
             Put_Line("Failed to save provides " & US_To_String(RPM.Name) & "  Message: " & Ada.Exceptions.Exception_Message(The_Event));
             Put_Line (Ada.Exceptions.Exception_Information(The_Event));
+            QP.Finish;
+            QPP.Finish;
     end Save_Provides;
 
     procedure Save_requires(RPM : in ARPM_RPM_Access; DB : in ARPM_DB_Container_Access) is 
