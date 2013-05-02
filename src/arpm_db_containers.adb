@@ -18,6 +18,10 @@ package body ARPM_DB_Containers is
     end SHA256;
 
     procedure Save_Provides(RPM : in ARPM_RPM_Access; DB : in ARPM_DB_Container_Access) is 
+        function "+"
+            (Item : Wide_Wide_String) return League.Strings.Universal_String
+            renames League.Strings.To_Universal_String;
+
         QP : SQL.Queries.SQL_Query := DB.Handler.Query;
         QPP : SQL.Queries.SQL_Query := DB.Handler.Query;
     begin

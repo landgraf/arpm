@@ -46,10 +46,12 @@ package ARPM_Files_Handlers is
     end DB_Keys;
 
     protected DB is 
-            function Get_DB return ARPM_DB_Container_Access;
+            -- function Get_DB return ARPM_DB_Container_Access;
+            entry  Get_DB(rDB : out ARPM_DB_Container_Access);
             procedure Init_DB(FileName : in Universal_String);
             procedure Free;
         private 
             DB : ARPM_DB_Types.ARPM_DB_Container_Access;
+            Initialized : Boolean := False;
     end DB;
 end ARPM_FIles_Handlers;

@@ -5,6 +5,7 @@ with ARPM_Walkers; use ARPM_Walkers;
 with ARPM_Processors; use ARPM_Processors;
 with ARPM_Files_Handlers;
 with ARPM_C_Bridge;
+with Internal_Codecs; use Internal_Codecs;
 
 procedure Createrepo is 
     function Get_Dir return String is 
@@ -23,6 +24,7 @@ begin
     if Integer(ARPM_C_Bridge.Read_Config) /= 0 then
         raise ERROR_RPM_CONFIG;
     end if;
+    ARPM_Files_Handlers.DB.Init_DB(String_To_US(Dir));
     Start(Dir);
     ARPM_Files_Handlers.Workers.Is_Empty;
     ARPM_Files_Handlers.DB.Free;

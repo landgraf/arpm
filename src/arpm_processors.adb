@@ -24,12 +24,13 @@ package body ARPM_Processors is
         DB : arpm_db_types.ARPM_DB_Container_Access; 
         DB_ERROR : exception;
     begin
-        DB := ARPM_Files_Handlers.DB.Get_DB;
+        ARPM_Files_Handlers.DB.Get_DB(DB);
         DB.Handler.Transaction;
         if DB.Error /= 0 then
             raise DB_ERROR;
         end if;
         ARPM_Files_Handlers.Workers.Increase;
+        pragma Debug(Put_Line("Start worker...."));
         loop
             ARPM_Files_Handlers.Files.Get(FileName);
             if FileName = Null_Unbounded_String then
