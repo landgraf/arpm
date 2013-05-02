@@ -38,7 +38,7 @@ package body ARPM_Processors is
             if Is_File(To_POSIX_String(To_String(FileName))) then
                     MyRPM := arpm_c_bridge.constructors.create(To_String(FileName));
                 if INteger(MyRPM.Error) = 0 then
-                    arpm_c_bridge.convert(MyRPM => MyRPM, RPM => RPM);
+                    RPM := arpm_c_bridge.convert(MyRPM);
                     arpm_db_containers.save_main(RPM, DB);
                     arpm_db_containers.save_requires(RPM, DB);
                     arpm_db_containers.save_provides(RPM, DB);

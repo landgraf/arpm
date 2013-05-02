@@ -19,8 +19,7 @@ package ARPM_C_Bridge is
  
     
     procedure Free(MyRPM : in out My_RPM_Struct_Access); 
-    procedure Convert(RPM : out ARPM_RPM_Access; MyRPM : in out My_RPM_Struct_Access) 
-        with Pre => RPM /= Null; 
 
+    function Convert(MyRPM : My_RPM_Struct_Access) return ARPM_RPM_Access;
 
 end ARPM_C_Bridge;

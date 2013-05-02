@@ -62,12 +62,13 @@ package body ARPM_C_Bridge is
             pragma Debug(Put_Line("Unable to free C pointers"));
     end Free;
 
-    procedure Convert(RPM : out ARPM_RPM_Access; MyRPM : in out My_RPM_Struct_Access) is
+    function Convert(MyRPM : My_RPM_Struct_Access) return ARPM_RPM_Access is
         use Internal_Codecs;
         use League.Strings;
         use League.String_Vectors;
+        RPM : ARPM_RPM_Access := new ARPM_RPM;
+        CONVERT_ERROR : exception;
     begin
-        RPM := new ARPM_RPM;
         RPM.Name := String_To_US(Value(MyRPM.Name));
         RPM.Version := String_To_US(Value(MyRPM.Version));
         RPM.Release := String_To_US(Value(MyRPM.Release));
@@ -79,6 +80,10 @@ package body ARPM_C_Bridge is
             RPM.Provides.Append(String_To_US(Value(MyRPM.Provides.all)));
             chars_ptr_Pointers.Increment(MyRPM.Provides);
         end loop;
+        return RPM;
+    exception
+        when others =>
+            raise CONVERT_ERROR;
     end Convert;
 
 end ARPM_C_Bridge;
