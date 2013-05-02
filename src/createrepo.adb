@@ -6,7 +6,7 @@ with ARPM_Processors; use ARPM_Processors;
 with ARPM_Files_Handlers;
 with ARPM_C_Bridge;
 
-procedure Main is 
+procedure Createrepo is 
     threads : Positive := 8;
     pool : array (1..threads) of ARPM_Processor;
     ERROR_RPM_CONFIG : exception;
@@ -21,4 +21,4 @@ begin
     Start(Argument(1));
     ARPM_Files_Handlers.Workers.Is_Empty;
     ARPM_Files_Handlers.DB.Free;
-end Main;
+end Createrepo;
