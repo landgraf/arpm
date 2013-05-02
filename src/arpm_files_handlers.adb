@@ -160,6 +160,7 @@ package body ARPM_Files_Handlers is
             exception
                 when others =>
                     Put_Line("CreateDB is failed");
+                    return 1;
             end Create_DB;
 
             procedure Init_DB(FileName : in Universal_String) is 
