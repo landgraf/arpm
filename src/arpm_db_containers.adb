@@ -33,8 +33,6 @@ package body ARPM_DB_Containers is
                 QP.Execute;
                 QP.Finish;
             end if;
-            QP.Execute;
-            QP.Finish;
             QPP.Bind_Value(+":pkgKey", League.Holders.To_Holder (SHA256(RPM.Name)));
             QPP.Bind_Value(+":provideKey", League.Holders.To_Holder (SHA256(RPM.Provides.Element(I))));
             QPP.Execute; 
@@ -42,16 +40,18 @@ package body ARPM_DB_Containers is
         end loop;
     exception
         when The_Event: others =>
-            Put_Line("Failed to save provides " & US_To_String(RPM.Name) & "  Message: " & Ada.Exceptions.Exception_Message(The_Event));
-            Put_Line (Ada.Exceptions.Exception_Information(The_Event));
+            pragma Debug(Put_Line("Failed to save provides " & US_To_String(RPM.Name) & "  Message: " & Ada.Exceptions.Exception_Message(The_Event)));
+            pragma Debug(Put_Line (Ada.Exceptions.Exception_Information(The_Event)));
             QP.Finish;
             QPP.Finish;
     end Save_Provides;
 
     procedure Save_requires(RPM : in ARPM_RPM_Access; DB : in ARPM_DB_Container_Access) is 
         Q : SQL.Queries.SQL_Query := DB.Handler.Query;
+        QPP : SQL.Queries.SQL_Query := DB.Handler.Query;
     begin
         Q.Prepare (+"INSERT INTO  requires ( name, version, release, requireKey) VALUES ( :name, :version, :release, :pkey)");
+        QPP.Prepare (+"INSERT INTO packages_requires ( pkgKey, requireKey ) VALUES ( :pkgKey, :requireKey)");
         for I in 1..Length(RPM.requires) loop
             if not ARPM_Files_Handlers.DB_Keys.Has_require_Key(RPM.requires.Element(I)) then 
                 ARPM_Files_Handlers.DB_Keys.Add_Require_Key (RPM.requires.Element(I));
@@ -62,10 +62,17 @@ package body ARPM_DB_Containers is
                 Q.Execute;
                 Q.Finish;
             end if;
+            QPP.Bind_Value(+":pkgKey", League.Holders.To_Holder (SHA256(RPM.Name)));
+            QPP.Bind_Value(+":requireKey", League.Holders.To_Holder (SHA256(RPM.Requires.Element(I))));
+            QPP.Execute; 
+            QPP.Finish;
         end loop;
     exception
-        when others =>
-            Put_Line("Failed to save requires " & US_To_String(RPM.Name));
+        when The_Event: others =>
+            pragma Debug(Put_Line("Failed to save requires " & US_To_String(RPM.Name) & "  Message: " & Ada.Exceptions.Exception_Message(The_Event)));
+            pragma Debug(Put_Line (Ada.Exceptions.Exception_Information(The_Event)));
+            Q.Finish;
+            QPP.Finish;
     end Save_requires;
 
     procedure Save_Main(RPM : in ARPM_RPM_Access; DB : in ARPM_DB_Container_Access) is 
@@ -77,7 +84,5 @@ package body ARPM_DB_Containers is
         Q.Bind_Value (+":version", League.Holders.To_Holder(RPM.version));
         Q.Bind_Value (+":release", League.Holders.To_Holder(RPM.release));
         Q.Execute;
-        Save_Provides(RPM, DB);
-        Save_Requires(RPM, DB);
     end Save_Main;
 end ARPM_DB_Containers;

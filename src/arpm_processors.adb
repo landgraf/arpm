@@ -19,7 +19,7 @@ package body ARPM_Processors is
     task body ARPM_Processor is 
         FileName : Unbounded_String;
         MyRPM : My_RPM_Struct_Access;
-        RPM : ARPM_RPM_Access := new ARPM_RPM;
+        RPM : ARPM_RPM_Access;
         -- TODO configurable
         DB : arpm_db_types.ARPM_DB_Container_Access; 
         DB_ERROR : exception;
@@ -38,23 +38,22 @@ package body ARPM_Processors is
             if Is_File(To_POSIX_String(To_String(FileName))) then
                     MyRPM := arpm_c_bridge.constructors.create(To_String(FileName));
                 if INteger(MyRPM.Error) = 0 then
-                    -- RPM := arpm_c_bridge.convert(MyRPM);
                     arpm_c_bridge.convert(MyRPM => MyRPM, RPM => RPM);
                     arpm_db_containers.save_main(RPM, DB);
-                    -- arpm_db_containers.save_requires(RPM, DB);
-                    -- arpm_db_containers.save_provides(RPM, DB);
+                    arpm_db_containers.save_requires(RPM, DB);
+                    arpm_db_containers.save_provides(RPM, DB);
                 end if;
                 ARPM_C_Bridge.Free(MyRPM);
             end if;
         end loop;
-        Put_Line("Commit...");
+        pragma Debug(Put_Line("Commit..."));
         DB.Handler.Commit;
         DB.Handler.Close;
         ARPM_Files_Handlers.Workers.Decrease;
     exception
         when The_Event: others =>
-            Put_Line("Processor:" & Ada.Exceptions.Exception_Message(The_Event));
-            Put_Line (Ada.Exceptions.Exception_Information(The_Event));
+            pragma Debug(Put_Line("Processor:" & Ada.Exceptions.Exception_Message(The_Event)));
+            pragma Debug(Put_Line (Ada.Exceptions.Exception_Information(The_Event)));
             ARPM_Files_Handlers.Workers.Decrease;
     end ARPM_Processor;
 end ARPM_Processors;

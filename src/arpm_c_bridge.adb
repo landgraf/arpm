@@ -20,7 +20,7 @@ package body ARPM_C_Bridge is
             return MyRPM; 
         exception 
             when others => 
-                Put_Line("Fuck");
+                pragma Debug(Put_Line("Unknown error: arpm_c_bridge"));
                 MyRPM.Error := 77;
                 return MyRPM;
         end  Create;
@@ -57,14 +57,17 @@ package body ARPM_C_Bridge is
         Free_Ptr(MyRPM);
     exception
         when STORAGE_ERROR =>
-            Put_Line("Unable to free memory");
+            pragma Debug(Put_Line("Unable to free memory"));
         when FREE_ERROR => 
-            Put_Line("Unable to free C pointers");
+            pragma Debug(Put_Line("Unable to free C pointers"));
     end Free;
 
     procedure Convert(RPM : out ARPM_RPM_Access; MyRPM : in out My_RPM_Struct_Access) is
         use Internal_Codecs;
+        use League.Strings;
+        use League.String_Vectors;
     begin
+        RPM := new ARPM_RPM;
         RPM.Name := String_To_US(Value(MyRPM.Name));
         RPM.Version := String_To_US(Value(MyRPM.Version));
         RPM.Release := String_To_US(Value(MyRPM.Release));
