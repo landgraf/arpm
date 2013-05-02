@@ -12,9 +12,13 @@ package body ARPM_DB_Containers is
         (Item : Wide_Wide_String) return League.Strings.Universal_String
         renames League.Strings.To_Universal_String;
     
-    function SHA256(Item : Universal_String) return Universal_String is 
+    -- function SHA256(Item : Universal_String) return Universal_String is 
+    -- begin
+    --     return String_To_US(GNAT.SHA256.Digest(US_To_Sea(Item)));
+    -- end SHA256;
+    function SHA256(Name : Universal_String; Version :  Universal_String := Empty_Universal_String; Arch : Universal_String := Empty_Universal_String ) return Universal_String is 
     begin
-        return String_To_US(GNAT.SHA256.Digest(US_To_Sea(Item)));
+        return String_To_US(GNAT.SHA256.Digest(US_To_Sea(Name & To_Universal_String("-") & Version & To_Universal_String(".") & Arch )));
     end SHA256;
 
     procedure Save_Provides(RPM : in ARPM_RPM_Access; DB : in ARPM_DB_Container_Access) is 
@@ -31,14 +35,14 @@ package body ARPM_DB_Containers is
             if not ARPM_Files_Handlers.DB_Keys.Has_Provide_Key(RPM.Provides.Element(I)) then 
                 ARPM_Files_Handlers.DB_Keys.Add_Provide_Key (RPM.Provides.Element(I));
                 QP.Bind_Value (+":name", League.Holders.To_Holder(RPM.Provides.Element(I)));
-                QP.Bind_Value (+":version", League.Holders.To_Holder(To_Universal_string("Fixme")));
+                QP.Bind_Value (+":version", League.Holders.To_Holder(RPM.Provides_Version.Element(I)));
                 QP.Bind_Value (+":release", League.Holders.To_Holder(To_Universal_string("Fixme")));
-                QP.Bind_Value (+":pkey", League.Holders.To_Holder (SHA256(RPM.Provides.Element(I))));
+                QP.Bind_Value (+":pkey", League.Holders.To_Holder (SHA256(RPM.Provides.Element(I), RPM.Provides_Version.Element(I) )));
                 QP.Execute;
                 QP.Finish;
             end if;
-            QPP.Bind_Value(+":pkgKey", League.Holders.To_Holder (SHA256(RPM.Name)));
-            QPP.Bind_Value(+":provideKey", League.Holders.To_Holder (SHA256(RPM.Provides.Element(I))));
+            QPP.Bind_Value(+":pkgKey", League.Holders.To_Holder (SHA256(RPM.Name, RPM.Version)));
+            QPP.Bind_Value(+":provideKey", League.Holders.To_Holder (SHA256(RPM.Provides.Element(I), RPM.Provides_Version.Element(I))));
             QPP.Execute; 
             QPP.Finish;
         end loop;
@@ -62,12 +66,12 @@ package body ARPM_DB_Containers is
                 Q.Bind_Value (+":name", League.Holders.To_Holder(RPM.requires.Element(I)));
                 Q.Bind_Value (+":version", League.Holders.To_Holder(To_Universal_string("Fixme")));
                 Q.Bind_Value (+":release", League.Holders.To_Holder(To_Universal_string("Fixme")));
-                Q.Bind_Value (+":pkey", League.Holders.To_Holder (SHA256(RPM.requires.Element(I))));
+                Q.Bind_Value (+":pkey", League.Holders.To_Holder (SHA256(RPM.requires.Element(I), RPM.Requires_Version.Element(I))));
                 Q.Execute;
                 Q.Finish;
             end if;
-            QPP.Bind_Value(+":pkgKey", League.Holders.To_Holder (SHA256(RPM.Name)));
-            QPP.Bind_Value(+":requireKey", League.Holders.To_Holder (SHA256(RPM.Requires.Element(I))));
+            QPP.Bind_Value(+":pkgKey", League.Holders.To_Holder (SHA256(RPM.Name, RPM.Version, RPM.Arch)));
+            QPP.Bind_Value(+":requireKey", League.Holders.To_Holder (SHA256(RPM.Requires.Element(I), RPM.Requires_Version.Element(I))));
             QPP.Execute; 
             QPP.Finish;
         end loop;
@@ -83,7 +87,7 @@ package body ARPM_DB_Containers is
         Q : SQL.Queries.SQL_Query := DB.Handler.Query;
     begin
         Q.Prepare (+"INSERT INTO packages (pkgKey, name, version, release) VALUES (:key, :name, :version, :release)");
-        Q.Bind_Value (+":key", League.Holders.To_Holder (SHA256(RPM.Name)));
+        Q.Bind_Value (+":key", League.Holders.To_Holder (SHA256(RPM.Name, RPM.Version, RPM.Arch )));
         Q.Bind_Value (+":name", League.Holders.To_Holder(RPM.name));
         Q.Bind_Value (+":version", League.Holders.To_Holder(RPM.version));
         Q.Bind_Value (+":release", League.Holders.To_Holder(RPM.release));

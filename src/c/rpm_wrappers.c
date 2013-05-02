@@ -11,6 +11,7 @@ typedef struct{
     char* name;
     char* version;
     char* release;
+    char* arch;
     int depends_count;
     char** depends_on;
     char** depends_version;
@@ -99,6 +100,14 @@ char*  get_version(Header hdr, rpmtd td){
     return version;
 }
 
+char*  get_arch(Header hdr, rpmtd td){
+    int rc;
+    rpmtdFreeData(td);
+    rpmtdReset(td);
+    rc = headerGet(hdr, RPMTAG_ARCH, td, HEADERGET_EXT);
+    char* arch = strdup((char*) rpmtdGetString(td));
+    return arch;
+}
 char* get_release(Header hdr, rpmtd td){
     int rc;
     rpmtdFreeData(td);
@@ -159,6 +168,7 @@ void parse_rpm (char* filename,my_rpm_struct* myrpm)
     myrpm->name = get_name(hdr,td);
     myrpm->version = get_version(hdr,td);
     myrpm->release = get_release(hdr,td);
+    myrpm->arch   = get_arch(hdr,td);
     get_req(myrpm,hdr,td);
     get_requires_version(myrpm, hdr, td);
     get_provides(myrpm,hdr,td);
