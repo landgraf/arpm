@@ -103,6 +103,7 @@ package body ARPM_Files_Handlers is
         Execute(nDB,"CREATE INDEX packages_requires_pkgkey ON packages_requires(pkgKey);" );
         Execute(nDB,"CREATE TRIGGER removals AFTER DELETE ON packages  BEGIN    DELETE FROM files WHERE pkgKey = old.pkgKey;    DELETE FROM requires WHERE pkgKey = old.pkgKey;    DELETE FROM provides WHERE pkgKey = old.pkgKey;    DELETE FROM conflicts WHERE pkgKey = old.pkgKey;    DELETE FROM obsoletes WHERE pkgKey = old.pkgKey;  END;");
         nDB.Commit;
+        Free(nDB);
         return True;
     exception
         when others =>
