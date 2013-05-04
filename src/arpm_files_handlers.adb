@@ -84,9 +84,10 @@ package body ARPM_Files_Handlers is
             function Prepare_filename(Dir : Universal_String) return Universal_String is
                 RepoDir : constant String := (US_To_String(Dir) & "/repodata/");
             begin
-                if not Ada.Directories.Exists(RepoDir) then
-                    Ada.Directories.Create_Directory(RepoDir);
+                if Ada.Directories.Exists(RepoDir) then
+                    Ada.Directories.Delete_Tree(RepoDir);
                 end if;
+                    Ada.Directories.Create_Directory(RepoDir);
                 return Dir & To_Universal_String("/repodata/primary.db");
             end Prepare_FileName;
 
