@@ -8,7 +8,6 @@ with GNAT.SHA256; use GNAT.SHA256;
 
 with GNATCOLL.SQL_Impl;   use GNATCOLL.SQL_Impl;
 with GNATCOLL.SQL.Sqlite; use GNATCOLL.SQL;
--- with Database; use Database;
 
 package body ARPM_DB_Containers is 
     
@@ -17,7 +16,7 @@ package body ARPM_DB_Containers is
         return GNAT.SHA256.Digest(Str_To_Sea(Name & ("-" & Version & "." & Arch )));
     end SHA256;
 
-    procedure Save_Provides(RPM : in ARPM_RPM_Access; DB : in Database_Connection; PKG : in String) is 
+    procedure Save_Provides(RPM : in ARPM_RPM_Access; DB : in out Database_Connection) is 
          QP  : Prepared_Statement;
          provides_parameters :   SQL_Parameters (1 .. 4) :=
              (1 => (Parameter_Text, null),
@@ -38,7 +37,7 @@ package body ARPM_DB_Containers is
                 Version : aliased String := To_String(RPM.Provides_Version.Element(I));
                 Release : aliased String := "FIXME";
                 SHA : aliased String := SHA256(Name => Name, Version => Version);
-                SHAPKG : aliased String := PKG;
+                SHAPKG : aliased String := SHA256(To_String(RPM.Name), To_String(RPM.Version), To_String(RPM.Release), To_String(RPM.Arch));
             begin
                 if not ARPM_Files_Handlers.DB_Keys.Has_Provide_Key(RPM.Provides.Element(I)) then 
                     ARPM_Files_Handlers.DB_Keys.Add_Provide_Key (RPM.Provides.Element(I));
@@ -55,7 +54,7 @@ package body ARPM_DB_Containers is
             pragma Debug(Put_Line (Ada.Exceptions.Exception_Information(The_Event)));
     end Save_Provides;
 
-    procedure Save_Requires(RPM : in ARPM_RPM_Access; DB : in Database_Connection; PKG : in String) is 
+    procedure Save_Requires(RPM : in ARPM_RPM_Access; DB : in out Database_Connection) is 
          QP  : Prepared_Statement;
          requires_parameters :   SQL_Parameters (1 .. 4) :=
              (1 => (Parameter_Text, null),
@@ -76,7 +75,7 @@ package body ARPM_DB_Containers is
                 Version : aliased String := To_String(RPM.requires_Version.Element(I));
                 Release : aliased String := "FIXME";
                 SHA : aliased String := SHA256(Name => Name, Version => Version);
-                SHAPKG : aliased String := PKG;
+                SHAPKG : aliased String := SHA256(To_String(RPM.Name), To_String(RPM.Version), To_String(RPM.Release), To_String(RPM.Arch));
             begin
                 if not ARPM_Files_Handlers.DB_Keys.Has_require_Key(RPM.requires.Element(I)) then 
                     ARPM_Files_Handlers.DB_Keys.Add_require_Key (RPM.requires.Element(I));
@@ -93,7 +92,7 @@ package body ARPM_DB_Containers is
             pragma Debug(Put_Line (Ada.Exceptions.Exception_Information(The_Event)));
     end Save_requires;
 
-    procedure Save(RPM : in ARPM_RPM_Access; DB : in Database_Connection) is 
+    procedure Save(RPM : in ARPM_RPM_Access; DB : in out Database_Connection) is 
         Q  : Prepared_Statement;
         param :   SQL_Parameters (1 .. 8) :=
             (1 => (Parameter_Text, null),
@@ -115,12 +114,8 @@ package body ARPM_DB_Containers is
         Transaction : Boolean := False;
     begin
         Reset_Connection (DB);
-        Transaction := Start_Transaction(DB);
         Q := Prepare ("INSERT INTO packages (pkgKey, name, version, release, arch, summary, description, url ) VALUES (? , ? , ? , ?, ?, ?, ?, ? )");
         Param := ("+"(SHA'Access), "+"(Name'Access), "+" (Version'Access), "+" (Release'Access), "+"(Arch'Access), "+"(Summary'Access), "+"(Description'Access), "+"(URL'Access));
         Execute(DB, Q, Param);
-        Save_Provides(RPM, DB, SHA);
-        Save_requires(RPM, DB, SHA);
-        Commit_Or_Rollback (DB);
     end Save;
 end ARPM_DB_Containers;

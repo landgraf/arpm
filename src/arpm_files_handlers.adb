@@ -145,7 +145,7 @@ package body ARPM_Files_Handlers is
 
             procedure Free is 
             begin
-                null;
+                Free(DB);
             end Free;
     end DB;
 end ARPM_FIles_Handlers;

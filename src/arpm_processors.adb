@@ -24,6 +24,7 @@ package body ARPM_Processors is
         DC : Database_Description;
         DB : Database_Connection;
         DB_ERROR : exception;
+        Transaction : Boolean;
     begin
         ARPM_Files_Handlers.DB.Get_DB(DC);
            DB := GNATCOLL.SQL.Exec.Get_Task_Connection
@@ -42,10 +43,11 @@ package body ARPM_Processors is
                     RPM := arpm_c_bridge.convert(MyRPM);
                     try:
                     begin
-                        null;
+                        Transaction := Start_Transaction(DB);
                         arpm_db_containers.save(RPM, DB);
-                        --arpm_db_containers.save_requires(RPM, DB);
-                        --arpm_db_containers.save_provides(RPM, DB);
+                        arpm_db_containers.save_requires(RPM, DB);
+                        arpm_db_containers.save_provides(RPM, DB);
+                        Commit(DB);
                     exception
                         when SQL_Event: others =>
                             pragma Debug(Put_Line("Failed to save " & To_String(RPM.Name)));
@@ -59,6 +61,7 @@ package body ARPM_Processors is
         pragma Debug(Put_Line("Commit..."));
         -- DB.Handler.Commit;
         -- DB.Handler.Close;
+        Free(DB);
         ARPM_Files_Handlers.Workers.Decrease;
     exception
         when The_Event: others =>
