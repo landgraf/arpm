@@ -1,4 +1,3 @@
-with League.Stream_Element_Vectors; use League.Stream_Element_Vectors;
 with Ada.Text_IO; use Ada.Text_IO;
 package body Internal_Codecs is
 
@@ -18,24 +17,5 @@ package body Internal_Codecs is
    begin
       return Result;
    end Sea_To_Str;
-
-   function US_To_String(Item : Universal_String) return String is
-         Str : Ada.Streams.Stream_Element_Array := To_Stream_Element_Array(League.Text_Codecs.Codec_For_Application_Locale.Encode(Item));
-    begin
-        return Sea_To_Str(Str);
-    end US_To_String;
-
-   function String_To_US(Item : String) return Universal_String is
-        US : Universal_String;
-        S  : Ada.Streams.Stream_Element_Array := Str_to_Sea(Item);
-        begin
-             US := League.Text_Codecs.Codec_For_Application_Locale.Decode(S);
-        return US;
-    end String_To_US;
-
-   function US_To_Sea (Item : Universal_String) return Ada.Streams.Stream_Element_Array is
-    begin
-        return To_Stream_Element_Array(League.Text_Codecs.Codec_For_Application_Locale.Encode(Item));
-    end US_To_Sea;
 
 end Internal_Codecs;

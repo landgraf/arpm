@@ -9,7 +9,7 @@ with POSIX.IO; use POSIX.IO;
 with POSIX; use POSIX;
 with arpm_db_containers;
 with ARPM_DB_Types;
-with SQL;
+with GNATCOLL.SQL.Exec; use GNATCOLL.SQL.Exec;
 
 
 with Internal_Codecs; use Internal_Codecs;
@@ -21,15 +21,10 @@ package body ARPM_Processors is
         FileName : Unbounded_String;
         MyRPM : My_RPM_Struct_Access;
         RPM : ARPM_RPM_Access;
-        -- TODO configurable
-        DB : arpm_db_types.ARPM_DB_Container_Access; 
+        DB : Database_Connection;
         DB_ERROR : exception;
     begin
         ARPM_Files_Handlers.DB.Get_DB(DB);
-        DB.Handler.Transaction;
-        if DB.Error /= 0 then
-            raise DB_ERROR;
-        end if;
         ARPM_Files_Handlers.Workers.Increase;
         pragma Debug(Put_Line("Start worker...."));
         loop
@@ -43,12 +38,13 @@ package body ARPM_Processors is
                     RPM := arpm_c_bridge.convert(MyRPM);
                     try:
                     begin
+                        null;
                         arpm_db_containers.save_main(RPM, DB);
-                        arpm_db_containers.save_requires(RPM, DB);
-                        arpm_db_containers.save_provides(RPM, DB);
+                        --arpm_db_containers.save_requires(RPM, DB);
+                        --arpm_db_containers.save_provides(RPM, DB);
                     exception
-                        when SQL_Event: SQL.SQL_ERROR =>
-                            pragma Debug(Put_Line("Failed to save " & US_To_String(RPM.Name)));
+                        when SQL_Event: others =>
+                            pragma Debug(Put_Line("Failed to save " & To_String(RPM.Name)));
                             pragma Debug(Put_Line("Reason " & Ada.Exceptions.Exception_Information(SQL_Event)));
                     end try;
                     ARPM_RPM_Internals.Free(RPM);
@@ -57,7 +53,7 @@ package body ARPM_Processors is
             end if;
         end loop;
         pragma Debug(Put_Line("Commit..."));
-        DB.Handler.Commit;
+        -- DB.Handler.Commit;
         -- DB.Handler.Close;
         ARPM_Files_Handlers.Workers.Decrease;
     exception

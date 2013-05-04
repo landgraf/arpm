@@ -24,7 +24,7 @@ begin
     if Integer(ARPM_C_Bridge.Read_Config) /= 0 then
         raise ERROR_RPM_CONFIG;
     end if;
-    ARPM_Files_Handlers.DB.Init_DB(String_To_US(Dir));
+    ARPM_Files_Handlers.DB.Init_DB(Dir);
     Start(Dir);
     ARPM_Files_Handlers.Workers.Is_Empty;
     ARPM_Files_Handlers.DB.Free;

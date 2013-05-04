@@ -1,10 +1,14 @@
 with Interfaces.C; use Interfaces.C;
+with Ada.Strings. Unbounded; use Ada.Strings.Unbounded;
 with Ada.Unchecked_Deallocation;
 with Interfaces.C.Pointers;
 with Interfaces.C.Strings; use Interfaces.C.Strings;
-with League.Strings; use League.Strings;
-with League.String_Vectors; use League.String_Vectors;
+with Ada.Containers.Vectors;
 package ARPM_RPM_Internals is
+    package ARPM_Vector_Container_Package is new Ada.Containers.Vectors(
+        Element_Type => Unbounded_String, Index_Type => Positive
+        );
+    subtype ARPM_Vector_Container is ARPM_Vector_Container_Package.Vector;
     package chars_ptr_Pointers is
         new Interfaces.C.Pointers
             (Interfaces.C.size_t,
@@ -31,14 +35,14 @@ package ARPM_RPM_Internals is
 
     type ARPM_RPM is record
         Id  : Integer   := Integer'Last;
-        Name : Universal_String := Empty_Universal_String;
-        Version : Universal_String := Empty_Universal_String;
-        Release : Universal_String := Empty_Universal_String;
-        Arch   : Universal_String := Empty_Universal_String;
-        requires : Universal_String_Vector := Empty_Universal_String_Vector;
-        requires_version : Universal_String_Vector := Empty_Universal_String_Vector;
-        Provides : Universal_String_Vector := Empty_Universal_String_Vector;
-        Provides_version : Universal_String_Vector := Empty_Universal_String_Vector;
+        Name : Unbounded_String := Null_Unbounded_String;
+        Version : Unbounded_String := Null_Unbounded_String;
+        Release : Unbounded_String := Null_Unbounded_String;
+        Arch   : Unbounded_String := Null_Unbounded_String;
+        requires : ARPM_Vector_Container;
+        requires_version : ARPM_Vector_Container; 
+        Provides : ARPM_Vector_Container; 
+        Provides_version : ARPM_Vector_Container;
     end record;
     type ARPM_RPM_Access is access all ARPM_RPM;
 

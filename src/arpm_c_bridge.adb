@@ -1,9 +1,8 @@
 with Ada.Text_IO; use Ada.Text_IO;
+with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
 with Ada.Exceptions;
 with Ada.Unchecked_Deallocation;
 with ARPM_Files_Handlers;
-with League.Strings; 
-with League.String_Vectors;
 with Internal_Codecs;
 
 package body ARPM_C_Bridge is 
@@ -70,25 +69,22 @@ package body ARPM_C_Bridge is
     end Free;
 
     function Convert(MyRPM : My_RPM_Struct_Access) return ARPM_RPM_Access is
-        use Internal_Codecs;
-        use League.Strings;
-        use League.String_Vectors;
         RPM : ARPM_RPM_Access := new ARPM_RPM;
         CONVERT_ERROR : exception;
     begin
-        RPM.Name := String_To_US(Value(MyRPM.Name));
-        RPM.Version := String_To_US(Value(MyRPM.Version));
-        RPM.Release := String_To_US(Value(MyRPM.Release));
-        RPM.Arch   := String_To_US(Value(MyRPM.Arch));
+        RPM.Name := To_Unbounded_String(Value(MyRPM.Name));
+        RPM.Version := To_Unbounded_String(Value(MyRPM.Version));
+        RPM.Release := To_Unbounded_String(Value(MyRPM.Release));
+        RPM.Arch   := To_Unbounded_String(Value(MyRPM.Arch));
         for I in 1..MyRPM.requires_Count loop
-            RPM.requires.Append(String_To_US(Value(MyRPM.requires.all)));
-            RPM.requires_version.Append (String_To_US(Value(MyRPM.requires_version.all)));
+            RPM.requires.Append(To_Unbounded_String(Value(MyRPM.requires.all)));
+            RPM.requires_version.Append (To_Unbounded_String(Value(MyRPM.requires_version.all)));
             chars_ptr_Pointers.Increment(MyRPM.requires);
             chars_ptr_Pointers.Increment(MyRPM.requires_version);
         end loop;
         for I in 1..MyRPM.Provides_Count loop
-            RPM.Provides.Append(String_To_US(Value(MyRPM.Provides.all)));
-            RPM.Provides_version.Append(String_To_US(Value(MyRPM.Provides_Version.all)));
+            RPM.Provides.Append(To_Unbounded_String(Value(MyRPM.Provides.all)));
+            RPM.Provides_version.Append(To_Unbounded_String(Value(MyRPM.Provides_Version.all)));
             chars_ptr_Pointers.Increment(MyRPM.Provides);
             chars_ptr_Pointers.Increment(MyRPM.Provides_version);
         end loop;

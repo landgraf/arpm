@@ -1,7 +1,5 @@
 with "florist";
-with "matreshka_sql";
-with "matreshka_sql_sqlite3";
-with "matreshka_league";
+with "gnatcoll_sqlite";
 project ARPM is 
     for Source_Dirs use ("../src", "../src/c", "../src/db/generated");
     for Main use ("createrepo.adb");
