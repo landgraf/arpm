@@ -43,7 +43,7 @@ package body ARPM_Processors is
                     try:
                     begin
                         null;
-                        arpm_db_containers.save_main(RPM, DB);
+                        arpm_db_containers.save(RPM, DB);
                         --arpm_db_containers.save_requires(RPM, DB);
                         --arpm_db_containers.save_provides(RPM, DB);
                     exception
