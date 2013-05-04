@@ -95,10 +95,16 @@ void  get_provides(my_rpm_struct* myrpm, Header hdr, rpmtd td)
 
 char* get_txt(Header hdr, rpmtd td, rpmTagVal tag){
     int rc;
+    char* name;
     rpmtdFreeData(td);
     rpmtdReset(td);
     rc = headerGet(hdr, tag, td, HEADERGET_EXT);
-    char* name =  strdup((char*) rpmtdGetString(td));
+    if (rpmtdGetString(td)  != NULL)
+    {
+        name =  strdup((char*) rpmtdGetString(td));
+    } else{
+        name =  strdup((char*) "");
+    };
     return name;
 }
 
