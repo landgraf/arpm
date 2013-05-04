@@ -46,7 +46,7 @@ package ARPM_Files_Handlers is
     protected DB is 
             -- function Get_DB return ARPM_DB_Container_Access;
             procedure Init_DB(FileName : in String);
-            entry Get_DB(rDB : out Database_Connection);
+            entry Get_DB(rDB : out Database_Description);
             procedure Free;
         private 
             DB : GNATCOLL.SQL.Exec.Database_Description;

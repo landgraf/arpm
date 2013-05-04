@@ -21,10 +21,14 @@ package body ARPM_Processors is
         FileName : Unbounded_String;
         MyRPM : My_RPM_Struct_Access;
         RPM : ARPM_RPM_Access;
+        DC : Database_Description;
         DB : Database_Connection;
         DB_ERROR : exception;
     begin
-        ARPM_Files_Handlers.DB.Get_DB(DB);
+        ARPM_Files_Handlers.DB.Get_DB(DC);
+           DB := GNATCOLL.SQL.Exec.Get_Task_Connection
+                   (Description  => DC);
+           Execute(DB, "PRAGMA synchronous = OFF");
         ARPM_Files_Handlers.Workers.Increase;
         pragma Debug(Put_Line("Start worker...."));
         loop

@@ -82,10 +82,9 @@ package body ARPM_Files_Handlers is
                     return 1;
             end Create_DB;
 
-            entry Get_DB(rDB : out Database_Connection ) when Initialized is
+            entry Get_DB(rDB : out Database_Description) when Initialized is
             begin
-                rDB :=  GNATCOLL.SQL.Exec.Get_Task_Connection
-                        (Description  => DB);
+                rDB :=  DB;
             end Get_DB;
 
             function Prepare_Directories(Dir : String) return Integer is 

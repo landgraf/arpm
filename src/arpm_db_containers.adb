@@ -17,25 +17,41 @@ package body ARPM_DB_Containers is
         return GNAT.SHA256.Digest(Str_To_Sea(Name & ("-" & Version & "." & Arch )));
     end SHA256;
 
-    procedure Save_Provides(RPM : in ARPM_RPM_Access; DB : in Database_Connection) is 
-      --   QP  : Prepared_Statement;
-      --   provides_parameters :   SQL_Parameters (1 .. 4) :=
-      --       (1 => (Parameter_Text, null),
-      --        2 => (Parameter_Text, 0),
-      --        3 => (Parameter_Text, null),
-      --        4 => (Parameter_Text, 0));
-      --   QPP : Prepared_Statement;
-      --   provides_packages_parameters :   SQL_Parameters (1 .. 2) :=
-      --       (1 => (Parameter_Text, null),
-      --        2 => (Parameter_Text, null));
+    procedure Save_Provides(RPM : in ARPM_RPM_Access; DB : in Database_Connection; PKG : in String) is 
+         QP  : Prepared_Statement;
+         provides_parameters :   SQL_Parameters (1 .. 4) :=
+             (1 => (Parameter_Text, null),
+              2 => (Parameter_Text, null),
+              3 => (Parameter_Text, null),
+              4 => (Parameter_Text, null));
+         QPP : Prepared_Statement;
+         provides_packages_parameters :   SQL_Parameters (1 .. 2) :=
+             (1 => (Parameter_Text, null),
+              2 => (Parameter_Text, null));
+         TRANSACTION_ERROR : exception;
     begin
-        -- QP.Prepare ("INSERT INTO  provides ( name, version, release, provideKey) VALUES ( ?, ?, ?, ?)");
-        --QPP.Prepare ("INSERT INTO packages_provides ( pkgKey, provideKey ) VALUES ( ? , ? )");
-        for I in 1..Integer(RPM.Provides.Length) loop
-            if not ARPM_Files_Handlers.DB_Keys.Has_Provide_Key(RPM.Provides.Element(I)) then 
-                ARPM_Files_Handlers.DB_Keys.Add_Provide_Key (RPM.Provides.Element(I));
-            end if;
-        end loop;
+        QP := Prepare ("INSERT INTO  provides ( name, version, release, provideKey) VALUES ( ?, ?, ?, ?)");
+        QPP := Prepare ("INSERT INTO packages_provides ( pkgKey, provideKey ) VALUES ( ? , ? )");
+        Reset_Connection (DB);
+        --if Start_Transaction(DB) then
+            for I in 1..Integer(RPM.Provides.Length) loop
+                declare
+                    Name : aliased String := To_String(RPM.Provides.Element(I));
+                    Version : aliased String := To_String(RPM.Provides_Version.Element(I));
+                    Release : aliased String := "FIXME";
+                    SHA : aliased String := SHA256(Name => Name, Version => Version);
+                    SHAPKG : aliased String := PKG;
+                begin
+                    if not ARPM_Files_Handlers.DB_Keys.Has_Provide_Key(RPM.Provides.Element(I)) then 
+                        ARPM_Files_Handlers.DB_Keys.Add_Provide_Key (RPM.Provides.Element(I));
+                        provides_parameters := ("+"(Name'Access), "+" (Version'Access), "+" (Release'Access), "+"(SHA'Access));
+                        Execute(DB, QP, provides_parameters);
+                    end if;
+                    provides_packages_parameters := ("+"(SHAPKG'Access), "+"(SHA'Access));
+                    Execute(DB, QPP, provides_packages_parameters);
+                end;
+            end loop;
+         --   Commit_Or_Rollback (DB);
     exception
         when The_Event: others =>
             pragma Debug(Put_Line("Failed to save provides " & To_String(RPM.Name) & "  Message: " & Ada.Exceptions.Exception_Message(The_Event)));
@@ -80,13 +96,14 @@ package body ARPM_DB_Containers is
         Release : aliased String := To_String(RPM.Release);
         Arch : aliased String := To_String(RPM.Arch);
         SHA : aliased String := SHA256(Name, Version, Release, Arch);
+        Transaction : Boolean := False;
     begin
-        Put_Line(Name);
+        Reset_Connection (DB);
+        Transaction := Start_Transaction(DB);
         Q := Prepare ("INSERT INTO packages (pkgKey, name, version, release) VALUES (? , ? , ? , ? )");
-        -- Q := SQL_Begin;
         Param := ("+"(SHA'Access), "+"(Name'Access), "+" (Version'Access), "+" (Release'Access));
         Execute(DB, Q, Param);
-        -- Commit_Or_Rollback (DB);
-        -- Put_Line("Exit");
+        Save_Provides(RPM, DB, SHA);
+        Commit_Or_Rollback (DB);
     end Save_Main;
 end ARPM_DB_Containers;
