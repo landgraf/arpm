@@ -24,6 +24,9 @@ package ARPM_RPM_Internals is
             Version : Chars_Ptr;
             Release : Chars_Ptr;
             Arch : Chars_Ptr;
+            Summary: Chars_Ptr;
+            Description : Chars_Ptr;
+            Url : Chars_Ptr;
             requires_Count : Interfaces.C.Int := 0;
             requires : char_star;
             requires_version : char_star;
@@ -39,6 +42,9 @@ package ARPM_RPM_Internals is
         Version : Unbounded_String := Null_Unbounded_String;
         Release : Unbounded_String := Null_Unbounded_String;
         Arch   : Unbounded_String := Null_Unbounded_String;
+        Summary : Unbounded_String := Null_Unbounded_String;
+        Description   : Unbounded_String := Null_Unbounded_String;
+        Url   : Unbounded_String := Null_Unbounded_String;
         requires : ARPM_Vector_Container;
         requires_version : ARPM_Vector_Container; 
         Provides : ARPM_Vector_Container; 

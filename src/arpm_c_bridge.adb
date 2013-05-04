@@ -10,7 +10,6 @@ package body ARPM_C_Bridge is
     package body Constructors is 
         function Create(Filename : String) 
             return My_RPM_Struct_Access is 
-            
             File_Name : Chars_Ptr := New_String(Filename);
             MyRPM : My_RPM_Struct_Access := new My_RPM_Struct;
         begin
@@ -60,6 +59,9 @@ package body ARPM_C_Bridge is
         Free(MyRPM.Version);
         Free(MyRPM.Release);
         Free(MyRPM.Arch);
+        Free(MyRPM.Summary);
+        Free(MyRPM.Description);
+        Free(MyRPM.Url);
         Free_Ptr(MyRPM);
     exception
         when STORAGE_ERROR =>
@@ -76,6 +78,9 @@ package body ARPM_C_Bridge is
         RPM.Version := To_Unbounded_String(Value(MyRPM.Version));
         RPM.Release := To_Unbounded_String(Value(MyRPM.Release));
         RPM.Arch   := To_Unbounded_String(Value(MyRPM.Arch));
+        RPM.Summary := To_Unbounded_String(Value(MyRPM.Summary));
+        RPM.Description   := To_Unbounded_String(Value(MyRPM.Description));
+        RPM.Url   := To_Unbounded_String(Value(MyRPM.Url));
         for I in 1..MyRPM.requires_Count loop
             RPM.requires.Append(To_Unbounded_String(Value(MyRPM.requires.all)));
             RPM.requires_version.Append (To_Unbounded_String(Value(MyRPM.requires_version.all)));

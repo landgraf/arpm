@@ -95,22 +95,29 @@ package body ARPM_DB_Containers is
 
     procedure Save(RPM : in ARPM_RPM_Access; DB : in Database_Connection) is 
         Q  : Prepared_Statement;
-        param :   SQL_Parameters (1 .. 4) :=
+        param :   SQL_Parameters (1 .. 8) :=
             (1 => (Parameter_Text, null),
              2 => (Parameter_Text, null),
              3 => (Parameter_Text, null),
-             4 => (Parameter_Text, null));
+             4 => (Parameter_Text, null),
+             5 => (Parameter_Text, null),
+             6 => (Parameter_Text, null),
+             7 => (Parameter_Text, null),
+             8 => (Parameter_Text, null));
         Name : aliased String := To_String(RPM.Name);
         Version : aliased String := To_String(RPM.Version);
         Release : aliased String := To_String(RPM.Release);
         Arch : aliased String := To_String(RPM.Arch);
+        Summary : aliased String := To_String(RPM.Summary);
+        Description : aliased String := To_String(RPM.Description);
+        Url : aliased String := To_String(RPM.URL);
         SHA : aliased String := SHA256(Name, Version, Release, Arch);
         Transaction : Boolean := False;
     begin
         Reset_Connection (DB);
         Transaction := Start_Transaction(DB);
-        Q := Prepare ("INSERT INTO packages (pkgKey, name, version, release) VALUES (? , ? , ? , ? )");
-        Param := ("+"(SHA'Access), "+"(Name'Access), "+" (Version'Access), "+" (Release'Access));
+        Q := Prepare ("INSERT INTO packages (pkgKey, name, version, release, arch, summary, description, url ) VALUES (? , ? , ? , ?, ?, ?, ?, ? )");
+        Param := ("+"(SHA'Access), "+"(Name'Access), "+" (Version'Access), "+" (Release'Access), "+"(Arch'Access), "+"(Summary'Access), "+"(Description'Access), "+"(URL'Access));
         Execute(DB, Q, Param);
         Save_Provides(RPM, DB, SHA);
         Save_requires(RPM, DB, SHA);

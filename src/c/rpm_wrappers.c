@@ -12,6 +12,9 @@ typedef struct{
     char* version;
     char* release;
     char* arch;
+    char* summary;
+    char* description;
+    char* url;
     int depends_count;
     char** depends_on;
     char** depends_version;
@@ -90,41 +93,12 @@ void  get_provides(my_rpm_struct* myrpm, Header hdr, rpmtd td)
     }
 }
 
-char*  get_version(Header hdr, rpmtd td){
+char* get_txt(Header hdr, rpmtd td, rpmTagVal tag){
     int rc;
     rpmtdFreeData(td);
     rpmtdReset(td);
-    rc = headerGet(hdr, RPMTAG_VERSION, td, HEADERGET_EXT);
-    char* version = (char*) malloc(strlen(rpmtdGetString(td))+1);
-    strcpy(version,rpmtdGetString(td));
-    return version;
-}
-
-char*  get_arch(Header hdr, rpmtd td){
-    int rc;
-    rpmtdFreeData(td);
-    rpmtdReset(td);
-    rc = headerGet(hdr, RPMTAG_ARCH, td, HEADERGET_EXT);
-    char* arch = strdup((char*) rpmtdGetString(td));
-    return arch;
-}
-char* get_release(Header hdr, rpmtd td){
-    int rc;
-    rpmtdFreeData(td);
-    rpmtdReset(td);
-    rc = headerGet(hdr, RPMTAG_RELEASE, td, HEADERGET_EXT);
-    char* release = (char*) malloc(strlen(rpmtdGetString(td))+1);
-    strcpy(release,rpmtdGetString(td));
-    return release;
-}
-
-char* get_name(Header hdr, rpmtd td){
-    int rc;
-    rpmtdFreeData(td);
-    rpmtdReset(td);
-    rc = headerGet(hdr, RPMTAG_NAME, td, HEADERGET_EXT);
-    char* name = (char*) malloc(strlen(rpmtdGetString(td))+1);
-    strcpy(name,rpmtdGetString(td));
+    rc = headerGet(hdr, tag, td, HEADERGET_EXT);
+    char* name =  strdup((char*) rpmtdGetString(td));
     return name;
 }
 
@@ -165,10 +139,13 @@ void parse_rpm (char* filename,my_rpm_struct* myrpm)
     Fclose(fd);
 
     td = rpmtdNew();
-    myrpm->name = get_name(hdr,td);
-    myrpm->version = get_version(hdr,td);
-    myrpm->release = get_release(hdr,td);
-    myrpm->arch   = get_arch(hdr,td);
+    myrpm->name = get_txt(hdr,td, RPMTAG_NAME);
+    myrpm->version = get_txt(hdr,td, RPMTAG_VERSION);
+    myrpm->release = get_txt(hdr,td, RPMTAG_RELEASE);
+    myrpm->arch   = get_txt(hdr,td, RPMTAG_ARCH);
+    myrpm->summary   = get_txt(hdr,td, RPMTAG_SUMMARY);
+    myrpm->description   = get_txt(hdr,td, RPMTAG_DESCRIPTION);
+    myrpm->url   = get_txt(hdr,td, RPMTAG_URL);
     get_req(myrpm,hdr,td);
     get_requires_version(myrpm, hdr, td);
     get_provides(myrpm,hdr,td);
