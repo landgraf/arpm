@@ -86,11 +86,15 @@ package body ARPM_DB_Containers is
     procedure Save_Main(RPM : in ARPM_RPM_Access; DB : in ARPM_DB_Container_Access) is 
         Q : SQL.Queries.SQL_Query := DB.Handler.Query;
     begin
-        Q.Prepare (+"INSERT INTO packages (pkgKey, name, version, release) VALUES (:key, :name, :version, :release)");
+        Q.Prepare (+"INSERT INTO packages (pkgKey, name, version, release, summary, url, arch, description) VALUES (:key, :name, :version, :release, :summary, :url, :arch, :description)");
         Q.Bind_Value (+":key", League.Holders.To_Holder (SHA256(RPM.Name, RPM.Version, RPM.Arch )));
         Q.Bind_Value (+":name", League.Holders.To_Holder(RPM.name));
         Q.Bind_Value (+":version", League.Holders.To_Holder(RPM.version));
         Q.Bind_Value (+":release", League.Holders.To_Holder(RPM.release));
+        Q.Bind_Value (+":arch", League.Holders.To_Holder(RPM.arch));
+        Q.Bind_Value (+":summary", League.Holders.To_Holder(RPM.summary));
+        Q.Bind_Value (+":description", League.Holders.To_Holder(RPM.description));
+        Q.Bind_Value (+":url", League.Holders.To_Holder(RPM.url));
         Q.Execute;
     end Save_Main;
 end ARPM_DB_Containers;

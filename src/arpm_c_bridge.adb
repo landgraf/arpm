@@ -61,6 +61,9 @@ package body ARPM_C_Bridge is
         Free(MyRPM.Version);
         Free(MyRPM.Release);
         Free(MyRPM.Arch);
+        Free(MyRPM.Summary);
+        Free(MyRPM.Description);
+        Free(MyRPM.Url);
         Free_Ptr(MyRPM);
     exception
         when STORAGE_ERROR =>
@@ -80,6 +83,9 @@ package body ARPM_C_Bridge is
         RPM.Version := String_To_US(Value(MyRPM.Version));
         RPM.Release := String_To_US(Value(MyRPM.Release));
         RPM.Arch   := String_To_US(Value(MyRPM.Arch));
+        RPM.Url   := String_To_US(Value(MyRPM.Url));
+        RPM.Description   := String_To_US(Value(MyRPM.Description));
+        RPM.Summary   := String_To_US(Value(MyRPM.Summary));
         for I in 1..MyRPM.requires_Count loop
             RPM.requires.Append(String_To_US(Value(MyRPM.requires.all)));
             RPM.requires_version.Append (String_To_US(Value(MyRPM.requires_version.all)));

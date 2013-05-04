@@ -20,6 +20,9 @@ package ARPM_RPM_Internals is
             Version : Chars_Ptr;
             Release : Chars_Ptr;
             Arch : Chars_Ptr;
+            Summary: Chars_Ptr;
+            Description : Chars_Ptr;
+            Url : Chars_Ptr;
             requires_Count : Interfaces.C.Int := 0;
             requires : char_star;
             requires_version : char_star;
@@ -35,6 +38,9 @@ package ARPM_RPM_Internals is
         Version : Universal_String := Empty_Universal_String;
         Release : Universal_String := Empty_Universal_String;
         Arch   : Universal_String := Empty_Universal_String;
+        Url   : Universal_String := Empty_Universal_String;
+        Description   : Universal_String := Empty_Universal_String;
+        Summary   : Universal_String := Empty_Universal_String;
         requires : Universal_String_Vector := Empty_Universal_String_Vector;
         requires_version : Universal_String_Vector := Empty_Universal_String_Vector;
         Provides : Universal_String_Vector := Empty_Universal_String_Vector;
