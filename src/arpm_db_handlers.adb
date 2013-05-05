@@ -1,24 +1,24 @@
 package body ARPM_DB_Handlers is 
 
     protected body DB_Keys is
-        procedure Add_Provide_Key(Key : in Unbounded_String) is
+        procedure Add_Provide_Key(Key : in String) is
         begin
-            Provides.Insert(SHA256S(To_String(Key)));
+            Provides.Insert(SHA256S(Key));
         end Add_Provide_Key;
-        function Has_Provide_Key(Key : in Unbounded_String) return Boolean is
+        function Has_Provide_Key(Key : in String) return Boolean is
         begin
-            if Provides.Is_Empty or not Provides.Contains(SHA256S(To_String(Key))) then
+            if Provides.Is_Empty or not Provides.Contains(SHA256S(Key)) then
                 return False;
             end if;
             return True;
         end Has_Provide_Key;
-        procedure Add_Require_Key(Key : in Unbounded_String) is
+        procedure Add_Require_Key(Key : in String) is
         begin
-            Requires.Insert(SHA256S(To_String(Key)));
+            Requires.Insert(SHA256S(Key));
         end Add_Require_Key;
-        function Has_Require_Key(Key : in Unbounded_String) return Boolean is
+        function Has_Require_Key(Key : in String) return Boolean is
         begin
-            if Requires.Is_Empty or not Requires.Contains(SHA256S(To_String(Key))) then
+            if Requires.Is_Empty or not Requires.Contains(SHA256S(Key)) then
                 return False;
             end if;
             return True;

@@ -39,8 +39,8 @@ package body ARPM_DB_Containers is
                 SHA : aliased String := SHA256(Name => Name, Version => Version);
                 SHAPKG : aliased String := SHA256(To_String(RPM.Name), To_String(RPM.Version), To_String(RPM.Release), To_String(RPM.Arch));
             begin
-                if not ARPM_DB_Handlers.DB_Keys.Has_Provide_Key(RPM.Provides.Element(I)) then 
-                    ARPM_DB_Handlers.DB_Keys.Add_Provide_Key (RPM.Provides.Element(I));
+                if not ARPM_DB_Handlers.DB_Keys.Has_Provide_Key(SHA) then 
+                    ARPM_DB_Handlers.DB_Keys.Add_Provide_Key (SHA);
                     provides_parameters := ("+"(Name'Access), "+" (Version'Access), "+" (Release'Access), "+"(SHA'Access));
                     Execute(DB, QP, provides_parameters);
                 end if;
@@ -77,8 +77,8 @@ package body ARPM_DB_Containers is
                 SHA : aliased String := SHA256(Name => Name, Version => Version);
                 SHAPKG : aliased String := SHA256(To_String(RPM.Name), To_String(RPM.Version), To_String(RPM.Release), To_String(RPM.Arch));
             begin
-                if not ARPM_DB_Handlers.DB_Keys.Has_require_Key(RPM.requires.Element(I)) then 
-                    ARPM_DB_Handlers.DB_Keys.Add_require_Key (RPM.requires.Element(I));
+                if not ARPM_DB_Handlers.DB_Keys.Has_require_Key(SHA) then 
+                    ARPM_DB_Handlers.DB_Keys.Add_require_Key (SHA);
                     requires_parameters := ("+"(Name'Access), "+" (Version'Access), "+" (Release'Access), "+"(SHA'Access));
                     Execute(DB, QP, requires_parameters);
                 end if;
@@ -111,7 +111,6 @@ package body ARPM_DB_Containers is
         Description : aliased String := To_String(RPM.Description);
         Url : aliased String := To_String(RPM.URL);
         SHA : aliased String := SHA256(Name, Version, Release, Arch);
-        Transaction : Boolean := False;
     begin
         Reset_Connection (DB);
         Q := Prepare ("INSERT INTO packages (pkgKey, name, version, release, arch, summary, description, url ) VALUES (? , ? , ? , ?, ?, ?, ?, ? )");

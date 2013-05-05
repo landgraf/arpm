@@ -60,8 +60,6 @@ package body ARPM_Processors is
             end if;
         end loop;
         pragma Debug(Put_Line("Commit..."));
-        -- DB.Handler.Commit;
-        -- DB.Handler.Close;
         Free(DB);
         ARPM_Files_Handlers.Workers.Decrease;
         if ARPM_Files_Handlers.Workers.Is_Empty then

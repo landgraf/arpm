@@ -8,10 +8,10 @@ with GNATCOLL.SQL.SQLite;
 
 package ARPM_DB_Handlers is 
     protected DB_Keys is 
-            procedure Add_Provide_Key(Key : in Unbounded_String);
-            function Has_Provide_Key(Key : in Unbounded_String) return Boolean;
-            procedure Add_Require_Key(Key : in Unbounded_String);
-            function Has_Require_Key(Key : in Unbounded_String) return Boolean;
+            procedure Add_Provide_Key(Key : in String);
+            function Has_Provide_Key(Key : in String) return Boolean;
+            procedure Add_Require_Key(Key : in String);
+            function Has_Require_Key(Key : in String) return Boolean;
         private
             Provides : ARPM_OSets_Container ;
             Requires : ARPM_Osets_Container;

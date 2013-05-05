@@ -17,7 +17,7 @@ build_prof:
 	${BUILD} -P gnat/arpm -ggdb -g -gnata -v -cargs -pg -largs -pg
 
 build_debug:
-	${BUILD} -P gnat/arpm  -gnata -ggdb -g -cargs -pg 
+	${BUILD} -P gnat/arpm  -gnata -ggdb -g -gnatwu   -cargs -pg  
 
 build_all_warnings: 
 	${BUILD} -v -g -Pgnat/arpm -gnata -gnatwu -cargs -O0 -pg 
