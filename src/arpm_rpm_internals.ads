@@ -4,7 +4,14 @@ with Interfaces.C.Pointers;
 with Interfaces.C.Strings; use Interfaces.C.Strings;
 with League.Strings; use League.Strings;
 with League.String_Vectors; use League.String_Vectors;
+with Ada.Containers.Ordered_Sets; 
 package ARPM_RPM_Internals is
+
+    package ARPM_Set_Container_Package is new Ada.Containers.Ordered_Sets(
+    Element_Type  => Universal_String);
+    subtype ARPM_OSets_Container is ARPM_Set_Container_Package.Set;
+
+
     package chars_ptr_Pointers is
         new Interfaces.C.Pointers
             (Interfaces.C.size_t,

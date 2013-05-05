@@ -3,6 +3,7 @@ with Ada.Containers.Vectors; use Ada.Containers;
 with League.Strings; use League.Strings;
 with League.String_Vectors; use League.String_Vectors;
 with ARPM_DB_Types; use ARPM_DB_Types;
+with ARPM_RPM_Internals; use ARPM_RPM_Internals;
 
 
 package ARPM_Files_Handlers is 
@@ -41,8 +42,8 @@ package ARPM_Files_Handlers is
             procedure Add_Require_Key(Key : in Universal_String);
             function Has_Require_Key(Key : in Universal_String) return Boolean;
         private
-            Provides : Universal_String_Vector := Empty_Universal_String_Vector;
-            Requires :  Universal_String_Vector := Empty_Universal_String_Vector;
+            Provides : ARPM_OSets_Container; --Universal_String_Vector := Empty_Universal_String_Vector;
+            Requires :  ARPM_OSets_Container; -- Universal_String_Vector := Empty_Universal_String_Vector;
     end DB_Keys;
 
     protected DB is 

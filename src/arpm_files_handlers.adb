@@ -53,22 +53,22 @@ package body ARPM_Files_Handlers is
     protected body DB_Keys is 
             procedure Add_Provide_Key(Key : in Universal_String) is 
             begin
-                Provides.Append(Key);
+                Provides.Insert(Key);
             end Add_Provide_Key;
             function Has_Provide_Key(Key : in Universal_String) return Boolean is 
             begin
-                if Provides.Is_Empty or Index(Provides, Key) = 0 then
+                if Provides.Is_Empty or not Provides.Contains(Key) then
                     return False;
                 end if;
                 return True;
             end Has_Provide_Key;
             procedure Add_Require_Key(Key : in Universal_String) is 
             begin
-                Requires.Append(Key);
+                Requires.Insert(Key);
             end Add_Require_Key;
             function Has_Require_Key(Key : in Universal_String) return Boolean is 
             begin
-                if Requires.Is_Empty or Requires.Index(Key) = 0 then
+                if Requires.Is_Empty or not Requires.Contains(Key) then
                     return False;
                 end if;
                 return True;
