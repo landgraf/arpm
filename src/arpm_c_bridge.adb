@@ -26,7 +26,7 @@ package body ARPM_C_Bridge is
             (Object => My_RPM_Struct,
              Name   => My_RPM_Struct_Access);
 
-        procedure C_Free(MyRPM : in Char_Star);
+        procedure C_Free(R : in Char_Star);
             pragma Import(C, C_Free, "free");
         FREE_ERROR : exception;
     begin
