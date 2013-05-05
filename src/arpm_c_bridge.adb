@@ -1,9 +1,6 @@
 with Ada.Text_IO; use Ada.Text_IO;
 with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
-with Ada.Exceptions;
 with Ada.Unchecked_Deallocation;
-with ARPM_Files_Handlers;
-with Internal_Codecs;
 
 package body ARPM_C_Bridge is 
 

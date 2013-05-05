@@ -1,10 +1,6 @@
 with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
 with ARPM_RPM_Internals; use ARPM_RPM_Internals;
-with Ada.Directories; use Ada.Directories;
-with Ada.Text_IO; use Ada.Text_IO;
 with GNATCOLL.SQL.Exec; use GNATCOLL.SQL.Exec;
-with GNATCOLL.SQL.Sessions; use GNATCOLL.SQL.Sessions;
-with GNATCOLL.SQL.SQLite;
 
 package ARPM_DB_Handlers is 
     protected DB_Keys is 

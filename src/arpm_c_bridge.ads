@@ -1,5 +1,4 @@
 with Interfaces.C.Strings;  use Interfaces.C.Strings;
-with Interfaces.C.Pointers;
 with Interfaces.C;  use Interfaces.C;
 with ARPM_RPM_Internals; use ARPM_RPM_Internals;
 package ARPM_C_Bridge is 

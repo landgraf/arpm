@@ -3,9 +3,7 @@ with Ada.Text_IO; use Ada.Text_IO;
 with GNAT.OS_Lib; use GNAT.OS_Lib;
 with ARPM_Walkers; use ARPM_Walkers;
 with ARPM_Processors; use ARPM_Processors;
-with ARPM_Files_Handlers;
 with ARPM_C_Bridge;
-with Internal_Codecs; use Internal_Codecs;
 with ARPM_DB_Handlers; -- .DB.Init_DB(Dir);
 
 procedure Createrepo is 

@@ -1,6 +1,3 @@
-with Ada.Text_Io; use Ada.Text_IO;
-with Ada.Directories;
-with Internal_Codecs; use Internal_Codecs;
 package body ARPM_Files_Handlers is 
     protected body Files is 
         procedure Put(FileName : Unbounded_String) is 

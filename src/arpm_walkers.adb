@@ -1,6 +1,6 @@
 with Ada.Directories; use Ada.Directories;
 with POSIX.Files;
-with Ada.Text_IO; use Ada.Text_IO;
+with ARPM_Files_Handlers; use ARPM_Files_Handlers;
 
 package body ARPM_Walkers is 
     procedure Walk_Directory

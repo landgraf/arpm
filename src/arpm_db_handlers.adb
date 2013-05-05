@@ -1,3 +1,7 @@
+
+with Ada.Text_IO; use Ada.Text_IO;
+with GNATCOLL.SQL.SQLite;
+with Ada.Directories; use Ada.Directories;
 package body ARPM_DB_Handlers is 
 
     protected body DB_Keys is

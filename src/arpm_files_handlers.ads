@@ -1,5 +1,4 @@
 with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
-with Ada.Containers.Vectors; use Ada.Containers;
 with ARPM_RPM_Internals; use ARPM_RPM_Internals;
 
 

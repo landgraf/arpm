@@ -5,15 +5,11 @@ with ARPM_RPM_INternals; use ARPM_RPM_Internals;
 with ARPM_Files_Handlers;
 with Ada.Text_Io ; use Ada.Text_IO;
 with POSIX.Files; use POSIX.Files;
-with POSIX.IO; use POSIX.IO;
 with POSIX; use POSIX;
 with arpm_db_containers;
 with GNATCOLL.SQL.Exec; use GNATCOLL.SQL.Exec;
 with ARPM_Files_Handlers; 
 with ARPM_DB_Handlers; 
-
-
-with Internal_Codecs; use Internal_Codecs;
 
 package body ARPM_Processors is 
     
@@ -24,7 +20,6 @@ package body ARPM_Processors is
         RPM : ARPM_RPM_Access;
         DC : Database_Description;
         DB : Database_Connection;
-        DB_ERROR : exception;
         Transaction : Boolean;
     begin
         ARPM_DB_Handlers.DB.Get_DB(DC);

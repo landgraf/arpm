@@ -7,16 +7,15 @@ with ARPM_RPM_Internals; use ARPM_RPM_Internals;
 with GNAT.SHA256; use GNAT.SHA256;
 
 with GNATCOLL.SQL_Impl;   use GNATCOLL.SQL_Impl;
-with GNATCOLL.SQL.Sqlite; use GNATCOLL.SQL;
 
 package body ARPM_DB_Containers is 
     
     function SHA256(Name : String; Version :  String := ""; Release : String := ""; Arch : String := "" ) return String is 
     begin
-        return GNAT.SHA256.Digest(Str_To_Sea(Name & ("-" & Version & "." & Arch )));
+        return GNAT.SHA256.Digest(Str_To_Sea(Name & ("-" & Version & "." & Release & "." & Arch )));
     end SHA256;
 
-    procedure Save_Provides(RPM : in ARPM_RPM_Access; DB : in out Database_Connection) is 
+    procedure Save_Provides(RPM : in ARPM_RPM_Access; DB : in Database_Connection) is 
          QP  : Prepared_Statement;
          provides_parameters :   SQL_Parameters (1 .. 4) :=
              (1 => (Parameter_Text, null),
@@ -27,7 +26,6 @@ package body ARPM_DB_Containers is
          provides_packages_parameters :   SQL_Parameters (1 .. 2) :=
              (1 => (Parameter_Text, null),
               2 => (Parameter_Text, null));
-         TRANSACTION_ERROR : exception;
     begin
         QP := Prepare ("INSERT INTO  provides ( name, version, release, provideKey) VALUES ( ?, ?, ?, ?)");
         QPP := Prepare ("INSERT INTO packages_provides ( pkgKey, provideKey ) VALUES ( ? , ? )");
@@ -54,7 +52,7 @@ package body ARPM_DB_Containers is
             pragma Debug(Put_Line (Ada.Exceptions.Exception_Information(The_Event)));
     end Save_Provides;
 
-    procedure Save_Requires(RPM : in ARPM_RPM_Access; DB : in out Database_Connection) is 
+    procedure Save_Requires(RPM : in ARPM_RPM_Access; DB : in Database_Connection) is 
          QP  : Prepared_Statement;
          requires_parameters :   SQL_Parameters (1 .. 4) :=
              (1 => (Parameter_Text, null),
@@ -65,7 +63,6 @@ package body ARPM_DB_Containers is
          requires_packages_parameters :   SQL_Parameters (1 .. 2) :=
              (1 => (Parameter_Text, null),
               2 => (Parameter_Text, null));
-         TRANSACTION_ERROR : exception;
     begin
         QP := Prepare ("INSERT INTO  requires ( name, version, release, requireKey) VALUES ( ?, ?, ?, ?)");
         QPP := Prepare ("INSERT INTO packages_requires ( pkgKey, requireKey ) VALUES ( ? , ? )");
@@ -92,7 +89,7 @@ package body ARPM_DB_Containers is
             pragma Debug(Put_Line (Ada.Exceptions.Exception_Information(The_Event)));
     end Save_requires;
 
-    procedure Save(RPM : in ARPM_RPM_Access; DB : in out Database_Connection) is 
+    procedure Save(RPM : in ARPM_RPM_Access; DB : in Database_Connection) is 
         Q  : Prepared_Statement;
         param :   SQL_Parameters (1 .. 8) :=
             (1 => (Parameter_Text, null),
