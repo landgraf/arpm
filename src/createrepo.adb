@@ -15,7 +15,7 @@ procedure Createrepo is
             Put_Line("Please specify directory name");
             OS_Exit(1);
     end Get_Dir;
-    threads : Positive := 8;
+    threads : constant Positive := 8;
     pool : array (1..threads) of ARPM_Processor;
     ERROR_RPM_CONFIG : exception;
     Dir : constant String := Get_Dir;

@@ -3,7 +3,6 @@ with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
 with Ada.Exceptions;
 with ARPM_DB_Handlers;
 with Internal_Codecs; use Internal_Codecs;
-with ARPM_RPM_Internals; use ARPM_RPM_Internals;
 with GNAT.SHA256; use GNAT.SHA256;
 
 with GNATCOLL.SQL_Impl;   use GNATCOLL.SQL_Impl;

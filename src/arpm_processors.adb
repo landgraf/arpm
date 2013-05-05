@@ -2,7 +2,6 @@ with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
 with Ada.Exceptions;
 with arpm_c_bridge;
 with ARPM_RPM_INternals; use ARPM_RPM_Internals;
-with ARPM_Files_Handlers;
 with Ada.Text_Io ; use Ada.Text_IO;
 with POSIX.Files; use POSIX.Files;
 with POSIX; use POSIX;
@@ -21,6 +20,7 @@ package body ARPM_Processors is
         DC : Database_Description;
         DB : Database_Connection;
         Transaction : Boolean;
+        DB_ERROR : exception;
     begin
         ARPM_DB_Handlers.DB.Get_DB(DC);
            DB := GNATCOLL.SQL.Exec.Get_Task_Connection
@@ -40,6 +40,9 @@ package body ARPM_Processors is
                     try:
                     begin
                         Transaction := Start_Transaction(DB);
+                        if not Transaction then
+                            raise DB_ERROR;
+                        end if;
                         arpm_db_containers.save(RPM, DB);
                         arpm_db_containers.save_requires(RPM, DB);
                         arpm_db_containers.save_provides(RPM, DB);

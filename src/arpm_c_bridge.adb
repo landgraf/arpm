@@ -8,7 +8,7 @@ package body ARPM_C_Bridge is
         function Create(Filename : String) 
             return My_RPM_Struct_Access is 
             File_Name : Chars_Ptr := New_String(Filename);
-            MyRPM : My_RPM_Struct_Access := new My_RPM_Struct;
+            MyRPM : constant My_RPM_Struct_Access := new My_RPM_Struct;
         begin
             Parse_RPM(File_name, MyRPM.all);
             Free(File_Name);
@@ -68,7 +68,7 @@ package body ARPM_C_Bridge is
     end Free;
 
     function Convert(MyRPM : My_RPM_Struct_Access) return ARPM_RPM_Access is
-        RPM : ARPM_RPM_Access := new ARPM_RPM;
+        RPM : constant ARPM_RPM_Access := new ARPM_RPM;
         CONVERT_ERROR : exception;
     begin
         RPM.Name := To_Unbounded_String(Value(MyRPM.Name));

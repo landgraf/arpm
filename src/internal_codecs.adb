@@ -1,4 +1,3 @@
-with Ada.Text_IO; use Ada.Text_IO;
 package body Internal_Codecs is
 
    function Str_To_Sea (Str : String) return Ada.Streams.Stream_Element_Array is
