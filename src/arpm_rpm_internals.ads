@@ -4,17 +4,26 @@ with Ada.Unchecked_Deallocation;
 with Interfaces.C.Pointers;
 with Interfaces.C.Strings; use Interfaces.C.Strings;
 with Ada.Containers.Vectors;
+with Ada.Containers.Ordered_Sets;
 package ARPM_RPM_Internals is
     package ARPM_Vector_Container_Package is new Ada.Containers.Vectors(
         Element_Type => Unbounded_String, Index_Type => Positive
         );
     subtype ARPM_Vector_Container is ARPM_Vector_Container_Package.Vector;
+
+    type SHA256S is array (1..64) of Character;
+    package ARPM_Map_Container_Package is new Ada.Containers.Ordered_Sets(
+        Element_Type => SHA256S);
+    subtype ARPM_Osets_Container is ARPM_Map_Container_Package.Set;
+
     package chars_ptr_Pointers is
         new Interfaces.C.Pointers
             (Interfaces.C.size_t,
             Interfaces.C.Strings.chars_ptr,
             Interfaces.C.Strings.chars_ptr_array,
             Interfaces.C.Strings.Null_Ptr);
+
+
     --typedef struct{
     subtype Char_Star is chars_ptr_Pointers.Pointer;
     type Char_Star_Access is access all Char_Star;

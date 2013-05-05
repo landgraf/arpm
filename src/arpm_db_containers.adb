@@ -1,7 +1,7 @@
 with Ada.Text_IO; use Ada.Text_IO;
 with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
 with Ada.Exceptions;
-with ARPM_Files_Handlers;
+with ARPM_DB_Handlers;
 with Internal_Codecs; use Internal_Codecs;
 with ARPM_RPM_Internals; use ARPM_RPM_Internals;
 with GNAT.SHA256; use GNAT.SHA256;
@@ -39,8 +39,8 @@ package body ARPM_DB_Containers is
                 SHA : aliased String := SHA256(Name => Name, Version => Version);
                 SHAPKG : aliased String := SHA256(To_String(RPM.Name), To_String(RPM.Version), To_String(RPM.Release), To_String(RPM.Arch));
             begin
-                if not ARPM_Files_Handlers.DB_Keys.Has_Provide_Key(RPM.Provides.Element(I)) then 
-                    ARPM_Files_Handlers.DB_Keys.Add_Provide_Key (RPM.Provides.Element(I));
+                if not ARPM_DB_Handlers.DB_Keys.Has_Provide_Key(RPM.Provides.Element(I)) then 
+                    ARPM_DB_Handlers.DB_Keys.Add_Provide_Key (RPM.Provides.Element(I));
                     provides_parameters := ("+"(Name'Access), "+" (Version'Access), "+" (Release'Access), "+"(SHA'Access));
                     Execute(DB, QP, provides_parameters);
                 end if;
@@ -77,8 +77,8 @@ package body ARPM_DB_Containers is
                 SHA : aliased String := SHA256(Name => Name, Version => Version);
                 SHAPKG : aliased String := SHA256(To_String(RPM.Name), To_String(RPM.Version), To_String(RPM.Release), To_String(RPM.Arch));
             begin
-                if not ARPM_Files_Handlers.DB_Keys.Has_require_Key(RPM.requires.Element(I)) then 
-                    ARPM_Files_Handlers.DB_Keys.Add_require_Key (RPM.requires.Element(I));
+                if not ARPM_DB_Handlers.DB_Keys.Has_require_Key(RPM.requires.Element(I)) then 
+                    ARPM_DB_Handlers.DB_Keys.Add_require_Key (RPM.requires.Element(I));
                     requires_parameters := ("+"(Name'Access), "+" (Version'Access), "+" (Release'Access), "+"(SHA'Access));
                     Execute(DB, QP, requires_parameters);
                 end if;

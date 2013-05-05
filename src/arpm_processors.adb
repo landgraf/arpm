@@ -8,8 +8,9 @@ with POSIX.Files; use POSIX.Files;
 with POSIX.IO; use POSIX.IO;
 with POSIX; use POSIX;
 with arpm_db_containers;
-with ARPM_DB_Types;
 with GNATCOLL.SQL.Exec; use GNATCOLL.SQL.Exec;
+with ARPM_Files_Handlers; 
+with ARPM_DB_Handlers; 
 
 
 with Internal_Codecs; use Internal_Codecs;
@@ -26,7 +27,7 @@ package body ARPM_Processors is
         DB_ERROR : exception;
         Transaction : Boolean;
     begin
-        ARPM_Files_Handlers.DB.Get_DB(DC);
+        ARPM_DB_Handlers.DB.Get_DB(DC);
            DB := GNATCOLL.SQL.Exec.Get_Task_Connection
                    (Description  => DC);
            Execute(DB, "PRAGMA synchronous = OFF");
@@ -63,6 +64,9 @@ package body ARPM_Processors is
         -- DB.Handler.Close;
         Free(DB);
         ARPM_Files_Handlers.Workers.Decrease;
+        if ARPM_Files_Handlers.Workers.Is_Empty then
+            ARPM_DB_Handlers.DB.Free;
+        end if;
     exception
         when The_Event: others =>
             pragma Debug(Put_Line("Processor:" & Ada.Exceptions.Exception_Message(The_Event)));
