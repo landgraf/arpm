@@ -54,11 +54,14 @@ package body ARPM_C_Bridge is
         C_Free(MyRPM.Provides_version);
         Free(MyRPM.Name);
         Free(MyRPM.Version);
+        Free(MyRPM.Epoch);
         Free(MyRPM.Release);
         Free(MyRPM.Arch);
         Free(MyRPM.Summary);
+        Free(MyRPM.License);
         Free(MyRPM.Description);
         Free(MyRPM.Url);
+        Free(MyRPM.Vendor);
         Free_Ptr(MyRPM);
     exception
         when STORAGE_ERROR =>
@@ -73,11 +76,14 @@ package body ARPM_C_Bridge is
     begin
         RPM.Name := To_Unbounded_String(Value(MyRPM.Name));
         RPM.Version := To_Unbounded_String(Value(MyRPM.Version));
+        RPM.Epoch := To_Unbounded_String(Value(MyRPM.Epoch));
         RPM.Release := To_Unbounded_String(Value(MyRPM.Release));
         RPM.Arch   := To_Unbounded_String(Value(MyRPM.Arch));
         RPM.Summary := To_Unbounded_String(Value(MyRPM.Summary));
         RPM.Description   := To_Unbounded_String(Value(MyRPM.Description));
         RPM.Url   := To_Unbounded_String(Value(MyRPM.Url));
+        RPM.Vendor  := To_Unbounded_String(Value(MyRPM.Vendor));
+        RPM.License   := To_Unbounded_String(Value(MyRPM.License));
         for I in 1..MyRPM.requires_Count loop
             RPM.requires.Append(To_Unbounded_String(Value(MyRPM.requires.all)));
             RPM.requires_version.Append (To_Unbounded_String(Value(MyRPM.requires_version.all)));

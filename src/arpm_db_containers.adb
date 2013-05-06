@@ -90,7 +90,7 @@ package body ARPM_DB_Containers is
 
     procedure Save(RPM : in ARPM_RPM_Access; DB : in Database_Connection) is 
         Q  : Prepared_Statement;
-        param :   SQL_Parameters (1 .. 8) :=
+        param :   SQL_Parameters (1 .. 11) :=
             (1 => (Parameter_Text, null),
              2 => (Parameter_Text, null),
              3 => (Parameter_Text, null),
@@ -98,7 +98,11 @@ package body ARPM_DB_Containers is
              5 => (Parameter_Text, null),
              6 => (Parameter_Text, null),
              7 => (Parameter_Text, null),
-             8 => (Parameter_Text, null));
+             8 => (Parameter_Text, null),
+             9 => (Parameter_Text, null),
+             11 => (Parameter_Text, null),
+             10 => (Parameter_Text, null)
+             );
         Name : aliased String := To_String(RPM.Name);
         Version : aliased String := To_String(RPM.Version);
         Release : aliased String := To_String(RPM.Release);
@@ -106,11 +110,15 @@ package body ARPM_DB_Containers is
         Summary : aliased String := To_String(RPM.Summary);
         Description : aliased String := To_String(RPM.Description);
         Url : aliased String := To_String(RPM.URL);
+        License : aliased String := To_String(RPM.License);
+        Vendor : aliased String := To_String(RPM.Vendor);
+        Epoch : aliased String := To_String(RPM.Epoch);
         SHA : aliased String := SHA256(Name, Version, Release, Arch);
     begin
         Reset_Connection (DB);
-        Q := Prepare ("INSERT INTO packages (pkgKey, name, version, release, arch, summary, description, url ) VALUES (? , ? , ? , ?, ?, ?, ?, ? )");
-        Param := ("+"(SHA'Access), "+"(Name'Access), "+" (Version'Access), "+" (Release'Access), "+"(Arch'Access), "+"(Summary'Access), "+"(Description'Access), "+"(URL'Access));
+        Q := Prepare ("INSERT INTO packages (pkgKey, name, version, release, arch, summary, description, url, rpm_license , rpm_vendor, epoch) VALUES (? , ? , ? , ?, ?, ?, ?, ?, ?, ?, ? )");
+        Param := ("+"(SHA'Access), "+"(Name'Access), "+" (Version'Access), "+" (Release'Access), "+"(Arch'Access), "+"(Summary'Access), 
+                  "+"(Description'Access), "+"(URL'Access), "+"(License'Access), "+"(Vendor'Access), "+" (Epoch'Access)  );
         Execute(DB, Q, Param);
     end Save;
 end ARPM_DB_Containers;
