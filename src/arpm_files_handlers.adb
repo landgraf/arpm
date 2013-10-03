@@ -1,4 +1,5 @@
 with Ada.Text_Io; use Ada.Text_IO;
+with SQL.Options;
 with SQL.Queries; use SQL.Queries;
 with Ada.Directories;
 with Internal_Codecs; use Internal_Codecs;
@@ -165,13 +166,17 @@ package body ARPM_Files_Handlers is
             end Create_DB;
 
             procedure Init_DB(FileName : in Universal_String) is 
+                use SQL.Options;
+                use Ada.Strings;
                 DB_Driver : constant League.Strings.Universal_String
                     := League.Strings.To_Universal_String ("SQLITE3");
-                DB_Options : constant League.Strings.Universal_String
-                    := Prepare_Filename(Filename);
+                -- DB_Options : constant League.Strings.Universal_String
+                --     := Prepare_Filename(Filename);
+                DB_Options : SQL.Options.SQL_Options;
             begin
                 Put_Line("InitDB");
                 DB := new ARPM_DB_Container;
+                DB_Options.Set (String_to_US("filename"), Filename);
                 DB.Handler := new SQL_Database'(SQL.Databases.Create (DB_Driver, DB_Options));
                 DB.Handler.Open;
                 DB.Error := 0;
