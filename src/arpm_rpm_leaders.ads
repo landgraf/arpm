@@ -1,4 +1,3 @@
-with System; use System; 
 with Interfaces.C; use Interfaces.C; 
 package arpm_rpm_leaders is 
     type rpm_leader is private; 
@@ -45,7 +44,7 @@ package arpm_rpm_leaders is
          signature_type at 78 range 0..15; 
          reserved at 80 range 0..127;
     end record;
-    for rpm_leader'Bit_Order use High_Order_First;
+    for rpm_leader'Size use 96*8;
 
 end arpm_rpm_leaders; 
 
