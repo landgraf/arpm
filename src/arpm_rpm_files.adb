@@ -17,9 +17,6 @@ package body arpm_rpm_files is
     procedure Read_Header ( This : in out RPM_File) is 
        Header : RPM_Header; 
        buffer : dummy_byte := 0; 
-       version : dummy_byte := 0; 
-       header_indexes : header_indexes_type := 0; 
-
     begin
         pragma Debug(Put_Line("DEBUG: looking for RPM header")); 
         -- The header structure header always starts with a three-byte magic number: 8e ad e8
@@ -37,17 +34,10 @@ package body arpm_rpm_files is
                 end if; 
             end loop; 
         end loop header_loop; 
-        --  Following this is a one-byte version number
-        dummy_byte'Read(This.Stream, version) ;
-        pragma Debug(Put_Line("DEBUG: Version is " & version'Img));
-        for i in 1..4 loop
-            -- Next are four bytes that are reserved for future expansion
-            dummy_byte'Read(This.Stream, buffer) ;
-        end loop; 
-        --  there is a four-byte number that indicates how many index entries exist in this header structure
-        header_indexes_type'Read(This.Stream, header_indexes) ;
-        pragma Debug(Put_Line("DEBUG: Number of indexes " & version'Img));
-
+        rpm_header'Read(This.Stream, header);
+        pragma Debug ( Put_Line("DEBUG: Header version: " & version(header)'Img)) ; 
+        pragma Debug ( Put_Line("DEBUG: Header indexes: " & indexes(header)'Img)); 
+        pragma Debug ( Put_Line("DEBUG: Header data bytes: " & Data_Bytes(header)'Img));
 
     end Read_Header; 
 
