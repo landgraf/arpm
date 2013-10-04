@@ -8,18 +8,25 @@ package arpm_rpm_leaders is
     for rpmtypes use (Binary => 0, Source => 1);
 
     function Name(This : rpm_leader) return String; 
+
+    -- getter for RPMType 
     function RPMType ( This : rpm_leader) return rpmtypes; 
-    -- TODO  We have to check magic number here
-    -- NOT IMPLEMENTED
+
+    -- Check if magic is RPM magic or raise exception
     function Magic ( This : rpm_leader ) return String; 
     private 
 
-    type magic_type is new unsigned_char; 
+    type magic_type is range 0..2**(4*8)-1; 
     for magic_type'size use 4*8;
+    leader_magic : constant magic_type := 16#edabeedb#;
+    type two_bytes_number is range 0..2**(2*8)-1; 
+    for two_bytes_number'Size use 2*8; 
+
     type rpm_leader is record
         magic : magic_type; 
         major : unsigned_char; 
         minor : unsigned_char; 
+        -- rpmtype : two_bytes_number; 
         rpmtype : short; 
         archnum : short; 
         name : char_array(1..66); 
@@ -27,9 +34,7 @@ package arpm_rpm_leaders is
         signature_type : short; 
         reserver : char_array(1..16);
     end record;
-     pragma Warnings (Off);
-    for rpm_leader'Bit_Order use High_Order_First;
-     pragma Warnings (On);
+    -- for rpm_leader'Bit_Order use High_Order_First;
 
 end arpm_rpm_leaders; 
 
