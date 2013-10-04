@@ -36,8 +36,8 @@ package body arpm_rpm_files is
         end loop header_loop; 
         rpm_header'Read(This.Stream, header);
         pragma Debug ( Put_Line("DEBUG: Header version: " & version(header)'Img)) ; 
-        pragma Debug ( Put_Line("DEBUG: Header indexes: " & indexes(header)'Img)); 
         pragma Debug ( Put_Line("DEBUG: Header data bytes: " & Data_Bytes(header)'Img));
+        pragma Debug ( Put_Line("DEBUG: Header indexes: " & indexes(header)'Img)); 
 
     end Read_Header; 
 

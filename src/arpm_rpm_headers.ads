@@ -1,4 +1,5 @@
 with Interfaces.C; use Interfaces.C; 
+with System; use System; 
 package arpm_rpm_headers is 
     type rpm_header is private; 
     type rpm_header_access is access all rpm_header; 
@@ -14,10 +15,16 @@ package arpm_rpm_headers is
     type rpm_header is record 
         version : dummy_byte; 
         reserved :  four_byte_number;
-        indexes : four_byte_number;
-        data_bytes : four_byte_number; 
+        indexes : four_byte_number := 0;
+        data_bytes : four_byte_number := 0; 
     end record; 
-
+    for rpm_header use record
+        version at 0 range 0..7; 
+        reserved at 1 range 0..31;
+        indexes at 5 range 0..31; 
+        data_bytes at 9 range 0..31; 
+    end record; 
+    for rpm_header'Bit_Order use High_Order_First;
 
 end arpm_rpm_headers; 
 

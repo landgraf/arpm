@@ -17,7 +17,6 @@ package body arpm_rpm_leaders is
     end Name;
     function RPMType ( This : rpm_leader) return rpmtypes is 
     begin
-        Put_line("Type " & This.rpmtype'Img );
         return rpmtypes'Val(Integer(htonl_2bn(This.rpmtype)));
     end RPMType; 
     function Magic ( This : rpm_leader ) return String is 

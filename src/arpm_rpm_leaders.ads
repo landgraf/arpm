@@ -27,14 +27,25 @@ package arpm_rpm_leaders is
         major : unsigned_char; 
         minor : unsigned_char; 
         -- rpmtype : two_bytes_number; 
-        rpmtype : short; 
-        archnum : short; 
+        rpmtype : two_bytes_number; 
+        archnum : two_bytes_number; 
         name : char_array(1..66); 
-        osnum : short; 
-        signature_type : short; 
-        reserver : char_array(1..16);
+        osnum : two_bytes_number; 
+        signature_type : two_bytes_number; 
+        reserved : char_array(1..16);
     end record;
-    -- for rpm_leader'Bit_Order use High_Order_First;
+    for rpm_leader use record
+         magic at 0 range 0..31; 
+         major at 4 range 0..7;
+         minor at 4 range 8..15;
+         rpmtype at 6 range 0..15; 
+         archnum at 8 range 0..15; 
+         name at 10 range 0..66*8-1;
+         osnum at 76  range 0..15;
+         signature_type at 78 range 0..15; 
+         reserved at 80 range 0..127;
+    end record;
+    for rpm_leader'Bit_Order use High_Order_First;
 
 end arpm_rpm_leaders; 
 
