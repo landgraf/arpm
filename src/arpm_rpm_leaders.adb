@@ -5,7 +5,7 @@ package body arpm_rpm_leaders is
     function htonl_short(Number : in short) return short; 
         pragma Import(C, htonl_short, "htons"); 
     function htonl_2bn(Number : in two_bytes_number) return two_bytes_number; 
-        pragma Import(C, htonl_2bn, "htonl"); 
+        pragma Import(C, htonl_2bn, "htons"); 
     function htonl_uchar(Number : in unsigned_char) return unsigned_char; 
         pragma Import(C, htonl_uchar, "htonl"); 
     function htonl_magic(Number : in magic_type) return magic_type; 
@@ -18,7 +18,7 @@ package body arpm_rpm_leaders is
     function RPMType ( This : rpm_leader) return rpmtypes is 
     begin
         Put_line("Type " & This.rpmtype'Img );
-        return rpmtypes'Val(Integer(htonl_short(This.rpmtype)));
+        return rpmtypes'Val(Integer(htonl_2bn(This.rpmtype)));
     end RPMType; 
     function Magic ( This : rpm_leader ) return String is 
         NON_RPM_EXCEPTION : exception;
