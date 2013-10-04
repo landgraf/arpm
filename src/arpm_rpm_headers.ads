@@ -12,6 +12,7 @@ package arpm_rpm_headers is
     LABELONE : constant array (1..3) of dummy_byte := (16#8e#, 16#ad#, 16#e8#); 
     private
     type four_byte_number is range 0..2**(4*8)-1;
+    for four_byte_number'Size use 32; 
     type rpm_header is record 
         version : dummy_byte; 
         reserved :  four_byte_number;
