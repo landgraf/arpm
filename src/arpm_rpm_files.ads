@@ -9,6 +9,7 @@ package arpm_rpm_files is
 
     procedure Read_Leader(This : in out RPM_File); 
     procedure Read_Header ( This : in out RPM_File); 
+    procedure Read_Hdrindex(This : in out RPM_File); 
     package Constructors is 
         function  Create(Filename : Universal_String) return rpm_file_access; 
         -- function  Create(Filename : String) return rpm_file_access is null; 

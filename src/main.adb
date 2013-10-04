@@ -7,5 +7,6 @@ procedure main is
 begin
     file.read_leader; 
     file.read_header; 
+    file.Read_Hdrindex; 
 end main; 
 

@@ -2,6 +2,7 @@ with Internal_Codecs; use Internal_Codecs;
 with POSIX.Files; 
 with arpm_rpm_leaders; use arpm_rpm_leaders; 
 with arpm_rpm_headers; use arpm_rpm_headers; 
+with arpm_rpm_rpmhdrindexs; use arpm_rpm_rpmhdrindexs; 
 with ada.text_io ; use ada.Text_IO; 
 package body arpm_rpm_files is 
     procedure Read_Leader(This : in out RPM_File) is 
@@ -40,6 +41,16 @@ package body arpm_rpm_files is
         pragma Debug ( Put_Line("DEBUG: Header indexes: " & indexes(header)'Img)); 
 
     end Read_Header; 
+
+    procedure Read_Hdrindex(This : in out RPM_File) is 
+        index : rpmhdrindex; 
+    begin
+        pragma Debug(Put_Line("DEBUG: parsing rpmhdrindex")); 
+        rpmhdrindex'Read(This.Stream, index);
+        Put_Line("index: " & tag(index));
+        Put_Line("format: " & format(index));
+        -- Put_Line("Package format: " & rpmtypes'Image(rpmtype(Leader)));
+    end Read_hdrindex; 
 
     package body Constructors is 
         function  Create(Filename : Universal_String) return rpm_file_access is 
