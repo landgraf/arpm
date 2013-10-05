@@ -5,6 +5,12 @@ with arpm_rpm_headers; use arpm_rpm_headers;
 with arpm_rpm_rpmhdrindexs; use arpm_rpm_rpmhdrindexs; 
 with ada.text_io ; use ada.Text_IO; 
 package body arpm_rpm_files is 
+    procedure Parse(This : in out RPM_File) is 
+    begin
+        this.read_leader; 
+        this.read_header;
+        this.Read_Hdrindex;
+    end Parse;
     procedure Read_Leader(This : in out RPM_File) is 
        Leader : RPM_Leader; 
     begin
@@ -29,13 +35,13 @@ package body arpm_rpm_files is
                     exit header_loop when I = 3; 
                     dummy_byte'Read(This.Stream, buffer) ;
                 else
-                    -- reset the mask and continue
                     dummy_byte'Read(This.Stream, buffer) ;
                     exit; 
                 end if; 
             end loop; 
         end loop header_loop; 
         rpm_header'Read(This.Stream, header);
+        this.indexes := new index_array(1..indexes(header)); 
         pragma Debug ( Put_Line("DEBUG: Header version: " & version(header)'Img)) ; 
         pragma Debug ( Put_Line("DEBUG: Header data bytes: " & Data_Bytes(header)'Img));
         pragma Debug ( Put_Line("DEBUG: Header indexes: " & indexes(header)'Img)); 
@@ -46,10 +52,12 @@ package body arpm_rpm_files is
         index : rpmhdrindex; 
     begin
         pragma Debug(Put_Line("DEBUG: parsing rpmhdrindex")); 
-        rpmhdrindex'Read(This.Stream, index);
-        Put_Line("index: " & tag(index));
-        Put_Line("format: " & format(index));
-        -- Put_Line("Package format: " & rpmtypes'Image(rpmtype(Leader)));
+        for I in 1..This.indexes'Length loop
+            rpmhdrindex'Read(This.Stream, index);
+            -- FIXME read store here 
+            Put_Line("index: " & tag(index));
+            Put_Line("format: " & format(index));
+        end loop;
     end Read_hdrindex; 
 
     package body Constructors is 
@@ -58,13 +66,12 @@ package body arpm_rpm_files is
             RPM : rpm_file_access := new rpm_file; 
             IO_ERROR : exception; 
         begin
-            RPM.File_Name := Filename;
             if not Is_File(posix.TO_POSIX_String(US_To_String(Filename))) then
                 raise IO_ERROR; 
             end if;
             Ada.Streams.Stream_IO.Open
                 (File => RPM.File,
-                Name => US_To_String(RPM.File_name),
+                Name => US_To_String(Filename),
                 Mode => Ada.Streams.Stream_IO.In_File);
             RPM.Stream := Ada.Streams.Stream_IO.Stream (RPM.File);
             return RPM;

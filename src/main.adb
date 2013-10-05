@@ -5,8 +5,6 @@ with Internal_Codecs; use Internal_Codecs;
 procedure main is 
     file : rpm_file_Access := Constructors.Create(String_To_Us("/tmp/test.rpm"));
 begin
-    file.read_leader; 
-    file.read_header; 
-    file.Read_Hdrindex; 
+    file.parse; 
 end main; 
 
