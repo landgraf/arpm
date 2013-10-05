@@ -15,16 +15,21 @@ package arpm_rpm_files is
         -- function  Create(Filename : Unbounded_String) return rpm_file_access is null ; 
     end Constructors; 
     private
+
+    INVALID_FORMAT_EXCEPTION : exception; 
     type index_array is array (Positive range <>) of rpmhdrindex; 
     type index_array_access is access all index_array; 
     procedure Read_Leader(This : in out RPM_File); 
     procedure Read_Header (This : in out RPM_File; Signature : Boolean := False); 
     function Read_Indexes(This : in out RPM_File; count : in Integer) return index_array_access;
+    procedure Read_Payload(This: in out RPM_File; indexes : in index_array_access); 
     -- procedure Read_Hdrindex(This : in out RPM_File); 
     type rpm_file is tagged limited record
         -- File_name : Universal_String; 
         File : Ada.Streams.Stream_IO.File_Type;
         Stream : Ada.Streams.Stream_IO.Stream_Access;
+        offset: Long_Long_Integer := 0 ; 
+        Name : Universal_String; 
         Version : Universal_String; 
         Release: Universal_String; 
         Requires : Universal_String_Vector; 

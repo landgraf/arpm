@@ -1,16 +1,7 @@
 package arpm_rpm_rpmhdrindexs is 
     type rpmhdrindex is private; 
     type rpmhdrindex_access is access all rpmhdrindex; 
-    function Tag(index : in rpmhdrindex) return String; 
-    function Format(index : in rpmhdrindex) return String; 
-    function Format(index : in rpmhdrindex) return Integer; 
-    function Tag(Index : in rpmhdrindex) return Integer; 
-    function Data_Items( Index : in rpmhdrindex) return Integer; 
-    function Data_Offset ( Index : in rpmhdrindex) return Integer; 
 
-    private
-    type four_byte_number is range 0..2**(4*8)-1;
-    for four_byte_number'Size use 32; 
     type tags_type is (
         RPMTAG_HEADERSIGNATURES,
         RPMTAG_HEADERIMMUTABLE,
@@ -517,6 +508,13 @@ package arpm_rpm_rpmhdrindexs is
         RPM_STRING_ARRAY_TYPE => 8 , 
         RPM_I18NSTRING_TYPE =>9
         ); 
+    function Format(index : in rpmhdrindex) return format_type; 
+    function Tag(Index : in rpmhdrindex) return tags_type; 
+    function Data_Items( Index : in rpmhdrindex) return Integer; 
+    function Data_Offset ( Index : in rpmhdrindex) return Integer; 
+    private
+    type four_byte_number is range 0..2**(4*8)-1;
+    for four_byte_number'Size use 32; 
     type rpmhdrindex is record
         tag : four_byte_number := 0; 
         format : four_byte_number := 0; 
