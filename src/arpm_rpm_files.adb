@@ -8,7 +8,10 @@ package body arpm_rpm_files is
     procedure Parse(This : in out RPM_File) is 
     begin
         this.read_leader; 
-        this.read_header;
+        -- skip signature for now
+        for I in 1..2 loop
+            this.read_header;
+        end loop;
         this.Read_Hdrindex;
     end Parse;
     procedure Read_Leader(This : in out RPM_File) is 
