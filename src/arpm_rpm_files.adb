@@ -19,9 +19,8 @@ package body arpm_rpm_files is
     begin
         pragma Debug(Put_Line("DEBUG: parsing  RPM_Leader")); 
         RPM_Leader'Read(This.Stream, Leader);
-        Put_Line("magic: " & Magic(Leader));
-        Put_Line("Package name: " & Name(Leader));
-        Put_Line("Package format: " & rpmtypes'Image(rpmtype(Leader)));
+        pragma Debug (Put_Line("DEBUG: Package name: " & Name(Leader)));
+        pragma Debug (Put_Line("DEBUG: Package format: " & rpmtypes'Image(rpmtype(Leader))));
     end Read_Leader; 
 
     procedure Read_Header ( This : in out RPM_File) is 
@@ -58,8 +57,8 @@ package body arpm_rpm_files is
         for I in 1..This.indexes'Length loop
             rpmhdrindex'Read(This.Stream, index);
             -- FIXME read store here 
-            Put_Line("index: " & tag(index));
-            Put_Line("format: " & format(index));
+            pragma DEBUG(Put_Line("DEBUG: index: " & tag(index)));
+            pragma DEBUG(Put_Line("DEBUG: format: " & format(index)));
         end loop;
     end Read_hdrindex; 
 
