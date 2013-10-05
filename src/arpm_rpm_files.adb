@@ -6,14 +6,16 @@ with arpm_rpm_rpmhdrindexs; use arpm_rpm_rpmhdrindexs;
 with ada.text_io ; use ada.Text_IO; 
 package body arpm_rpm_files is 
     procedure Parse(This : in out RPM_File) is 
+        Number_Of_Indexes : Natural := 0; 
     begin
         this.read_leader; 
         -- skip signature for now
-        for I in 1..2 loop
-            this.read_header;
-        end loop;
-        this.Read_Hdrindex;
+        this.read_header(Signature => True);
+        this.read_header(Signature => False);
+        --this.Read_Hdrindex;
+        --this.Read_Store; 
     end Parse;
+
     procedure Read_Leader(This : in out RPM_File) is 
        Leader : RPM_Leader; 
     begin
@@ -23,9 +25,10 @@ package body arpm_rpm_files is
         pragma Debug (Put_Line("DEBUG: Package format: " & rpmtypes'Image(rpmtype(Leader))));
     end Read_Leader; 
 
-    procedure Read_Header ( This : in out RPM_File) is 
+    procedure Read_Header (This : in out RPM_File; Signature : Boolean := False) is 
        Header : RPM_Header; 
        buffer : dummy_byte := 0; 
+       indexes : index_array_access; 
     begin
         pragma Debug(Put_Line("DEBUG: looking for RPM header")); 
         -- The header structure header always starts with a three-byte magic number: 8e ad e8
@@ -42,27 +45,29 @@ package body arpm_rpm_files is
             end loop; 
         end loop header_loop; 
         rpm_header'Read(This.Stream, header);
-        this.indexes := new index_array(1..indexes(header)); 
+        -- indexes := new index_array(1..indexes(header)); 
         pragma Debug ( Put_Line("DEBUG: Header version: " & version(header)'Img)) ; 
         pragma Debug ( Put_Line("DEBUG: Header data bytes: " & Data_Bytes(header)'Img));
-        pragma Debug ( Put_Line("DEBUG: Header indexes: " & indexes(header)'Img)); 
-
+        pragma Debug ( Put_Line("DEBUG: Header indexes: " & arpm_rpm_headers.indexes(header)'Img)); 
+        indexes := This.Read_Indexes(arpm_rpm_headers.indexes(header));
     end Read_Header; 
 
-    procedure Read_Hdrindex(This : in out RPM_File) is 
+    function Read_Indexes(This : in out RPM_File; count : in Integer) return index_array_access is 
+        indexes : index_array_access := new index_array(1..count);
         index : rpmhdrindex; 
     begin
         pragma Debug(Put_Line("DEBUG: parsing rpmhdrindex")); 
-        for I in 1..This.indexes'Length loop
+        for I in 1..indexes'Length loop
             rpmhdrindex'Read(This.Stream, index);
             -- FIXME read store here 
-            This.indexes(I) := index; 
+            indexes(I) := index; 
             pragma DEBUG(Put_Line("DEBUG: index: " & tag(index)));
             pragma DEBUG(Put_Line("DEBUG: format: " & format(index)));
             pragma Debug (Put_Line("DEBUG: Number of data items: " & data_items(index)'Img ));
             pragma Debug (Put_Line("DEBUG: Data offset: " & data_offset(index)'Img ));
         end loop;
-    end Read_hdrindex; 
+        return indexes; 
+    end Read_Indexes;
 
     package body Constructors is 
         function  Create(Filename : Universal_String) return rpm_file_access is 

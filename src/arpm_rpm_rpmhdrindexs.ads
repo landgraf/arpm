@@ -15,6 +15,8 @@ package arpm_rpm_rpmhdrindexs is
         RPMTAG_HEADERSIGNATURES,
         RPMTAG_HEADERIMMUTABLE,
         RPMTAG_HEADERI18NTABLE,
+        RPMSIGTAG_RSA, 
+        RPMSIGTAG_SHA1,
         RPMTAG_NAME,
         RPMTAG_VERSION,
         RPMTAG_RELEASE,
@@ -253,6 +255,10 @@ package arpm_rpm_rpmhdrindexs is
         RPMTAG_HEADERSIGNATURES => 62, 
         RPMTAG_HEADERIMMUTABLE => 63, 
         RPMTAG_HEADERI18NTABLE => 100, 
+        RPMSIGTAG_RSA => 268, 
+        RPMSIGTAG_SHA1 => 269, 
+        -- TODO
+        -- The values are different for the SIGNATURE and PAYLOAD sections
         RPMTAG_NAME                 => 1000,        
         RPMTAG_VERSION              => 1001,        
         RPMTAG_RELEASE              => 1002,        

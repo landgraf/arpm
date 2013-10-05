@@ -18,8 +18,9 @@ package arpm_rpm_files is
     type index_array is array (Positive range <>) of rpmhdrindex; 
     type index_array_access is access all index_array; 
     procedure Read_Leader(This : in out RPM_File); 
-    procedure Read_Header ( This : in out RPM_File); 
-    procedure Read_Hdrindex(This : in out RPM_File); 
+    procedure Read_Header (This : in out RPM_File; Signature : Boolean := False); 
+    function Read_Indexes(This : in out RPM_File; count : in Integer) return index_array_access;
+    -- procedure Read_Hdrindex(This : in out RPM_File); 
     type rpm_file is tagged limited record
         -- File_name : Universal_String; 
         File : Ada.Streams.Stream_IO.File_Type;

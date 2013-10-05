@@ -1,19 +1,48 @@
 DEBUG: parsing  RPM_Leader
-DEBUG: Package name: matreshka-devel-0.5.0-2.fc19
-DEBUG: Package format: BINARY
+DEBUG: Package name: dracut-029-2.fc19
+DEBUG: Package format: SOURCE
 DEBUG: looking for RPM header
 DEBUG: Header version:  0
-DEBUG: Header data bytes:  84
-DEBUG: Header indexes:  5
+DEBUG: Header data bytes:  1156
+DEBUG: Header indexes:  7
+DEBUG: parsing rpmhdrindex
+DEBUG: index: RPMTAG_HEADERSIGNATURES
+DEBUG: format: RPM_BIN_TYPE
+DEBUG: Number of data items:  16
+DEBUG: Data offset:  1140
+DEBUG: index: RPMSIGTAG_RSA
+DEBUG: format: RPM_BIN_TYPE
+DEBUG: Number of data items:  536
+DEBUG: Data offset:  0
+DEBUG: index: RPMSIGTAG_SHA1
+DEBUG: format: RPM_STRING_TYPE
+DEBUG: Number of data items:  1
+DEBUG: Data offset:  536
+DEBUG: index: RPMTAG_NAME
+DEBUG: format: RPM_INT32_TYPE
+DEBUG: Number of data items:  1
+DEBUG: Data offset:  580
+DEBUG: index: RPMTAG_RELEASE
+DEBUG: format: RPM_BIN_TYPE
+DEBUG: Number of data items:  536
+DEBUG: Data offset:  584
+DEBUG: index: RPMTAG_SUMMARY
+DEBUG: format: RPM_BIN_TYPE
+DEBUG: Number of data items:  16
+DEBUG: Data offset:  1120
+DEBUG: index: RPMTAG_BUILDHOST
+DEBUG: format: RPM_INT32_TYPE
+DEBUG: Number of data items:  1
+DEBUG: Data offset:  1136
 DEBUG: looking for RPM header
 DEBUG: Header version:  0
-DEBUG: Header data bytes:  129996
-DEBUG: Header indexes:  56
+DEBUG: Header data bytes:  28625
+DEBUG: Header indexes:  48
 DEBUG: parsing rpmhdrindex
 DEBUG: index: RPMTAG_HEADERIMMUTABLE
 DEBUG: format: RPM_BIN_TYPE
 DEBUG: Number of data items:  16
-DEBUG: Data offset:  129980
+DEBUG: Data offset:  28609
 DEBUG: index: RPMTAG_HEADERI18NTABLE
 DEBUG: format: RPM_STRING_ARRAY_TYPE
 DEBUG: Number of data items:  1
@@ -25,212 +54,180 @@ DEBUG: Data offset:  2
 DEBUG: index: RPMTAG_VERSION
 DEBUG: format: RPM_STRING_TYPE
 DEBUG: Number of data items:  1
-DEBUG: Data offset:  18
+DEBUG: Data offset:  9
 DEBUG: index: RPMTAG_RELEASE
 DEBUG: format: RPM_STRING_TYPE
 DEBUG: Number of data items:  1
-DEBUG: Data offset:  24
+DEBUG: Data offset:  13
 DEBUG: index: RPMTAG_SUMMARY
 DEBUG: format: RPM_I18NSTRING_TYPE
 DEBUG: Number of data items:  1
-DEBUG: Data offset:  31
+DEBUG: Data offset:  20
 DEBUG: index: RPMTAG_DESCRIPTION
 DEBUG: format: RPM_I18NSTRING_TYPE
 DEBUG: Number of data items:  1
-DEBUG: Data offset:  59
+DEBUG: Data offset:  51
 DEBUG: index: RPMTAG_BUILDTIME
 DEBUG: format: RPM_INT32_TYPE
 DEBUG: Number of data items:  1
-DEBUG: Data offset:  88
+DEBUG: Data offset:  412
 DEBUG: index: RPMTAG_BUILDHOST
 DEBUG: format: RPM_STRING_TYPE
 DEBUG: Number of data items:  1
-DEBUG: Data offset:  92
+DEBUG: Data offset:  416
 DEBUG: index: RPMTAG_SIZE
 DEBUG: format: RPM_INT32_TYPE
 DEBUG: Number of data items:  1
-DEBUG: Data offset:  124
+DEBUG: Data offset:  452
+DEBUG: index: RPMTAG_DISTRIBUTION
+DEBUG: format: RPM_STRING_TYPE
+DEBUG: Number of data items:  1
+DEBUG: Data offset:  456
+DEBUG: index: RPMTAG_VENDOR
+DEBUG: format: RPM_STRING_TYPE
+DEBUG: Number of data items:  1
+DEBUG: Data offset:  471
 DEBUG: index: RPMTAG_LICENSE
 DEBUG: format: RPM_STRING_TYPE
 DEBUG: Number of data items:  1
-DEBUG: Data offset:  128
+DEBUG: Data offset:  486
+DEBUG: index: RPMTAG_PACKAGER
+DEBUG: format: RPM_STRING_TYPE
+DEBUG: Number of data items:  1
+DEBUG: Data offset:  507
 DEBUG: index: RPMTAG_GROUP
 DEBUG: format: RPM_I18NSTRING_TYPE
 DEBUG: Number of data items:  1
-DEBUG: Data offset:  132
+DEBUG: Data offset:  522
+DEBUG: index: RPMTAG_SOURCE
+DEBUG: format: RPM_STRING_ARRAY_TYPE
+DEBUG: Number of data items:  1
+DEBUG: Data offset:  546
+DEBUG: index: RPMTAG_PATCH
+DEBUG: format: RPM_STRING_ARRAY_TYPE
+DEBUG: Number of data items:  1
+DEBUG: Data offset:  565
 DEBUG: index: RPMTAG_URL
 DEBUG: format: RPM_STRING_TYPE
 DEBUG: Number of data items:  1
-DEBUG: Data offset:  154
+DEBUG: Data offset:  608
 DEBUG: index: RPMTAG_OS
 DEBUG: format: RPM_STRING_TYPE
 DEBUG: Number of data items:  1
-DEBUG: Data offset:  211
+DEBUG: Data offset:  640
 DEBUG: index: RPMTAG_ARCH
 DEBUG: format: RPM_STRING_TYPE
 DEBUG: Number of data items:  1
-DEBUG: Data offset:  217
+DEBUG: Data offset:  646
 DEBUG: index: RPMTAG_FILESIZES
 DEBUG: format: RPM_INT32_TYPE
-DEBUG: Number of data items:  775
-DEBUG: Data offset:  224
+DEBUG: Number of data items:  3
+DEBUG: Data offset:  656
 DEBUG: index: RPMTAG_FILEMODES
 DEBUG: format: RPM_INT16_TYPE
-DEBUG: Number of data items:  775
-DEBUG: Data offset:  3324
+DEBUG: Number of data items:  3
+DEBUG: Data offset:  668
 DEBUG: index: RPMTAG_FILERDEVS
 DEBUG: format: RPM_INT16_TYPE
-DEBUG: Number of data items:  775
-DEBUG: Data offset:  4874
+DEBUG: Number of data items:  3
+DEBUG: Data offset:  674
 DEBUG: index: RPMTAG_FILEMTIMES
 DEBUG: format: RPM_INT32_TYPE
-DEBUG: Number of data items:  775
-DEBUG: Data offset:  6424
+DEBUG: Number of data items:  3
+DEBUG: Data offset:  680
 DEBUG: index: RPMTAG_FILEDIGESTS
 DEBUG: format: RPM_STRING_ARRAY_TYPE
-DEBUG: Number of data items:  775
-DEBUG: Data offset:  9524
+DEBUG: Number of data items:  3
+DEBUG: Data offset:  692
 DEBUG: index: RPMTAG_FILELINKTOS
 DEBUG: format: RPM_STRING_ARRAY_TYPE
-DEBUG: Number of data items:  775
-DEBUG: Data offset:  59771
+DEBUG: Number of data items:  3
+DEBUG: Data offset:  887
 DEBUG: index: RPMTAG_FILEFLAGS
 DEBUG: format: RPM_INT32_TYPE
-DEBUG: Number of data items:  775
-DEBUG: Data offset:  60568
+DEBUG: Number of data items:  3
+DEBUG: Data offset:  892
 DEBUG: index: RPMTAG_FILEUSERNAME
 DEBUG: format: RPM_STRING_ARRAY_TYPE
-DEBUG: Number of data items:  775
-DEBUG: Data offset:  63668
+DEBUG: Number of data items:  3
+DEBUG: Data offset:  904
 DEBUG: index: RPMTAG_FILEGROUPNAME
 DEBUG: format: RPM_STRING_ARRAY_TYPE
-DEBUG: Number of data items:  775
-DEBUG: Data offset:  67543
-DEBUG: index: RPMTAG_SOURCERPM
-DEBUG: format: RPM_STRING_TYPE
-DEBUG: Number of data items:  1
-DEBUG: Data offset:  71418
+DEBUG: Number of data items:  3
+DEBUG: Data offset:  934
 DEBUG: index: RPMTAG_FILEVERIFYFLAGS
 DEBUG: format: RPM_INT32_TYPE
-DEBUG: Number of data items:  775
-DEBUG: Data offset:  71452
-DEBUG: index: RPMTAG_PROVIDENAME
-DEBUG: format: RPM_STRING_ARRAY_TYPE
-DEBUG: Number of data items:  2
-DEBUG: Data offset:  74552
+DEBUG: Number of data items:  3
+DEBUG: Data offset:  964
 DEBUG: index: RPMTAG_REQUIREFLAGS
 DEBUG: format: RPM_INT32_TYPE
-DEBUG: Number of data items:  7
-DEBUG: Data offset:  74592
+DEBUG: Number of data items:  11
+DEBUG: Data offset:  976
 DEBUG: index: RPMTAG_REQUIRENAME
 DEBUG: format: RPM_STRING_ARRAY_TYPE
-DEBUG: Number of data items:  7
-DEBUG: Data offset:  74620
+DEBUG: Number of data items:  11
+DEBUG: Data offset:  1020
 DEBUG: index: RPMTAG_REQUIREVERSION
 DEBUG: format: RPM_STRING_ARRAY_TYPE
-DEBUG: Number of data items:  7
-DEBUG: Data offset:  74796
+DEBUG: Number of data items:  11
+DEBUG: Data offset:  1165
 DEBUG: index: RPMTAG_RPMVERSION
 DEBUG: format: RPM_STRING_TYPE
 DEBUG: Number of data items:  1
-DEBUG: Data offset:  74840
+DEBUG: Data offset:  1190
 DEBUG: index: RPMTAG_CHANGELOGTIME
 DEBUG: format: RPM_INT32_TYPE
-DEBUG: Number of data items:  16
-DEBUG: Data offset:  74848
+DEBUG: Number of data items:  212
+DEBUG: Data offset:  1200
 DEBUG: index: RPMTAG_CHANGELOGNAME
 DEBUG: format: RPM_STRING_ARRAY_TYPE
-DEBUG: Number of data items:  16
-DEBUG: Data offset:  74912
+DEBUG: Number of data items:  212
+DEBUG: Data offset:  2048
 DEBUG: index: RPMTAG_CHANGELOGTEXT
 DEBUG: format: RPM_STRING_ARRAY_TYPE
-DEBUG: Number of data items:  16
-DEBUG: Data offset:  75772
-DEBUG: index: RPMTAG_COOKIE
-DEBUG: format: RPM_STRING_TYPE
-DEBUG: Number of data items:  1
-DEBUG: Data offset:  76350
+DEBUG: Number of data items:  212
+DEBUG: Data offset:  11590
 DEBUG: index: RPMTAG_FILEDEVICES
 DEBUG: format: RPM_INT32_TYPE
-DEBUG: Number of data items:  775
-DEBUG: Data offset:  76392
+DEBUG: Number of data items:  3
+DEBUG: Data offset:  28432
 DEBUG: index: RPMTAG_FILEINODES
 DEBUG: format: RPM_INT32_TYPE
-DEBUG: Number of data items:  775
-DEBUG: Data offset:  79492
+DEBUG: Number of data items:  3
+DEBUG: Data offset:  28444
 DEBUG: index: RPMTAG_FILELANGS
 DEBUG: format: RPM_STRING_ARRAY_TYPE
-DEBUG: Number of data items:  775
-DEBUG: Data offset:  82592
-DEBUG: index: RPMTAG_PROVIDEFLAGS
-DEBUG: format: RPM_INT32_TYPE
-DEBUG: Number of data items:  2
-DEBUG: Data offset:  83368
-DEBUG: index: RPMTAG_PROVIDEVERSION
-DEBUG: format: RPM_STRING_ARRAY_TYPE
-DEBUG: Number of data items:  2
-DEBUG: Data offset:  83376
+DEBUG: Number of data items:  3
+DEBUG: Data offset:  28456
 DEBUG: index: RPMTAG_DIRINDEXES
 DEBUG: format: RPM_INT32_TYPE
-DEBUG: Number of data items:  775
-DEBUG: Data offset:  83404
+DEBUG: Number of data items:  3
+DEBUG: Data offset:  28460
 DEBUG: index: RPMTAG_BASENAMES
 DEBUG: format: RPM_STRING_ARRAY_TYPE
-DEBUG: Number of data items:  775
-DEBUG: Data offset:  86504
+DEBUG: Number of data items:  3
+DEBUG: Data offset:  28472
 DEBUG: index: RPMTAG_DIRNAMES
 DEBUG: format: RPM_STRING_ARRAY_TYPE
-DEBUG: Number of data items:  7
-DEBUG: Data offset:  117171
-DEBUG: index: RPMTAG_OPTFLAGS
-DEBUG: format: RPM_STRING_TYPE
 DEBUG: Number of data items:  1
-DEBUG: Data offset:  117332
+DEBUG: Data offset:  28546
 DEBUG: index: RPMTAG_PAYLOADFORMAT
 DEBUG: format: RPM_STRING_TYPE
 DEBUG: Number of data items:  1
-DEBUG: Data offset:  117475
+DEBUG: Data offset:  28547
 DEBUG: index: RPMTAG_PAYLOADCOMPRESSOR
 DEBUG: format: RPM_STRING_TYPE
 DEBUG: Number of data items:  1
-DEBUG: Data offset:  117480
+DEBUG: Data offset:  28552
 DEBUG: index: RPMTAG_PAYLOADFLAGS
 DEBUG: format: RPM_STRING_TYPE
 DEBUG: Number of data items:  1
-DEBUG: Data offset:  117483
-DEBUG: index: RPMTAG_PLATFORM
-DEBUG: format: RPM_STRING_TYPE
-DEBUG: Number of data items:  1
-DEBUG: Data offset:  117485
-DEBUG: index: RPMTAG_FILECOLORS
-DEBUG: format: RPM_INT32_TYPE
-DEBUG: Number of data items:  775
-DEBUG: Data offset:  117512
-DEBUG: index: RPMTAG_FILECLASS
-DEBUG: format: RPM_INT32_TYPE
-DEBUG: Number of data items:  775
-DEBUG: Data offset:  120612
-DEBUG: index: RPMTAG_CLASSDICT
-DEBUG: format: RPM_STRING_ARRAY_TYPE
-DEBUG: Number of data items:  4
-DEBUG: Data offset:  123712
-DEBUG: index: RPMTAG_FILEDEPENDSX
-DEBUG: format: RPM_INT32_TYPE
-DEBUG: Number of data items:  775
-DEBUG: Data offset:  123756
-DEBUG: index: RPMTAG_FILEDEPENDSN
-DEBUG: format: RPM_INT32_TYPE
-DEBUG: Number of data items:  775
-DEBUG: Data offset:  126856
-DEBUG: index: RPMTAG_DEPENDSDICT
-DEBUG: format: RPM_INT32_TYPE
-DEBUG: Number of data items:  1
-DEBUG: Data offset:  129956
-DEBUG: index: RPMTAG_SOURCEPKGID
-DEBUG: format: RPM_BIN_TYPE
-DEBUG: Number of data items:  16
-DEBUG: Data offset:  129960
+DEBUG: Data offset:  28557
 DEBUG: index: RPMTAG_FILEDIGESTALGO
 DEBUG: format: RPM_INT32_TYPE
 DEBUG: Number of data items:  1
-DEBUG: Data offset:  129976
+DEBUG: Data offset:  28560
+DEBUG: index: RPMTAG_COOKIE
+DEBUG: format: RPM_STRING_TYPE
+DEBUG: Number of data items:  1
+DEBUG: Data offset:  28564
