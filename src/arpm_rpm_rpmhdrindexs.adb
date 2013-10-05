@@ -33,5 +33,13 @@ package body arpm_rpm_rpmhdrindexs is
     begin
         return Integer(htonl(index.format));
     end format;
+    function Data_Items( Index : in rpmhdrindex) return Integer is 
+    begin
+        return  Integer(htonl(index.number_of_data_items));
+    end Data_Items;
+    function Data_Offset ( Index : in rpmhdrindex) return Integer is 
+    begin
+        return  Integer(htonl(index.data_offset));
+    end Data_offset;
 end arpm_rpm_rpmhdrindexs; 
 

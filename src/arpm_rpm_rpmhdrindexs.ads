@@ -5,6 +5,8 @@ package arpm_rpm_rpmhdrindexs is
     function Format(index : in rpmhdrindex) return String; 
     function Format(index : in rpmhdrindex) return Integer; 
     function Tag(Index : in rpmhdrindex) return Integer; 
+    function Data_Items( Index : in rpmhdrindex) return Integer; 
+    function Data_Offset ( Index : in rpmhdrindex) return Integer; 
 
     private
     type four_byte_number is range 0..2**(4*8)-1;
@@ -512,7 +514,7 @@ package arpm_rpm_rpmhdrindexs is
     type rpmhdrindex is record
         tag : four_byte_number := 0; 
         format : four_byte_number := 0; 
-        data_position  :  four_byte_number := 0; 
+        data_offset :  four_byte_number := 0; 
         number_of_data_items  : four_byte_number := 0;
     end record; 
     for rpmhdrindex'Size use 16*8; 

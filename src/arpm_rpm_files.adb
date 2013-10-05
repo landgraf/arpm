@@ -58,6 +58,8 @@ package body arpm_rpm_files is
             -- FIXME read store here 
             pragma DEBUG(Put_Line("DEBUG: index: " & tag(index)));
             pragma DEBUG(Put_Line("DEBUG: format: " & format(index)));
+            pragma Debug (Put_Line("DEBUG: Number of data items: " & data_items(index)'Img ));
+            pragma Debug (Put_Line("DEBUG: Data offset: " & data_offset(index)'Img ));
         end loop;
     end Read_hdrindex; 
 
