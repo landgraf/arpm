@@ -36,9 +36,26 @@ package arpm_rpm_files is
         Summary : Universal_String;
         Description : Universal_String;
         Build_Time : LOng_Long_Integer := 0;
+        Size : LOng_Long_Integer := 0;
+        License : Universal_String; 
+        Distribution : Universal_String;
+        Vendor : Universal_String;
+        PAYLOADFLAGS : Universal_String;
+        PAYLOADCOMPRESSOR : Universal_String;
+        PAYLOADFORMAT : Universal_String;
+        packager : Universal_String;
+        cookie : Universal_String;
+        optflags : Universal_String;
+        postunprog : Universal_String;
+        postinprog : Universal_String;
+        Arch : Universal_String;
+        OS : Universal_String;
+        URL : Universal_String;
+        SRPM : Universal_String;
+        RPM_Version : Universal_String;
+        Platform : Universal_String;
         Requires : Universal_String_Vector; 
         Provides : Universal_String_Vector; 
-        License : Universal_String; 
         indexes : index_array_access;
     end record; 
 
