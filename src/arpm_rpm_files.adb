@@ -33,7 +33,6 @@ package body arpm_rpm_files is
         loop 
             for I in LABELONE'First..LABELONE'Last loop
                 if buffer = LABELONE(I) then 
-                    pragma Debug ( Put_Line("DEBUG: Magic element " & I'Img & " found " & buffer'Img)); 
                     exit header_loop when I = 3; 
                     dummy_byte'Read(This.Stream, buffer) ;
                 else
