@@ -512,9 +512,11 @@ package arpm_rpm_rpmhdrindexs is
     function Tag(Index : in rpmhdrindex) return tags_type; 
     function Data_Items( Index : in rpmhdrindex) return Integer; 
     function Data_Offset ( Index : in rpmhdrindex) return Integer; 
-    private
     type four_byte_number is range 0..2**(4*8)-1;
     for four_byte_number'Size use 32; 
+    type two_byte_number is range 0..2**(2*8)-1;
+    for two_byte_number'Size use 16; 
+    private
     type rpmhdrindex is record
         tag : four_byte_number := 0; 
         format : four_byte_number := 0; 

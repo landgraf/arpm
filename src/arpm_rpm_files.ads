@@ -32,6 +32,10 @@ package arpm_rpm_files is
         Name : Universal_String; 
         Version : Universal_String; 
         Release: Universal_String; 
+        Build_Host : Universal_String;
+        Summary : Universal_String;
+        Description : Universal_String;
+        Build_Time : LOng_Long_Integer := 0;
         Requires : Universal_String_Vector; 
         Provides : Universal_String_Vector; 
         License : Universal_String; 
