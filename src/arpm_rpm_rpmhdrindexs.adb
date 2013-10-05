@@ -9,6 +9,10 @@ package body arpm_rpm_rpmhdrindexs is
               new Ada.Unchecked_Conversion (four_byte_number, tags_type);  
     begin
         return tags_type'Image(Extract_Tag(htonl(index.tag)));
+    exception
+        when CONSTRAINT_ERROR =>
+            Put_Line("Exception tag: " & htonl(index.tag)'Img); 
+            raise; 
     end Tag; 
     function Tag(Index : in rpmhdrindex) return Integer is 
     begin
@@ -19,6 +23,10 @@ package body arpm_rpm_rpmhdrindexs is
               new Ada.Unchecked_Conversion (four_byte_number, format_type);  
     begin
         return format_type'Image(Extract_format(htonl(index.format)));
+    exception
+        when CONSTRAINT_ERROR =>
+            Put_Line("Exception format: " & htonl(index.format)'Img); 
+            raise;
     end Format; 
 
     function Format(index : in rpmhdrindex) return Integer is 
