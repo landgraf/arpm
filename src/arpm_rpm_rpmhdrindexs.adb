@@ -10,11 +10,20 @@ package body arpm_rpm_rpmhdrindexs is
     begin
         return tags_type'Image(Extract_Tag(htonl(index.tag)));
     end Tag; 
+    function Tag(Index : in rpmhdrindex) return Integer is 
+    begin
+        return Integer(htonl(index.tag)); 
+    end Tag; 
     function Format(index : in rpmhdrindex) return String is 
          function Extract_Format is 
               new Ada.Unchecked_Conversion (four_byte_number, format_type);  
     begin
         return format_type'Image(Extract_format(htonl(index.format)));
     end Format; 
+
+    function Format(index : in rpmhdrindex) return Integer is 
+    begin
+        return Integer(htonl(index.format));
+    end format;
 end arpm_rpm_rpmhdrindexs; 
 

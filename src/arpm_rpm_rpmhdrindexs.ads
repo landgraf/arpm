@@ -3,6 +3,8 @@ package arpm_rpm_rpmhdrindexs is
     type rpmhdrindex_access is access all rpmhdrindex; 
     function Tag(index : in rpmhdrindex) return String; 
     function Format(index : in rpmhdrindex) return String; 
+    function Format(index : in rpmhdrindex) return Integer; 
+    function Tag(Index : in rpmhdrindex) return Integer; 
 
     private
     type four_byte_number is range 0..2**(4*8)-1;
