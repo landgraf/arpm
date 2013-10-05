@@ -56,6 +56,7 @@ package body arpm_rpm_files is
         for I in 1..This.indexes'Length loop
             rpmhdrindex'Read(This.Stream, index);
             -- FIXME read store here 
+            This.indexes(I) := index; 
             pragma DEBUG(Put_Line("DEBUG: index: " & tag(index)));
             pragma DEBUG(Put_Line("DEBUG: format: " & format(index)));
             pragma Debug (Put_Line("DEBUG: Number of data items: " & data_items(index)'Img ));
