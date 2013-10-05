@@ -40,6 +40,7 @@ package arpm_rpm_files is
         License : Universal_String; 
         Distribution : Universal_String;
         Vendor : Universal_String;
+        Group : Universal_String;
         PAYLOADFLAGS : Universal_String;
         PAYLOADCOMPRESSOR : Universal_String;
         PAYLOADFORMAT : Universal_String;

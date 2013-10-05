@@ -209,7 +209,7 @@ package body arpm_rpm_files is
             cf :=  format(indexes(I));
             cof := data_offset(indexes(I)); 
             ctag := tag(indexes(I));
-            Put_Line("Read: " & tags_type'Image(ctag));
+            -- Put_Line("Read: " & tags_type'Image(ctag));
             case cf is 
                 when RPM_BIN_TYPE => 
                     case ctag is 
@@ -348,14 +348,17 @@ package body arpm_rpm_files is
                                 this,  
                                 data_items(indexes(I)), 
                                 data_offset(indexes(I+1)) - data_offset(indexes(I)));
-
-
                         when others =>
                             pragma Debug(Put_Line("READER OF " & tags_type'Image(ctag) & " IS NOT IMPLEMETED. OFFSET=" & This.Offset'Img));
                             Skip_String(this, data_items(indexes(I)));
                     end case;
                 when RPM_I18NSTRING_TYPE =>
                     case ctag  is 
+                        when RPMTAG_Group => 
+                            This.Group:=  Read_i18_String(
+                                this,  
+                                data_items(indexes(I)), 
+                                data_offset(indexes(I+1)) - data_offset(indexes(I)));
                         when RPMTAG_DESCRIPTION => 
                             This.Description := Read_i18_String(
                                 this,  
@@ -364,6 +367,7 @@ package body arpm_rpm_files is
                         when RPMTAG_SUMMARY =>
                             This.Summary := Read_String(this,  data_items(indexes(I)), data_offset(indexes(I+1)) - data_offset(indexes(I)));
                         when others =>
+                            pragma Debug(Put_Line("READER OF " & tags_type'Image(ctag) & " IS NOT IMPLEMETED. OFFSET=" & This.Offset'Img));
                             Skip_String(this, data_items(indexes(I)));
                     end case;
                 when others => 
@@ -380,6 +384,7 @@ package body arpm_rpm_files is
             pragma Debug(Put_Line("Build host: " & US_To_String(This.Build_host)));
             pragma Debug(Put_Line("Licanse:" & US_To_String(This.License)));
             pragma Debug(Put_Line("Vendor: " & US_To_String(This.Vendor)));
+            pragma Debug(Put_Line("Group: " & US_To_String(This.Group)));
             pragma Debug(Put_Line("PAYLOADFLAGS: " & US_To_String(This.PAYLOADFLAGS)));
             pragma Debug(Put_Line("PAYLOADCOMPRESSOR: " & US_To_String(This.PAYLOADCOMPRESSOR)));
             pragma Debug(Put_Line("PAYLOADFORMAT: " & US_To_String(This.PAYLOADFORMAT)));
