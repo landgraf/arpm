@@ -3,7 +3,7 @@ with "matreshka_sql";
 with "matreshka_sql_sqlite3";
 with "matreshka_league";
 project ARPM is 
-    for Source_Dirs use ("../src", "../src/c", "../src/db/generated");
+    for Source_Dirs use ("../src", "../src/c");
     for Main use ("createrepo.adb", "main.adb");
     for Exec_Dir use "../bin";
     for Object_Dir use "../obj";
