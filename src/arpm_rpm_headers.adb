@@ -8,14 +8,14 @@ package body arpm_Rpm_Headers is
         return Integer(htons(This.Version));
     end Version;
     function Indexes (This : in Rpm_Header) return Integer is
-        function htonl(Index : in four_byte_number) return four_byte_number;
+        function htonl(Index : in Four_Byte_Number) return Four_Byte_Number;
         pragma Import (C, htonl, "htonl");
     begin
         return Integer(htonl(This.Indexes));
     end Indexes;
 
     function Data_Bytes (This : in Rpm_Header) return Integer is
-        function htonl(Index : in four_byte_number) return four_byte_number;
+        function htonl(Index : in Four_Byte_Number) return Four_Byte_Number;
         pragma Import (C, htonl, "htonl");
     begin
         return Integer(htonl(This.data_bytes));

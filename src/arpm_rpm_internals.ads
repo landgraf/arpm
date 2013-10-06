@@ -14,7 +14,7 @@ package ARPM_RPM_internals is
     type SHA256S is array (1..64) of Character;
     package ARPM_Map_Container_Package is new Ada.Containers.Ordered_Sets(
         Element_Type => SHA256S);
-    subtype ARPM_Osets_Container is ARPM_Map_Container_Package.Set;
+    subtype Arpm_Osets_Container is ARPM_Map_Container_Package.Set;
 
     package chars_ptr_Pointers is
         new Interfaces.C.Pointers
@@ -41,7 +41,7 @@ package ARPM_RPM_internals is
             Summary: chars_ptr;
             Description : chars_ptr;
             URL : chars_ptr;
-            license : chars_ptr;
+            License : chars_ptr;
             Vendor : chars_ptr;
             requires_Count : Interfaces.C.int := 0;
             requires : Char_Star;

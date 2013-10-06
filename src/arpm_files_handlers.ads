@@ -5,7 +5,7 @@ with ARPM_RPM_internals; use ARPM_RPM_internals;
 package ARpm_Files_Handlers is
 
     protected Files is
-    --  Onject to syncronize files
+    --  Onject to syncronize Files
 
 
         procedure Put(FileName : Unbounded_String);
@@ -26,7 +26,7 @@ package ARpm_Files_Handlers is
 
     protected Workers is
     -- Syncronoze workers
-    -- to free memoty after last worker is finished
+    -- to Free memoty after last worker is finished
 
         procedure Increase;
         -- Increase count of workers

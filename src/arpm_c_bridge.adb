@@ -2,7 +2,7 @@ with Ada.Text_IO; use Ada.Text_IO;
 with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
 with Ada.Unchecked_Deallocation;
 
-package body ARPM_C_Bridge is
+package body Arpm_C_Bridge is
 
     package body Constructors is
         function Create(FileName : String)
@@ -15,7 +15,7 @@ package body ARPM_C_Bridge is
             return MyRPM;
         exception
             when others =>
-                pragma Debug(Put_Line("Unknown error: arpm_c_bridge"));
+                pragma Debug(Put_Line("Unknown Error: Arpm_C_Bridge"));
                 MyRPM.Error := 77;
                 return MyRPM;
         end  Create;
@@ -27,8 +27,8 @@ package body ARPM_C_Bridge is
              Name   => My_RPM_Struct_Access);
 
         procedure C_Free(R : in Char_Star);
-            pragma Import(C, C_Free, "free");
-        FREE_ERROR : exception;
+            pragma Import(C, C_Free, "Free");
+        Free_Error : exception;
     begin
         for I in 1..MyRPM.requires_Count loop
             chars_ptr_Pointers.Decrement(MyRPM.requires);
@@ -36,7 +36,7 @@ package body ARPM_C_Bridge is
             Free(MyRPM.requires.all);
             Free(MyRPM.requires_Version.all);
             if MyRPM.requires.all /= Null_Ptr or MyRPM.requires_Version.all /= Null_Ptr then
-                raise FREE_ERROR;
+                raise Free_Error;
             end if;
         end loop;
         C_Free(MyRPM.requires);
@@ -47,7 +47,7 @@ package body ARPM_C_Bridge is
             Free(MyRPM.Provides.all);
             Free(MyRPM.Provides_Version.all);
             if MyRPM.Provides.all /= Null_Ptr or MyRPM.Provides_Version.all /= Null_Ptr then
-                raise FREE_ERROR;
+                raise Free_Error;
             end if;
         end loop;
         C_Free(MyRPM.Provides);
@@ -64,15 +64,15 @@ package body ARPM_C_Bridge is
         Free(MyRPM.Vendor);
         Free_Ptr(MyRPM);
     exception
-        when STORAGE_ERROR =>
-            pragma Debug(Put_Line("Unable to free memory"));
-        when FREE_ERROR =>
-            pragma Debug(Put_Line("Unable to free C pointers"));
+        when Storage_Error =>
+            pragma Debug(Put_Line("Unable to Free memory"));
+        when Free_Error =>
+            pragma Debug(Put_Line("Unable to Free C pointers"));
     end Free;
 
     function Convert(MyRPM : My_RPM_Struct_Access) return ARPM_RPM_Access is
         RPM : constant ARPM_RPM_Access := new ARPM_RPM;
-        CONVERT_ERROR : exception;
+        Convert_Error : exception;
     begin
         RPM.Name := To_Unbounded_String(Value(MyRPM.Name));
         RPM.Version := To_Unbounded_String(Value(MyRPM.Version));
@@ -99,7 +99,7 @@ package body ARPM_C_Bridge is
         return RPM;
     exception
         when others =>
-            raise CONVERT_ERROR;
+            raise Convert_Error;
     end Convert;
 
-end ARPM_C_Bridge;
+end Arpm_C_Bridge;

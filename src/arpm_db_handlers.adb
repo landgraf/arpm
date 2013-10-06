@@ -1,6 +1,6 @@
 
 with Ada.Text_IO; use Ada.Text_IO;
-with GNATCOLL.SQL.SQLite;
+with GNATCOLL.SQL.Sqlite;
 with Ada.Directories; use Ada.Directories;
 package body ARPM_DB_Handlers is
 
@@ -38,30 +38,30 @@ package body ARPM_DB_Handlers is
     begin
         nDB := GNATCOLL.SQL.Exec.Get_Task_Connection
             (Description  => DB);
-        Execute(nDB,"CREATE TABLE conflicts (  Name TEXT,  Flags TEXT,  Epoch TEXT,  Version TEXT,  release TEXT,  pkgKey CHAR(65));" );
-        Execute(nDB,"CREATE TABLE db_info (dbVersion Integer, checksum TEXT);" );
-        Execute(nDB,"CREATE TABLE files (  Name TEXT,  type TEXT,  pkgKey CHAR(65)); " );
-        Execute(nDB,"CREATE TABLE obsoletes (  Name TEXT,  Flags TEXT,  Epoch TEXT,  Version TEXT,  release TEXT,  pkgKey CHAR(65) );" );
-        Execute(nDB,"CREATE TABLE packages (  pkgKey CHAR(65) PRIMARY KEY,  pkgId TEXT,  Name TEXT,  arch TEXT,  Version TEXT,  Epoch TEXT,  release TEXT,  summary TEXT,  description TEXT,  URL TEXT,  time_file Integer,  time_build Integer,  rpm_license TEXT,  rpm_vendor TEXT,  rpm_group TEXT,  rpm_buildhost TEXT,  rpm_sourcerpm TEXT,  Rpm_Header_start Integer,  Rpm_Header_end Integer,  rpm_packager TEXT,  size_package Integer,  size_installed Integer,  size_archive Integer,  location_href TEXT,  location_base TEXT,  checksum_type TEXT);" );
-        Execute(nDB,"CREATE TABLE Provides (  Name TEXT,  Flags TEXT,  Epoch TEXT,  Version TEXT,  release TEXT,  pkgKey CHAR(65) , provideKey CHAR(65) PRIMARY KEY);" );
-        Execute(nDB,"CREATE TABLE packages_Provides ( pkgKey CHAR(65), provideKey CHAR(65));" );
-        Execute(nDB,"CREATE TABLE requires (  Name TEXT,  Flags TEXT,  Epoch TEXT,  Version TEXT,  release TEXT,  pkgkey CHAR(65) , pre BOOLEAN DEFAULT FALSE, requirekey CHAR(65) PRIMARY KEY);" );
-        Execute(nDB,"CREATE TABLE packages_requires ( pkgkey CHAR(65), requirekey CHAR(65) );" );
-        Execute(nDB,"CREATE Index fileNames ON files (Name);" );
-        Execute(nDB,"CREATE Index packageId ON packages (pkgId);" );
-        Execute(nDB,"CREATE Index packageName ON packages (Name);" );
-        Execute(nDB,"CREATE Index pkgconflicts on conflicts (pkgKey);" );
-        Execute(nDB,"CREATE Index pkgfiles ON files (pkgKey);" );
-        Execute(nDB,"CREATE Index pkgobsoletes on obsoletes (pkgKey);" );
-        Execute(nDB,"CREATE Index pkgProvides on Provides (pkgKey);" );
-        Execute(nDB,"CREATE Index pkgrequires on requires (pkgKey);" );
-        Execute(nDB,"CREATE Index ProvidesName ON Provides (Name);" );
-        Execute(nDB,"CREATE Index requiresName ON requires (Name);" );
-        Execute(nDB,"CREATE Index packages_Provides_providekey ON packages_Provides(provideKey);" );
-        Execute(nDB,"CREATE Index packages_Provides_pkgkey ON packages_Provides(pkgKey);" );
-        Execute(nDB,"CREATE Index packages_requires_requirekey ON packages_requires(requireKey);" );
-        Execute(nDB,"CREATE Index packages_requires_pkgkey ON packages_requires(pkgKey);" );
-        Execute(nDB,"CREATE TRIGGER removals AFTER DELETE ON packages  BEGIN    DELETE FROM files WHERE pkgKey = old.pkgKey;    DELETE FROM requires WHERE pkgKey = old.pkgKey;    DELETE FROM Provides WHERE pkgKey = old.pkgKey;    DELETE FROM conflicts WHERE pkgKey = old.pkgKey;    DELETE FROM obsoletes WHERE pkgKey = old.pkgKey;  END;");
+        Execute(nDB,"Create TABLE conflicts (  Name TEXT,  Flags TEXT,  Epoch TEXT,  Version TEXT,  release TEXT,  pkgKey CHAR(65));" );
+        Execute(nDB,"Create TABLE db_info (dbVersion Integer, checksum TEXT);" );
+        Execute(nDB,"Create TABLE Files (  Name TEXT,  type TEXT,  pkgKey CHAR(65)); " );
+        Execute(nDB,"Create TABLE obsoletes (  Name TEXT,  Flags TEXT,  Epoch TEXT,  Version TEXT,  release TEXT,  pkgKey CHAR(65) );" );
+        Execute(nDB,"Create TABLE packages (  pkgKey CHAR(65) PRIMARY KEY,  pkgId TEXT,  Name TEXT,  arch TEXT,  Version TEXT,  Epoch TEXT,  release TEXT,  summary TEXT,  description TEXT,  URL TEXT,  time_file Integer,  time_build Integer,  rpm_License TEXT,  rpm_vendor TEXT,  rpm_group TEXT,  rpm_buildhost TEXT,  rpm_sourcerpm TEXT,  Rpm_Header_start Integer,  Rpm_Header_end Integer,  rpm_packager TEXT,  size_package Integer,  size_installed Integer,  size_archive Integer,  location_href TEXT,  location_base TEXT,  checksum_type TEXT);" );
+        Execute(nDB,"Create TABLE Provides (  Name TEXT,  Flags TEXT,  Epoch TEXT,  Version TEXT,  release TEXT,  pkgKey CHAR(65) , provideKey CHAR(65) PRIMARY KEY);" );
+        Execute(nDB,"Create TABLE packages_Provides ( pkgKey CHAR(65), provideKey CHAR(65));" );
+        Execute(nDB,"Create TABLE requires (  Name TEXT,  Flags TEXT,  Epoch TEXT,  Version TEXT,  release TEXT,  pkgkey CHAR(65) , pre BOOLEAN DEFAULT FALSE, requirekey CHAR(65) PRIMARY KEY);" );
+        Execute(nDB,"Create TABLE packages_requires ( pkgkey CHAR(65), requirekey CHAR(65) );" );
+        Execute(nDB,"Create Index fileNames ON Files (Name);" );
+        Execute(nDB,"Create Index packageId ON packages (pkgId);" );
+        Execute(nDB,"Create Index packageName ON packages (Name);" );
+        Execute(nDB,"Create Index pkgconflicts on conflicts (pkgKey);" );
+        Execute(nDB,"Create Index pkgFiles ON Files (pkgKey);" );
+        Execute(nDB,"Create Index pkgobsoletes on obsoletes (pkgKey);" );
+        Execute(nDB,"Create Index pkgProvides on Provides (pkgKey);" );
+        Execute(nDB,"Create Index pkgrequires on requires (pkgKey);" );
+        Execute(nDB,"Create Index ProvidesName ON Provides (Name);" );
+        Execute(nDB,"Create Index requiresName ON requires (Name);" );
+        Execute(nDB,"Create Index packages_Provides_providekey ON packages_Provides(provideKey);" );
+        Execute(nDB,"Create Index packages_Provides_pkgkey ON packages_Provides(pkgKey);" );
+        Execute(nDB,"Create Index packages_requires_requirekey ON packages_requires(requireKey);" );
+        Execute(nDB,"Create Index packages_requires_pkgkey ON packages_requires(pkgKey);" );
+        Execute(nDB,"Create TRIGGER removals AFTER DELETE ON packages  BEGIN    DELETE FROM Files WHERE pkgKey = old.pkgKey;    DELETE FROM requires WHERE pkgKey = old.pkgKey;    DELETE FROM Provides WHERE pkgKey = old.pkgKey;    DELETE FROM conflicts WHERE pkgKey = old.pkgKey;    DELETE FROM obsoletes WHERE pkgKey = old.pkgKey;  END;");
         nDB.Commit;
         Free(nDB);
         return True;
@@ -96,7 +96,7 @@ package body ARPM_DB_Handlers is
                 if Prepare_Directories(FileName) and Create_DB then
                    Initialized := True;
                 else
-                    pragma Debug(Put_line("DB failed"));
+                    pragma Debug(Put_Line("DB failed"));
                     raise DB_Exception;
                 end if;
             exception

@@ -9,8 +9,8 @@ package ARPM_DB_Handlers is
             procedure Add_Require_Key(Key : in String);
             function Has_Require_Key(Key : in String) return Boolean;
         private
-            Provides : ARPM_OSets_Container ;
-            Requires : ARPM_Osets_Container;
+            Provides : Arpm_Osets_Container ;
+            Requires : Arpm_Osets_Container;
     end DB_Keys;
 
     protected DB is

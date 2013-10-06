@@ -7,7 +7,7 @@ with GNAT.SHA256; use GNAT.SHA256;
 
 with GNATCOLL.SQL_Impl;   use GNATCOLL.SQL_Impl;
 
-package body ARPM_DB_Containers is
+package body Arpm_Db_Containers is
 
     function SHA256(Name : String; Version :  String := ""; Release : String := ""; Arch : String := "" ) return String is
     begin
@@ -47,7 +47,7 @@ package body ARPM_DB_Containers is
         end loop;
     exception
         when The_Event: others =>
-            pragma Debug(Put_Line("Failed to save Provides " & To_String(RPM.Name) & "  Message: " & Ada.Exceptions.Exception_Message(The_Event)));
+            pragma Debug(Put_Line("Failed to Save Provides " & To_String(RPM.Name) & "  Message: " & Ada.Exceptions.Exception_Message(The_Event)));
             pragma Debug(Put_Line (Ada.Exceptions.Exception_Information(The_Event)));
     end Save_Provides;
 
@@ -84,7 +84,7 @@ package body ARPM_DB_Containers is
         end loop;
     exception
         when The_Event: others =>
-            pragma Debug(Put_Line("Failed to save requires " & To_String(RPM.Name) & "  Message: " & Ada.Exceptions.Exception_Message(The_Event)));
+            pragma Debug(Put_Line("Failed to Save requires " & To_String(RPM.Name) & "  Message: " & Ada.Exceptions.Exception_Message(The_Event)));
             pragma Debug(Put_Line (Ada.Exceptions.Exception_Information(The_Event)));
     end Save_Requires;
 
@@ -116,9 +116,9 @@ package body ARPM_DB_Containers is
         SHA : aliased String := SHA256(Name, Version, Release, Arch);
     begin
         Reset_Connection (DB);
-        Q := Prepare ("INSERT intO packages (pkgKey, Name, Version, release, arch, summary, description, URL, rpm_license , rpm_vendor, Epoch) VALUES (? , ? , ? , ?, ?, ?, ?, ?, ?, ?, ? )");
+        Q := Prepare ("INSERT intO packages (pkgKey, Name, Version, release, arch, summary, description, URL, rpm_License , rpm_vendor, Epoch) VALUES (? , ? , ? , ?, ?, ?, ?, ?, ?, ?, ? )");
         Param := ("+"(SHA'Access), "+"(Name'Access), "+" (Version'Access), "+" (Release'Access), "+"(Arch'Access), "+"(Summary'Access),
                   "+"(Description'Access), "+"(URL'Access), "+"(License'Access), "+"(Vendor'Access), "+" (Epoch'Access)  );
         Execute(DB, Q, Param);
     end Save;
-end ARPM_DB_Containers;
+end Arpm_Db_Containers;

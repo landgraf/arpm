@@ -5,17 +5,17 @@ with arpm_rpm_rpmhdrIndexs; use arpm_rpm_rpmhdrIndexs;
 with arpm_rpm_depends;  use arpm_rpm_depends;
 with Ada.Unchecked_Deallocation;
 
-package arpm_Rpm_Files is
-    type Rpm_File is tagged limited private;
-    type RPM_File_Access is access all Rpm_File;
+package Arpm_Rpm_Files is
+    type Rpm_File is Tagged limited private;
+    type Rpm_File_Access is access all Rpm_File;
 
     procedure Parse(This : in out Rpm_File);
     package Constructors is
-        -- function  Create(FileName : Unbounded_String) return RPM_File_Access;
-        function  Create(FileName : String) return RPM_File_Access;
-        -- function  Create(FileName : Unbounded_String) return RPM_File_Access is null ;
+        -- function  Create(FileName : Unbounded_String) return Rpm_File_Access;
+        function  Create(FileName : String) return Rpm_File_Access;
+        -- function  Create(FileName : Unbounded_String) return Rpm_File_Access is null ;
     end Constructors;
-    procedure Free(This : in out RPM_File_Access);
+    procedure Free(This : in out Rpm_File_Access);
     private
 
     INVALID_Format_EXCEPTION : exception;
@@ -26,10 +26,10 @@ package arpm_Rpm_Files is
     function Read_Indexes(This : in out Rpm_File; count : in Integer) return Index_array_access;
     procedure Read_Payload(This: in out Rpm_File; Indexes : in Index_array_access);
     -- procedure Read_HdrIndex(This : in out Rpm_File);
-    type Rpm_File is tagged limited record
+    type Rpm_File is Tagged limited record
         File : Ada.Streams.Stream_IO.File_Type;
         Stream : Ada.Streams.Stream_IO.Stream_Access;
-        offset: Integer := 0 ;
+        Offset: Integer := 0 ;
         Indexes : Index_array_access;
 
         -- FILE
@@ -71,6 +71,6 @@ package arpm_Rpm_Files is
         Name   => Index_array_access);
     procedure Free_RPM is new Ada.Unchecked_Deallocation
         (Object => Rpm_File,
-        Name   => RPM_File_Access);
-end arpm_Rpm_Files;
+        Name   => Rpm_File_Access);
+end Arpm_Rpm_Files;
 

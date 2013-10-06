@@ -1,11 +1,11 @@
 with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
 with Ada.Exceptions;
-with arpm_c_bridge;
+with Arpm_C_Bridge;
 with ARPM_RPM_internals; use ARPM_RPM_internals;
-with Ada.Text_Io ; use Ada.Text_IO;
+with Ada.Text_IO ; use Ada.Text_IO;
 with POSIX.Files; use POSIX.Files;
 with POSIX; use POSIX;
-with arpm_db_containers;
+with Arpm_Db_Containers;
 with GNATCOLL.SQL.Exec; use GNATCOLL.SQL.Exec;
 with ARpm_Files_Handlers;
 with ARPM_DB_Handlers;
@@ -20,7 +20,7 @@ package body ARPM_Processors is
         DC : Database_Description;
         DB : Database_Connection;
         Transaction : Boolean;
-        DB_ERROR : exception;
+        DB_Error : exception;
     begin
         ARPM_DB_Handlers.DB.Get_DB(DC);
            DB := GNATCOLL.SQL.Exec.Get_Task_Connection
@@ -34,27 +34,27 @@ package body ARPM_Processors is
                 exit;
             end if;
             if Is_File(To_POSIX_String(To_String(FileName))) then
-                    MyRPM := arpm_c_bridge.constructors.create(To_String(FileName));
+                    MyRPM := Arpm_C_Bridge.Constructors.Create(To_String(FileName));
                 if Integer(MyRPM.Error) = 0 then
-                    RPM := arpm_c_bridge.convert(MyRPM);
+                    RPM := Arpm_C_Bridge.Convert(MyRPM);
                     try:
                     begin
                         Transaction := Start_Transaction(DB);
                         if not Transaction then
-                            raise DB_ERROR;
+                            raise DB_Error;
                         end if;
-                        arpm_db_containers.save(RPM, DB);
-                        arpm_db_containers.Save_Requires(RPM, DB);
-                        arpm_db_containers.save_Provides(RPM, DB);
+                        Arpm_Db_Containers.Save(RPM, DB);
+                        Arpm_Db_Containers.Save_Requires(RPM, DB);
+                        Arpm_Db_Containers.Save_Provides(RPM, DB);
                         Commit(DB);
                     exception
                         when SQL_Event: others =>
-                            pragma Debug(Put_Line("Failed to save " & To_String(RPM.Name)));
+                            pragma Debug(Put_Line("Failed to Save " & To_String(RPM.Name)));
                             pragma Debug(Put_Line("Reason " & Ada.Exceptions.Exception_Information(SQL_Event)));
                     end try;
                     ARPM_RPM_internals.Free(RPM);
                 end if;
-                ARPM_C_Bridge.Free(MyRPM);
+                Arpm_C_Bridge.Free(MyRPM);
             end if;
         end loop;
         pragma Debug(Put_Line("Commit..."));

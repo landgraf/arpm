@@ -2,23 +2,23 @@ with Ada.Text_IO; use Ada.Text_IO;
          with  Ada.Unchecked_Conversion;
 package body arpm_rpm_rpmhdrIndexs is
 
-    function htonl(Index : in four_byte_number) return four_byte_number;
+    function htonl(Index : in Four_Byte_Number) return Four_Byte_Number;
         pragma Import (C, htonl, "htonl");
 
-    function Tag(Index : in rpmhdrIndex) return tags_type is
+    function Tag(Index : in rpmhdrIndex) return Tags_type is
          function Extract_Tag is
-              new Ada.Unchecked_Conversion (four_byte_number, tags_type);
+              new Ada.Unchecked_Conversion (Four_Byte_Number, Tags_type);
     begin
-        return Extract_Tag(htonl(Index.tag));
+        return Extract_Tag(htonl(Index.Tag));
     exception
         when Constraint_Error =>
-            Put_Line("Exception tag: " & htonl(Index.tag)'Img);
+            Put_Line("Exception Tag: " & htonl(Index.Tag)'Img);
             raise;
     end Tag;
 
     function Format(Index : in rpmhdrIndex) return String is
          function Extract_Format is
-              new Ada.Unchecked_Conversion (four_byte_number, Format_type);
+              new Ada.Unchecked_Conversion (Four_Byte_Number, Format_type);
     begin
         return Format_type'Image(Extract_Format(htonl(Index.Format)));
     exception
@@ -29,7 +29,7 @@ package body arpm_rpm_rpmhdrIndexs is
 
     function Format(Index : in rpmhdrIndex) return Format_type  is
          function Extract_Format is
-              new Ada.Unchecked_Conversion (four_byte_number, Format_type);
+              new Ada.Unchecked_Conversion (Four_Byte_Number, Format_type);
     begin
         return Extract_Format(htonl(Index.Format));
     exception
@@ -44,7 +44,7 @@ package body arpm_rpm_rpmhdrIndexs is
     end Format;
     function Data_Items( Index : in rpmhdrIndex) return Integer is
     begin
-        return  Integer(htonl(Index.number_of_data_items));
+        return  Integer(htonl(Index.number_of_Data_Items));
     end Data_Items;
     function Data_Offset ( Index : in rpmhdrIndex) return Integer is
     begin

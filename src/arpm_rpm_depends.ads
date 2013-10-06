@@ -1,7 +1,7 @@
 with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
 with Ada.Unchecked_Deallocation;
 package arpm_rpm_depends is
-    type rpm_depend is tagged limited private;
+    type rpm_depend is Tagged limited private;
     type rpm_depend_access is access all rpm_depend;
 
     type rpm_depend_array is array (Positive range <>) of rpm_depend;
@@ -17,7 +17,7 @@ package arpm_rpm_depends is
 
     private
 
-    type rpm_depend is tagged limited record
+    type rpm_depend is Tagged limited record
         Name : Unbounded_String;
         Version : Unbounded_String;
         Flags : Long_Long_Integer;

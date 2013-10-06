@@ -1,21 +1,21 @@
 with Internal_Codecs; use Internal_Codecs;
 with POSIX.Files;
-with arpm_rpm_leaders; use arpm_rpm_leaders;
+with arpm_Rpm_Leaders; use arpm_Rpm_Leaders;
 with arpm_Rpm_Headers; use arpm_Rpm_Headers;
 with arpm_rpm_rpmhdrIndexs; use arpm_rpm_rpmhdrIndexs;
-with ada.text_io ; use ada.Text_IO;
+with Ada.Text_IO ; use Ada.Text_IO;
 with Ada.Assertions;  use Ada.Assertions;
 
-package body arpm_Rpm_Files is
+package body Arpm_Rpm_Files is
 
     package body Constructors is
-        function  Create(FileName : String) return RPM_File_Access is
+        function  Create(FileName : String) return Rpm_File_Access is
             use POSIX.Files;
-            RPM : RPM_File_Access := new Rpm_File;
-            IO_ERROR : exception;
+            RPM : Rpm_File_Access := new Rpm_File;
+            IO_Error : exception;
         begin
-            if not Is_File(posix.TO_POSIX_String(FileName)) then
-                raise IO_ERROR;
+            if not Is_File(POSIX.To_POSIX_String(FileName)) then
+                raise IO_Error;
             end if;
             Ada.Streams.Stream_IO.Open
                 (File => RPM.File,
@@ -26,12 +26,12 @@ package body arpm_Rpm_Files is
         end Create;
     end Constructors;
 
-    function htonl32(number : in four_byte_number) return four_byte_number;
+    function htonl32(number : in Four_Byte_Number) return Four_Byte_Number;
         pragma Import(C, htonl32, "htonl");
-    function htonl16(number : in two_byte_number) return two_byte_number;
+    function htonl16(number : in Two_Byte_Number) return Two_Byte_Number;
         pragma Import(C, htonl16, "htonl");
 
-    function Read_i18_String (This : in out Rpm_File; items : in Integer := 1; Max_Length : in Integer := 1; Debug : Boolean := False ) return Unbounded_String is
+    function Read_I18_String (This : in out Rpm_File; Items : in Integer := 1; Max_Length : in Integer := 1; Debug : Boolean := False ) return Unbounded_String is
         Str : Unbounded_String;
         buffer : dummy_byte;
         Raw : String(1..Max_Length) := (others => Character'Val(0));
@@ -49,12 +49,12 @@ package body arpm_Rpm_Files is
                 Raw(Iter) := Character'Val(buffer);
                 Iter := Iter + 1;
             end loop;
-    end Read_i18_String;
+    end Read_I18_String;
 
-    procedure Skip_String(This : in out Rpm_File; items : in Integer := 1 ) is
+    procedure Skip_String(This : in out Rpm_File; Items : in Integer := 1 ) is
         buffer : dummy_byte;
     begin
-        for I in 1..items loop
+        for I in 1..Items loop
             loop
                 dummy_byte'Read(This.Stream, buffer) ;
                 This.Offset := This.Offset + buffer'Size/8;
@@ -65,70 +65,70 @@ package body arpm_Rpm_Files is
         end loop;
     end Skip_String;
 
-    procedure Skip_String_Array(This : in out Rpm_File; items : in Integer) is
+    procedure Skip_String_Array(This : in out Rpm_File; Items : in Integer) is
     begin
         for I in 1..Items loop
             Skip_String(This);
         end loop;
     end Skip_String_Array;
 
-    procedure Skip_Bin(This : in out Rpm_File; items : in Integer := 1 ) is
+    procedure Skip_Bin(This : in out Rpm_File; Items : in Integer := 1 ) is
         buffer : dummy_byte;
     begin
-        for I in 1..items loop
+        for I in 1..Items loop
             dummy_byte'Read(This.Stream, buffer) ;
             This.Offset := This.Offset + buffer'Size/8;
         end loop;
     end Skip_Bin;
 
-    function read_int16(This : in out Rpm_File;  items : in Integer := 1) return Integer is
-        buffer : two_byte_number := 0;
+    function read_int16(This : in out Rpm_File;  Items : in Integer := 1) return Integer is
+        buffer : Two_Byte_Number := 0;
     begin
-        for I in 1..items loop
-            two_byte_Number'Read(This.Stream, buffer) ;
+        for I in 1..Items loop
+            Two_Byte_Number'Read(This.Stream, buffer) ;
             This.Offset := This.Offset + buffer'Size/8;
         end loop;
         return Integer(htonl16(buffer));
     end read_int16;
 
-    procedure Skip_int16(This : in out Rpm_File;  items : in Integer := 1) is
+    procedure Skip_int16(This : in out Rpm_File;  Items : in Integer := 1) is
         buffer : Integer;
     begin
-        buffer := read_int16(This, items);
+        buffer := read_int16(This, Items);
     end Skip_int16;
 
-    function Read_int32(This : in out Rpm_File; items : in Integer := 1) return Long_Long_Integer is
-        buffer : four_byte_Number;
+    function Read_Int32(This : in out Rpm_File; Items : in Integer := 1) return Long_Long_Integer is
+        buffer : Four_Byte_Number;
     begin
-        for I in 1..items loop
-            four_byte_Number'Read(This.Stream, buffer) ;
+        for I in 1..Items loop
+            Four_Byte_Number'Read(This.Stream, buffer) ;
             This.Offset := This.Offset + buffer'Size/8;
         end loop;
         return Long_Long_Integer(htonl32(buffer));
-    end Read_int32;
+    end Read_Int32;
 
-    procedure Skip_int32(This : in out Rpm_File; items : in Integer := 1) is
+    procedure Skip_int32(This : in out Rpm_File; Items : in Integer := 1) is
         buffer : Long_Long_Integer;
     begin
-        buffer := read_int32(This, items);
+        buffer := Read_Int32(This, Items);
     end Skip_int32;
 
     procedure Parse(This : in out Rpm_File) is
         Number_Of_Indexes : Natural := 0;
     begin
-        this.read_leader;
-        this.read_header(Signature => True);
-        this.read_header(Signature => False);
+        This.Read_Leader;
+        This.Read_Header(Signature => True);
+        This.Read_Header(Signature => False);
     end Parse;
 
     procedure Read_Leader(This : in out Rpm_File) is
-       Leader : RPM_Leader;
+       Leader : Rpm_Leader;
     begin
-        pragma Debug(Put_Line("DEBUG: parsing  RPM_Leader"));
-        RPM_Leader'Read(This.Stream, Leader);
-        This.Offset := This.Offset + leader'Size/8;
+        pragma Debug(Put_Line("DEBUG: parsing  Rpm_Leader"));
+        Rpm_Leader'Read(This.Stream, Leader);
+        This.Offset := This.Offset + Leader'Size/8;
         pragma Debug (Put_Line("DEBUG: Package Name: " & Name(Leader)));
-        pragma Debug (Put_Line("DEBUG: Package Format: " & rpmtypes'Image(rpmtype(Leader))));
+        pragma Debug (Put_Line("DEBUG: Package Format: " & Rpm_Types'Image(Rpm_Type(Leader))));
     end Read_Leader;
 
     procedure Read_Header (This : in out Rpm_File; Signature : Boolean := False) is
@@ -136,13 +136,13 @@ package body arpm_Rpm_Files is
        buffer : dummy_byte := 0;
        Indexes : Index_array_access;
     begin
-        pragma Debug(Put_Line("DEBUG: looking for RPM header"));
-        -- The header structure header always starts with a three-byte Magic number: 8e ad e8
-        header_loop:
+        pragma Debug(Put_Line("DEBUG: looking for RPM Header"));
+        -- The Header structure Header always starts with a three-byte Magic number: 8e ad e8
+        Header_loop:
         loop
             for I in LABELONE'First..LABELONE'Last loop
                 if buffer = LABELONE(I) then
-                    exit header_loop when I = 3;
+                    exit Header_loop when I = 3;
                     dummy_byte'Read(This.Stream, buffer) ;
                     This.Offset := This.Offset + buffer'Size/8;
                 else
@@ -151,10 +151,10 @@ package body arpm_Rpm_Files is
                     exit;
                 end if;
             end loop;
-        end loop header_loop;
-        Rpm_Header'Read(This.Stream, header);
-        This.Offset := This.Offset + header'Size/8;
-        Indexes := This.Read_Indexes(arpm_Rpm_Headers.Indexes(header));
+        end loop Header_loop;
+        Rpm_Header'Read(This.Stream, Header);
+        This.Offset := This.Offset + Header'Size/8;
+        Indexes := This.Read_Indexes(arpm_Rpm_Headers.Indexes(Header));
         -- FIXME not implemented yet
         if not Signature then
             This.Read_Payload(Indexes);
@@ -180,142 +180,142 @@ package body arpm_Rpm_Files is
         return Indexes;
     end Read_Indexes;
 
-    procedure Check_String_Types(This: in out Rpm_File; Index : in rpmhdrIndex; length : in Integer) is
+    procedure Check_String_Types(This: in out Rpm_File; Index : in rpmhdrIndex; Length : in Integer) is
     begin
-        case  tag(Index) is
-            when RPMTAG_Name =>
-                This.Name := Read_i18_String(
-                    this,
-                    data_items(Index),
-                    length);
-            when RPMTAG_Version =>
-                This.Version := Read_i18_String(
-                    this,
-                    data_items(Index),
-                    length);
-            when RPMTAG_RELEASE =>
-                This.Release := Read_i18_String(
-                    this,
-                    data_items(Index),
-                    length);
-            when RPMTAG_DISTRIBUTION =>
-                This.Distribution := Read_i18_String(
-                    this,
-                    data_items(Index),
-                    length);
-            when RPMTAG_BUILDHOST =>
-                This.Build_Host := Read_i18_String(
-                    this,
-                    data_items(Index),
-                    length);
-            when RPMTAG_LICENSE =>
-                This.License :=  Read_i18_String(
-                    this,
-                    data_items(Index),
-                    length);
-            when RPMTAG_postunprog =>
-                This.postunprog:=  Read_i18_String(
-                    this,
-                    data_items(Index),
-                    length);
-            when RPMTAG_cookie =>
-                This.cookie:=  Read_i18_String(
-                    this,
-                    data_items(Index),
-                    length);
-            when RPMTAG_packager =>
-                This.packager:=  Read_i18_String(
-                    this,
-                    data_items(Index),
-                    length);
-            when RPMTAG_PAYLOADFormat =>
-                This.PAYLOADFormat:=  Read_i18_String(
-                    this,
-                    data_items(Index),
-                    length);
-            when RPMTAG_POSTIN =>
-                This.postin :=  Read_i18_String(
-                    this,
-                    data_items(Index),
-                    length);
-            when RPMTAG_POSTUN =>
-                This.postun :=  Read_i18_String(
-                    this,
-                    data_items(Index),
-                    length);
-            when RPMTAG_PAYLOADCOMPRESSOR =>
-                This.PAYLOADCOMPRESSOR:=  Read_i18_String(
-                    this,
-                    data_items(Index),
-                    length);
-            when RPMTAG_PAYLOADFlags =>
-                This.PAYLOADFlags:=  Read_i18_String(
-                    this,
-                    data_items(Index),
-                    length);
-            when RPMTAG_VENDOR =>
-                This.Vendor:=  Read_i18_String(
-                    this,
-                    data_items(Index),
-                    length);
-            when RPMTAG_optFlags =>
-                This.optFlags:=  Read_i18_String(
-                    this,
-                    data_items(Index),
-                    length);
-            when RPMTAG_postinprog =>
-                This.postinprog:=  Read_i18_String(
-                    this,
-                    data_items(Index),
-                    length);
-            when RPMTAG_Arch =>
-                This.Arch:=  Read_i18_String(
-                    this,
-                    data_items(Index),
-                    length);
-            when RPMTAG_OS =>
-                This.OS:=  Read_i18_String(
-                    this,
-                    data_items(Index),
-                    length);
-            when RPMTAG_URL =>
-                This.URL:=  Read_i18_String(
-                    this,
-                    data_items(Index),
-                    length);
-            when RPMTAG_PLATFORM =>
-                This.Platform :=  Read_i18_String(
-                    this,
-                    data_items(Index),
-                    length);
-            when RPMTAG_RPMVersion =>
-                This.RPM_Version:=  Read_i18_String(
-                    this,
-                    data_items(Index),
-                    length);
-            when RPMTAG_SOURCERPM =>
-                This.SRPM:=  Read_i18_String(
-                    this,
-                    data_items(Index),
-                    length);
-            when RPMTAG_Group =>
-                This.Group:=  Read_i18_String(
-                    this,
-                    data_items(Index),
-                    length);
-            when RPMTAG_DESCRIPTION =>
-                This.Description := Read_i18_String(
-                    this,
-                    data_items(Index),
-                    length);
-            when RPMTAG_SUMMARY =>
-                This.Summary := Read_i18_String(
-                    this,
-                    data_items(Index),
-                    length);
+        case  Tag(Index) is
+            when RPMTag_Name =>
+                This.Name := Read_I18_String(
+                    This,
+                    Data_Items(Index),
+                    Length);
+            when RPMTag_Version =>
+                This.Version := Read_I18_String(
+                    This,
+                    Data_Items(Index),
+                    Length);
+            when RPMTag_RELEASE =>
+                This.Release := Read_I18_String(
+                    This,
+                    Data_Items(Index),
+                    Length);
+            when RPMTag_DISTRIBUTION =>
+                This.Distribution := Read_I18_String(
+                    This,
+                    Data_Items(Index),
+                    Length);
+            when RPMTag_BUILDHOST =>
+                This.Build_Host := Read_I18_String(
+                    This,
+                    Data_Items(Index),
+                    Length);
+            when RPMTag_License =>
+                This.License :=  Read_I18_String(
+                    This,
+                    Data_Items(Index),
+                    Length);
+            when RPMTag_POSTUNPROG =>
+                This.postunprog:=  Read_I18_String(
+                    This,
+                    Data_Items(Index),
+                    Length);
+            when RPMTag_COOKIE =>
+                This.cookie:=  Read_I18_String(
+                    This,
+                    Data_Items(Index),
+                    Length);
+            when RPMTag_PACKAGER =>
+                This.packager:=  Read_I18_String(
+                    This,
+                    Data_Items(Index),
+                    Length);
+            when RPMTag_PAYLOADFormat =>
+                This.PAYLOADFormat:=  Read_I18_String(
+                    This,
+                    Data_Items(Index),
+                    Length);
+            when RPMTag_POSTIN =>
+                This.postin :=  Read_I18_String(
+                    This,
+                    Data_Items(Index),
+                    Length);
+            when RPMTag_POSTUN =>
+                This.postun :=  Read_I18_String(
+                    This,
+                    Data_Items(Index),
+                    Length);
+            when RPMTag_PAYLOADCOMPRESSOR =>
+                This.PAYLOADCOMPRESSOR:=  Read_I18_String(
+                    This,
+                    Data_Items(Index),
+                    Length);
+            when RPMTag_PAYLOADFlags =>
+                This.PAYLOADFlags:=  Read_I18_String(
+                    This,
+                    Data_Items(Index),
+                    Length);
+            when RPMTag_VENDOR =>
+                This.Vendor:=  Read_I18_String(
+                    This,
+                    Data_Items(Index),
+                    Length);
+            when RPMTag_OPTFLAGS =>
+                This.optFlags:=  Read_I18_String(
+                    This,
+                    Data_Items(Index),
+                    Length);
+            when RPMTag_POSTINPROG =>
+                This.postinprog:=  Read_I18_String(
+                    This,
+                    Data_Items(Index),
+                    Length);
+            when RPMTag_ARCH =>
+                This.Arch:=  Read_I18_String(
+                    This,
+                    Data_Items(Index),
+                    Length);
+            when RPMTag_OS =>
+                This.OS:=  Read_I18_String(
+                    This,
+                    Data_Items(Index),
+                    Length);
+            when RPMTag_URL =>
+                This.URL:=  Read_I18_String(
+                    This,
+                    Data_Items(Index),
+                    Length);
+            when RPMTag_PLATFORM =>
+                This.Platform :=  Read_I18_String(
+                    This,
+                    Data_Items(Index),
+                    Length);
+            when RPMTag_RPMVersion =>
+                This.RPM_Version:=  Read_I18_String(
+                    This,
+                    Data_Items(Index),
+                    Length);
+            when RPMTag_SOURCERPM =>
+                This.SRPM:=  Read_I18_String(
+                    This,
+                    Data_Items(Index),
+                    Length);
+            when RPMTag_GROUP =>
+                This.Group:=  Read_I18_String(
+                    This,
+                    Data_Items(Index),
+                    Length);
+            when RPMTag_DESCRIPTION =>
+                This.Description := Read_I18_String(
+                    This,
+                    Data_Items(Index),
+                    Length);
+            when RPMTag_SUMMARY =>
+                This.Summary := Read_I18_String(
+                    This,
+                    Data_Items(Index),
+                    Length);
             when others =>
-                pragma Debug(Put_Line("READER OF " & tags_type'Image(tag(Index)) & " IS NOT IMPLEMETED. OFFSET=" & This.Offset'Img));
-                Skip_String(this, data_items(Index));
+                pragma Debug(Put_Line("READER OF " & Tags_type'Image(Tag(Index)) & " IS NOT IMPLEMETED. Offset=" & This.Offset'Img));
+                Skip_String(This, Data_Items(Index));
         end case;
     end Check_String_Types;
 
@@ -323,28 +323,28 @@ package body arpm_Rpm_Files is
         use arpm_rpm_depends;
         OVERWRITE_EXCEPTION : exception;
     begin
-        case tag(Index) is
-            when RPMTAG_BUILDTIME =>
-                This.Build_Time := Read_int32(This, Data_Items(Index));
-            when RPMTAG_REQUIREFlags =>
+        case Tag(Index) is
+            when RPMTag_BUILDTIME =>
+                This.Build_Time := Read_Int32(This, Data_Items(Index));
+            when RPMTag_REQUIREFlags =>
                 if This.Requires = Null then
-                    This.Requires := new rpm_depend_array(1..data_Items(Index));
+                    This.Requires := new rpm_depend_array(1..Data_Items(Index));
                 end if;
                 for I in 1..This.Requires'Length loop
-                    Set_Flags(This.Requires(1),   Read_int32(This, 1));
+                    Set_Flags(This.Requires(1),   Read_Int32(This, 1));
                 end loop;
-            when RPMTAG_PROVIDEFlags =>
+            when RPMTag_PROVIDEFlags =>
                 if This.Provides = Null then
-                    This.Provides := new rpm_depend_array(1..data_Items(Index));
+                    This.Provides := new rpm_depend_array(1..Data_Items(Index));
                 end if;
                 for I in 1..This.Provides'Length loop
-                    Set_Flags(This.Provides(1),   Read_int32(This, 1));
+                    Set_Flags(This.Provides(1),   Read_Int32(This, 1));
                 end loop;
-            when RPMTAG_SIZE =>
-                This.Size := Read_int32(This, Data_Items(Index));
+            when RPMTag_SIZE =>
+                This.Size := Read_Int32(This, Data_Items(Index));
             when others =>
-                pragma Debug(Put_Line("READER OF " & tags_type'Image(tag(Index)) & " IS NOT IMPLEMETED. OFFSET=" & This.Offset'Img));
-                Skip_int32(This, data_items(Index));
+                pragma Debug(Put_Line("READER OF " & Tags_type'Image(Tag(Index)) & " IS NOT IMPLEMETED. Offset=" & This.Offset'Img));
+                Skip_int32(This, Data_Items(Index));
         end case;
     end Check_int32_Type;
 
@@ -352,7 +352,7 @@ package body arpm_Rpm_Files is
         procedure Allign_Offset(This : in out Rpm_File; Offset : in Integer)
             with
                 Pre => Offset - This.Offset > 0,
-                Post => This.Offset = offset;
+                Post => This.Offset = Offset;
 
         procedure Allign_Offset(This : in out Rpm_File; Offset : in Integer)
         is
@@ -366,37 +366,37 @@ package body arpm_Rpm_Files is
         end Allign_Offset;
         cf : Format_type;
         cof : Integer;
-        ctag : tags_type;
+        cTag : Tags_type;
     begin
         pragma Debug (Put_Line ("DEBUG: Reading payload") );
         for I in 1..Indexes'Length loop
             cf :=  Format(Indexes(I));
             cof := Data_Offset(Indexes(I));
-            ctag := tag(Indexes(I));
+            cTag := Tag(Indexes(I));
             if cof = 0 then
-                pragma Debug(Put_Line("DEBUG: Reseting offset"));
+                pragma Debug(Put_Line("DEBUG: Reseting Offset"));
                 This.Offset := 0;
             end if;
-            -- Put_Line("Read: " & tags_type'Image(ctag));
+            -- Put_Line("Read: " & Tags_type'Image(cTag));
             -- Sometimes We have to skip bytes to allign
-            -- cursor (Rpm_File.Offset) and tag offset (Data_Offset(Indexes(I)))
+            -- cursor (Rpm_File.Offset) and Tag Offset (Data_Offset(Indexes(I)))
             -- String types are not alligned
             if This.Offset /= cof then
                 Allign_Offset(This, cof);
             end if;
             case cf is
                 when RPM_BIN_TYPE =>
-                    case ctag is
+                    case cTag is
                         when others =>
-                            Skip_Bin(This, data_Items(Indexes(I)));
+                            Skip_Bin(This, Data_Items(Indexes(I)));
                             null;
                     end case;
                 when RPM_STRING_ARRAY_TYPE =>
 
-                    case ctag is
-                        when RPMTAG_PROVIDEName =>
+                    case cTag is
+                        when RPMTag_PROVIDEName =>
                             if This.Provides  = Null then
-                                This.Provides :=  new rpm_depend_array(1..data_Items(Indexes(I)));
+                                This.Provides :=  new rpm_depend_array(1..Data_Items(Indexes(I)));
                             end if;
                             for Prov in 1..This.Provides'Length loop
                                 Set_Name(This.Provides(Prov), Read_I18_String(
@@ -405,9 +405,9 @@ package body arpm_Rpm_Files is
                                     Data_Offset(Indexes(I+1)) - Data_Offset(Indexes(I))
                                     ));
                             end loop;
-                        when RPMTAG_PROVIDEVersion =>
+                        when RPMTag_PROVIDEVersion =>
                             if This.Provides  = Null then
-                                This.Provides :=  new rpm_depend_array(1..data_Items(Indexes(I)));
+                                This.Provides :=  new rpm_depend_array(1..Data_Items(Indexes(I)));
                             end if;
                             for Req in 1..This.Provides'Length loop
                                 Set_Version(This.Provides(Req), Read_I18_String(
@@ -417,9 +417,9 @@ package body arpm_Rpm_Files is
                                     ));
                             end loop;
 
-                        when RPMTAG_REQUIREName =>
+                        when RPMTag_REQUIREName =>
                             if This.Requires  = Null then
-                                This.Requires :=  new rpm_depend_array(1..data_Items(Indexes(I)));
+                                This.Requires :=  new rpm_depend_array(1..Data_Items(Indexes(I)));
                             end if;
                             for Req in 1..This.Requires'Length loop
                                 Set_Name(This.Requires(Req), Read_I18_String(
@@ -428,9 +428,9 @@ package body arpm_Rpm_Files is
                                     Data_Offset(Indexes(I+1)) - Data_Offset(Indexes(I))
                                     ));
                             end loop;
-                        when RPMTAG_REQUIREVersion =>
+                        when RPMTag_REQUIREVersion =>
                             if This.Requires  = Null then
-                                This.Requires :=  new rpm_depend_array(1..data_Items(Indexes(I)));
+                                This.Requires :=  new rpm_depend_array(1..Data_Items(Indexes(I)));
                             end if;
                             for Req in 1..This.Requires'Length loop
                                 Set_Version(This.Requires(Req), Read_I18_String(
@@ -440,21 +440,21 @@ package body arpm_Rpm_Files is
                                     ));
                             end loop;
                         when others =>
-                            Skip_String_Array(This, data_items(Indexes(I)));
+                            Skip_String_Array(This, Data_Items(Indexes(I)));
                     end case;
                 when RPM_int32_TYPE =>
                     Check_int32_Type(This, Indexes(I));
                 when RPM_int16_TYPE =>
-                    case ctag is
+                    case cTag is
                         when others =>
-                            Skip_int16(This, data_items(Indexes(I)));
+                            Skip_int16(This, Data_Items(Indexes(I)));
                     end case;
                 when RPM_STRING_TYPE | RPM_I18NSTRING_TYPE =>
                     Check_String_Types(This => This,
                     Index => Indexes(I),
                     Length => Data_Offset(Indexes(I+1)) - Data_Offset(Indexes(I)));
                 when others =>
-                    pragma Debug(Put_Line("READER OF " & tags_type'Image(ctag) & " IS NOT IMPLEMETED. OFFSET=" & This.Offset'Img));
+                    pragma Debug(Put_Line("READER OF " & Tags_type'Image(cTag) & " IS NOT IMPLEMETED. Offset=" & This.Offset'Img));
             end case;
         end loop;
 
@@ -468,7 +468,7 @@ package body arpm_Rpm_Files is
             pragma Debug(Put_Line("RESULT ## Description: " & To_String(This.Description)));
             pragma Debug(Put_Line("RESULT ## Build time: " & This.Build_Time'Img));
             pragma Debug(Put_Line("RESULT ## Size:" & This.Size'Img));
-            pragma Debug(Put_Line("RESULT ## Build host: " & To_String(This.Build_host)));
+            pragma Debug(Put_Line("RESULT ## Build host: " & To_String(This.Build_Host)));
             pragma Debug(Put_Line("RESULT ## Licanse:" & To_String(This.License)));
             pragma Debug(Put_Line("RESULT ## Vendor: " & To_String(This.Vendor)));
             pragma Debug(Put_Line("RESULT ## Group: " & To_String(This.Group)));
@@ -499,11 +499,11 @@ package body arpm_Rpm_Files is
 
     end Read_Payload;
 
-    procedure Free(This : in out RPM_File_Access) is
+    procedure Free(This : in out Rpm_File_Access) is
     begin
         Free_Depends(This.Requires);
         Free_Depends(This.Provides);
         Free_RPM(This);
     end Free;
-end arpm_Rpm_Files;
+end Arpm_Rpm_Files;
 
