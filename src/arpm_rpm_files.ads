@@ -3,6 +3,8 @@ with Ada.Strings.Unbounded;  use Ada.Strings.Unbounded;
 with Ada.Streams.Stream_IO; 
 with arpm_rpm_rpmhdrindexs; use arpm_rpm_rpmhdrindexs; 
 with arpm_rpm_depends;  use arpm_rpm_depends;
+with Ada.Unchecked_Deallocation;
+
 package arpm_rpm_files is 
     type rpm_file is tagged limited private; 
     type rpm_file_access is access all rpm_file; 
@@ -13,6 +15,7 @@ package arpm_rpm_files is
         function  Create(Filename : String) return rpm_file_access; 
         -- function  Create(Filename : Unbounded_String) return rpm_file_access is null ; 
     end Constructors; 
+    procedure Free(This : in out RPM_File_Access); 
     private
 
     INVALID_FORMAT_EXCEPTION : exception; 
@@ -62,5 +65,12 @@ package arpm_rpm_files is
         provides : arpm_rpm_depends.rpm_depends_access; 
     end record; 
 
+
+    procedure Free_Indexes is new Ada.Unchecked_Deallocation
+        (Object => index_array,
+        Name   => index_array_access);
+    procedure Free_RPM is new Ada.Unchecked_Deallocation
+        (Object => rpm_file,
+        Name   => rpm_file_access);
 end arpm_rpm_files; 
 

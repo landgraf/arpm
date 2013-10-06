@@ -1,4 +1,5 @@
 with Ada.Strings.Unbounded; use Ada.Strings.Unbounded; 
+with Ada.Unchecked_Deallocation;
 package arpm_rpm_depends is 
     type rpm_depend is tagged limited private; 
     type rpm_depend_access is access all rpm_depend; 
@@ -10,6 +11,7 @@ package arpm_rpm_depends is
     procedure Set_Version(This : in out rpm_depend; Version : in Unbounded_String);
     function Name(This: in out rpm_depend) return Unbounded_String;
     function version(This: in out rpm_depend) return Unbounded_String;
+    procedure Free_depends(This : in out rpm_depends_access); 
 
 
 
@@ -20,6 +22,9 @@ package arpm_rpm_depends is
         version : Unbounded_String;
         flags : Long_Long_Integer;
     end record; 
+    procedure Free is new Ada.Unchecked_Deallocation
+        (Object => rpm_depend_array,
+        Name   => rpm_depends_access);
 
 end arpm_rpm_depends; 
 

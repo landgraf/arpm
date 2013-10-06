@@ -159,6 +159,7 @@ package body arpm_rpm_files is
         if not Signature then 
             This.Read_Payload(indexes); 
         end if;
+        Free_Indexes(indexes); 
     end Read_Header; 
 
     function Read_Indexes(This : in out RPM_File; count : in Integer) return index_array_access is 
@@ -498,7 +499,11 @@ package body arpm_rpm_files is
 
     end Read_Payload; 
     
-
-
+    procedure Free(This : in out RPM_File_Access) is 
+    begin
+        Free_depends(This.Requires); 
+        Free_depends(This.Provides);
+        Free_RPM(This); 
+    end Free; 
 end arpm_rpm_files; 
 

@@ -14,5 +14,9 @@ package body arpm_rpm_depends is
     begin
         This.Version := Version; 
     end Set_Version;
+    procedure Free_depends(This : in out rpm_depends_access) is 
+    begin
+        Free(This); 
+    end Free_Depends; 
 end arpm_rpm_depends; 
 
