@@ -25,10 +25,11 @@ package arpm_rpm_files is
     procedure Read_Payload(This: in out RPM_File; indexes : in index_array_access); 
     -- procedure Read_Hdrindex(This : in out RPM_File); 
     type rpm_file is tagged limited record
-        -- File_name : Universal_String; 
         File : Ada.Streams.Stream_IO.File_Type;
         Stream : Ada.Streams.Stream_IO.Stream_Access;
-        offset: Long_Long_Integer := 0 ; 
+        offset: Integer := 0 ; 
+
+        -- FILE
         Name : Universal_String; 
         Version : Universal_String; 
         Release: Universal_String; 
