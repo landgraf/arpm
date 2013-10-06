@@ -5,36 +5,29 @@ with arpm_rpm_headers; use arpm_rpm_headers;
 with arpm_rpm_rpmhdrindexs; use arpm_rpm_rpmhdrindexs; 
 with ada.text_io ; use ada.Text_IO; 
 package body arpm_rpm_files is 
+
+    package body Constructors is 
+        function  Create(Filename : Universal_String) return rpm_file_access is 
+            use POSIX.Files; 
+            RPM : rpm_file_access := new rpm_file; 
+            IO_ERROR : exception; 
+        begin
+            if not Is_File(posix.TO_POSIX_String(US_To_String(Filename))) then
+                raise IO_ERROR; 
+            end if;
+            Ada.Streams.Stream_IO.Open
+                (File => RPM.File,
+                Name => US_To_String(Filename),
+                Mode => Ada.Streams.Stream_IO.In_File);
+            RPM.Stream := Ada.Streams.Stream_IO.Stream (RPM.File);
+            return RPM;
+        end Create; 
+    end Constructors; 
+
     function htonl32(number : in four_byte_number) return four_byte_number;
         pragma Import(C, htonl32, "htonl");
     function htonl16(number : in two_byte_number) return two_byte_number;
         pragma Import(C, htonl16, "htonl");
-
-    function Read_String (
-        This : in out RPM_File; 
-        items : in Integer := 1; 
-        Max_Length : in Integer := 1; 
-        Debug : Boolean := False ) 
-            return Universal_String is 
-        Str : Universal_String; 
-        buffer : dummy_byte; 
-        Raw : String(1..Max_Length) := (others => Character'Val(0));
-        Iter : Natural := 1; 
-    begin
-        for I in 1..items loop
-            loop 
-                dummy_byte'Read(This.Stream, buffer) ;
-                This.Offset := This.Offset + buffer'Size/8;
-                if buffer = 16#0# then 
-                    Str := String_To_US(Raw(1..Iter));  
-                    exit; 
-                end if; 
-                Raw(Iter) := Character'Val(buffer); 
-                Iter := Iter + 1; 
-            end loop;
-        end loop;
-        return Str; 
-    end Read_String;
 
     function Read_i18_String (This : in out RPM_File; items : in Integer := 1; Max_Length : in Integer := 1; Debug : Boolean := False ) return Universal_String is 
         Str : Universal_String; 
@@ -374,7 +367,7 @@ package body arpm_rpm_files is
                                 data_items(indexes(I)), 
                                 data_offset(indexes(I+1)) - data_offset(indexes(I))); 
                         when RPMTAG_SUMMARY =>
-                            This.Summary := Read_String(this,  data_items(indexes(I)), data_offset(indexes(I+1)) - data_offset(indexes(I)));
+                            This.Summary := Read_i18_String(this,  data_items(indexes(I)), data_offset(indexes(I+1)) - data_offset(indexes(I)));
                         when others =>
                             pragma Debug(Put_Line("READER OF " & tags_type'Image(ctag) & " IS NOT IMPLEMETED. OFFSET=" & This.Offset'Img));
                             Skip_String(this, data_items(indexes(I)));
@@ -410,24 +403,6 @@ package body arpm_rpm_files is
             pragma Debug(Put_Line("RESULT ## RPM_Version: " & US_To_String(This.RPM_Version)));
     end Read_Payload; 
     
-
-    package body Constructors is 
-        function  Create(Filename : Universal_String) return rpm_file_access is 
-            use POSIX.Files; 
-            RPM : rpm_file_access := new rpm_file; 
-            IO_ERROR : exception; 
-        begin
-            if not Is_File(posix.TO_POSIX_String(US_To_String(Filename))) then
-                raise IO_ERROR; 
-            end if;
-            Ada.Streams.Stream_IO.Open
-                (File => RPM.File,
-                Name => US_To_String(Filename),
-                Mode => Ada.Streams.Stream_IO.In_File);
-            RPM.Stream := Ada.Streams.Stream_IO.Stream (RPM.File);
-            return RPM;
-        end Create; 
-    end Constructors; 
 
 
 end arpm_rpm_files; 
