@@ -10,7 +10,7 @@ warn: clean build_all_warnings
 strip: clean build_strip
 prof: clean build_prof
 
-build: 
+build:
 	${BUILD} -P gnat/arpm 
 
 build_prof: 
@@ -36,3 +36,4 @@ orm: create_db clean clean_db
 
 clean:
 	rm -rf bin/ obj/ lib/ src/db/ganarated/* 
+	mkdir -p src/db/generated
