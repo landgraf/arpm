@@ -5,7 +5,7 @@ with Interfaces.C.Pointers;
 with Interfaces.C.Strings; use Interfaces.C.Strings;
 with Ada.Containers.Vectors;
 with Ada.Containers.Ordered_Sets;
-package ARPM_RPM_Internals is
+package ARPM_RPM_internals is
     package ARPM_Vector_Container_Package is new Ada.Containers.Vectors(
         Element_Type => Unbounded_String, Index_Type => Positive
         );
@@ -28,27 +28,27 @@ package ARPM_RPM_Internals is
     subtype Char_Star is chars_ptr_Pointers.Pointer;
     type Char_Star_Access is access all Char_Star;
     type My_RPM_Struct is limited record
-        --   time_file INTEGER,  time_build INTEGER,  rpm_group TEXT,  rpm_buildhost TEXT,  rpm_sourcerpm TEXT,  
-        --   rpm_header_start INTEGER,  rpm_header_end INTEGER,  
-        --   rpm_packager TEXT,  size_package INTEGER,  size_installed INTEGER,  size_archive INTEGER,  location_href TEXT,  location_base TEXT,  
+        --   time_file Integer,  time_build Integer,  rpm_group TEXT,  rpm_buildhost TEXT,  rpm_sourcerpm TEXT,
+        --   Rpm_Header_start Integer,  Rpm_Header_end Integer,
+        --   rpm_packager TEXT,  size_package Integer,  size_installed Integer,  size_archive Integer,  location_href TEXT,  location_base TEXT,
         --   checksum_type TEXT);" );
             Error : Interfaces.C.int := 0;
-            Name : Chars_Ptr;
-            Version : Chars_Ptr;
-            Epoch : Chars_Ptr;
-            Release : Chars_Ptr;
-            Arch : Chars_Ptr;
-            Summary: Chars_Ptr;
-            Description : Chars_Ptr;
-            Url : Chars_Ptr;
-            license : Chars_Ptr;
-            Vendor : Chars_Ptr;
-            requires_Count : Interfaces.C.Int := 0;
-            requires : char_star;
-            requires_version : char_star;
-            Provides_Count : Interfaces.C.Int := 0;
-            Provides : char_star;
-            Provides_version : char_star;
+            Name : chars_ptr;
+            Version : chars_ptr;
+            Epoch : chars_ptr;
+            Release : chars_ptr;
+            Arch : chars_ptr;
+            Summary: chars_ptr;
+            Description : chars_ptr;
+            URL : chars_ptr;
+            license : chars_ptr;
+            Vendor : chars_ptr;
+            requires_Count : Interfaces.C.int := 0;
+            requires : Char_Star;
+            requires_Version : Char_Star;
+            Provides_Count : Interfaces.C.int := 0;
+            Provides : Char_Star;
+            Provides_Version : Char_Star;
     end record;
     type My_RPM_Struct_Access is access all My_RPM_Struct;
 
@@ -56,18 +56,18 @@ package ARPM_RPM_Internals is
         Id  : Integer   := Integer'Last;
         Name : Unbounded_String := Null_Unbounded_String;
         Version : Unbounded_String := Null_Unbounded_String;
-        epoch : Unbounded_String := Null_Unbounded_String;
+        Epoch : Unbounded_String := Null_Unbounded_String;
         Release : Unbounded_String := Null_Unbounded_String;
         Arch   : Unbounded_String := Null_Unbounded_String;
         Summary : Unbounded_String := Null_Unbounded_String;
         Description   : Unbounded_String := Null_Unbounded_String;
-        Url   : Unbounded_String := Null_Unbounded_String;
+        URL   : Unbounded_String := Null_Unbounded_String;
         Vendor : Unbounded_String := Null_Unbounded_String;
         License : Unbounded_String := Null_Unbounded_String;
         requires : ARPM_Vector_Container;
-        requires_version : ARPM_Vector_Container; 
-        Provides : ARPM_Vector_Container; 
-        Provides_version : ARPM_Vector_Container;
+        requires_Version : ARPM_Vector_Container;
+        Provides : ARPM_Vector_Container;
+        Provides_Version : ARPM_Vector_Container;
     end record;
     type ARPM_RPM_Access is access all ARPM_RPM;
 
@@ -76,4 +76,4 @@ package ARPM_RPM_Internals is
          Name   => ARPM_RPM_Access);
 
 
-end ARPM_RPM_Internals;
+end ARPM_RPM_internals;

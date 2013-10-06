@@ -1,5 +1,5 @@
 with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
-package ARPM_Walkers is 
+package ARPM_Walkers is
     type ARPM_Walker is tagged limited private;
     type ARPM_Walker_Access is access all ARPM_Walker;
     procedure Start(Dir : String);
