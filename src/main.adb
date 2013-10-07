@@ -8,7 +8,7 @@ begin
    for I in 1..Ada.Command_Line.Argument_Count loop
      file :=  Constructors.Create(Ada.Command_Line.Argument(I));
      file.Parse;
-     Free(file);
+     Close(file);
    end loop;
 end main;
 

@@ -499,11 +499,12 @@ package body Arpm_Rpm_Files is
 
    end Read_Payload;
 
-   procedure Free(This : in out Rpm_File_Access) is
+   procedure Close(This : in out Rpm_File_Access) is
    begin
      Free_Depends(This.Requires);
+     Ada.Streams.Stream_IO.Close (This.File);
      Free_Depends(This.Provides);
      Free_RPM(This);
-   end Free;
+   end Close;
 end Arpm_Rpm_Files;
 
