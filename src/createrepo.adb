@@ -3,7 +3,6 @@ with Ada.Text_IO; use Ada.Text_IO;
 with GNAT.OS_Lib; use GNAT.OS_Lib;
 with ARPM_Walkers; use ARPM_Walkers;
 with ARPM_Processors; use ARPM_Processors;
-with Arpm_C_Bridge;
 with ARPM_DB_Handlers; -- .DB.Init_DB(Dir);
 
 procedure Createrepo is
@@ -20,9 +19,6 @@ procedure Createrepo is
    Error_RPM_CONFIG : exception;
    Dir : constant String := Get_Dir;
 begin
-   if Integer(Arpm_C_Bridge.Read_Config) /= 0 then
-     raise Error_RPM_CONFIG;
-   end if;
    ARPM_DB_Handlers.DB.Init_DB(Dir);
    Start(Dir);
 end Createrepo;
