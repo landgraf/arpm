@@ -2,6 +2,7 @@ with Internal_Codecs; use Internal_Codecs;
 with POSIX.Files;
 with arpm_Rpm_Leaders; use arpm_Rpm_Leaders;
 with arpm_Rpm_Headers; use arpm_Rpm_Headers;
+with arpm_Rpm_types; use arpm_Rpm_types;
 with arpm_rpm_rpmhdrIndexs; use arpm_rpm_rpmhdrIndexs;
 with Ada.Text_IO ; use Ada.Text_IO;
 with Ada.Assertions;  use Ada.Assertions;

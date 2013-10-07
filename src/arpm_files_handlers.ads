@@ -1,5 +1,5 @@
 with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
-with ARPM_RPM_internals; use ARPM_RPM_internals;
+with ARPM_RPM_types; use ARPM_RPM_types;
 
 
 package ARpm_Files_Handlers is

@@ -1,5 +1,5 @@
 with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
-with ARPM_RPM_internals; use ARPM_RPM_internals;
+with ARPM_RPM_types; use ARPM_RPM_types;
 with GNATCOLL.SQL.Exec; use GNATCOLL.SQL.Exec;
 
 package ARPM_DB_Handlers is

@@ -1,6 +1,5 @@
 with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
 with Ada.Exceptions;
-with ARPM_RPM_internals; use ARPM_RPM_internals;
 with Ada.Text_IO ; use Ada.Text_IO;
 with POSIX.Files; use POSIX.Files;
 with POSIX; use POSIX;
