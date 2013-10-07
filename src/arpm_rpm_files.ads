@@ -10,6 +10,19 @@ package Arpm_Rpm_Files is
    type Rpm_File_Access is access all Rpm_File;
 
    procedure Parse (This : in out Rpm_File);
+   -- getters 
+   function Name (This : in out RPM_File) return Unbounded_String; 
+   function Epoch (This : in out RPM_File) return Unbounded_String; 
+   function Vendor (This : in out RPM_File) return Unbounded_String; 
+   function License (This : in out RPM_File) return Unbounded_String; 
+   function Url (This : in out RPM_File) return Unbounded_String; 
+   function Arch (This : in out RPM_File) return Unbounded_String; 
+   function Description (This : in out RPM_File) return Unbounded_String; 
+   function Summary (This : in out RPM_File) return Unbounded_String; 
+   function Release (This : in out RPM_File) return Unbounded_String; 
+   function Version (This : in out RPM_File) return Unbounded_String; 
+   function Provides (This : in out RPM_File) return arpm_rpm_depends.rpm_depends_access;
+   function Requires (This : in out RPM_File) return arpm_rpm_depends.rpm_depends_access;
    package Constructors is
      -- function  Create (FileName : Unbounded_String) return Rpm_File_Access;
      function  Create (FileName : String) return Rpm_File_Access;
@@ -25,6 +38,8 @@ package Arpm_Rpm_Files is
    procedure Read_Header  (This : in out Rpm_File; Signature : Boolean := False);
    function Read_Indexes (This : in out Rpm_File; count : in Integer) return Index_array_access;
    procedure Read_Payload (This: in out Rpm_File; Indexes : in Index_array_access);
+   
+
    -- procedure Read_HdrIndex (This : in out Rpm_File);
    type Rpm_File is Tagged limited record
      File : Ada.Streams.Stream_IO.File_Type;
@@ -36,6 +51,7 @@ package Arpm_Rpm_Files is
      Name : Unbounded_String;
      Version : Unbounded_String;
      Release: Unbounded_String;
+     Epoch : Unbounded_String;
      Build_Host : Unbounded_String;
      Summary : Unbounded_String;
      Description : Unbounded_String;

@@ -4,6 +4,7 @@ with Ada.Exceptions;
 with ARPM_DB_Handlers;
 with Internal_Codecs; use Internal_Codecs;
 with GNAT.SHA256; use GNAT.SHA256;
+with arpm_rpm_depends;
 
 with GNATCOLL.SQL_Impl;   use GNATCOLL.SQL_Impl;
 
@@ -14,7 +15,8 @@ package body Arpm_Db_Containers is
      return GNAT.SHA256.Digest(Str_To_Sea(Name & ("-" & Version & "." & Release & "." & Arch )));
    end SHA256;
 
-   procedure Save_Provides(RPM : in ARPM_RPM_Access; DB : in Database_Connection) is
+   procedure Save_Provides(RPM : in RPM_File_Access; DB : in Database_Connection) is
+      Provides : arpm_rpm_depends.rpm_depends_access := RPM.Provides;
       QP  : Prepared_Statement;
       Provides_Parameters :   SQL_Parameters (1 .. 4) :=
         (1 => (Parameter_Text, null),
@@ -28,10 +30,10 @@ package body Arpm_Db_Containers is
    begin
      QP := Prepare ("INSERT intO  Provides ( Name, Version, release, provideKey) VALUES ( ?, ?, ?, ?)");
      QPP := Prepare ("INSERT intO packages_Provides ( pkgKey, provideKey ) VALUES ( ? , ? )");
-     for I in 1..Integer(RPM.Provides.Length) loop
+     for I in 1..Provides'Length loop
        declare
-         Name : aliased String := To_String(RPM.Provides.Element(I));
-         Version : aliased String := To_String(RPM.Provides_Version.Element(I));
+         Name : aliased String := To_String(Provides(I).Name);
+         Version : aliased String := To_String(Provides(I).Version);
          Release : aliased String := "FIXME";
          SHA : aliased String := SHA256(Name => Name, Version => Version);
          SHAPKG : aliased String := SHA256(To_String(RPM.Name), To_String(RPM.Version), To_String(RPM.Release), To_String(RPM.Arch));
@@ -51,7 +53,8 @@ package body Arpm_Db_Containers is
        pragma Debug(Put_Line (Ada.Exceptions.Exception_Information(The_Event)));
    end Save_Provides;
 
-   procedure Save_Requires(RPM : in ARPM_RPM_Access; DB : in Database_Connection) is
+   procedure Save_Requires(RPM : in RPM_File_Access; DB : in Database_Connection) is
+      Requires : arpm_rpm_depends.rpm_depends_access := RPM.Requires;
       QP  : Prepared_Statement;
       requires_Parameters :   SQL_Parameters (1 .. 4) :=
         (1 => (Parameter_Text, null),
@@ -65,10 +68,10 @@ package body Arpm_Db_Containers is
    begin
      QP := Prepare ("INSERT intO  requires ( Name, Version, release, requireKey) VALUES ( ?, ?, ?, ?)");
      QPP := Prepare ("INSERT intO packages_requires ( pkgKey, requireKey ) VALUES ( ? , ? )");
-     for I in 1..Integer(RPM.requires.Length) loop
+     for I in 1 .. requires'Length loop
        declare
-         Name : aliased String := To_String(RPM.requires.Element(I));
-         Version : aliased String := To_String(RPM.requires_Version.Element(I));
+         Name : aliased String := To_String(requires(I).Name);
+         Version : aliased String := To_String(requires(I).Version);
          Release : aliased String := "FIXME";
          SHA : aliased String := SHA256(Name => Name, Version => Version);
          SHAPKG : aliased String := SHA256(To_String(RPM.Name), To_String(RPM.Version), To_String(RPM.Release), To_String(RPM.Arch));
@@ -88,7 +91,7 @@ package body Arpm_Db_Containers is
        pragma Debug(Put_Line (Ada.Exceptions.Exception_Information(The_Event)));
    end Save_Requires;
 
-   procedure Save(RPM : in ARPM_RPM_Access; DB : in Database_Connection) is
+   procedure Save(RPM : in RPM_File_Access; DB : in Database_Connection) is
      Q  : Prepared_Statement;
      Param :   SQL_Parameters (1 .. 11) :=
        (1 => (Parameter_Text, null),

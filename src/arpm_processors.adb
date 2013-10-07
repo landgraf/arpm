@@ -1,6 +1,5 @@
 with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
 with Ada.Exceptions;
-with Arpm_C_Bridge;
 with ARPM_RPM_internals; use ARPM_RPM_internals;
 with Ada.Text_IO ; use Ada.Text_IO;
 with POSIX.Files; use POSIX.Files;
@@ -9,14 +8,14 @@ with Arpm_Db_Containers;
 with GNATCOLL.SQL.Exec; use GNATCOLL.SQL.Exec;
 with ARpm_Files_Handlers;
 with ARPM_DB_Handlers;
+with ARPM_RPM_Files; use ARPM_RPM_Files;
 
 package body ARPM_Processors is
 
 
    task body ARPM_Processor is
      FileName : Unbounded_String;
-     MyRPM : My_RPM_Struct_Access;
-     RPM : ARPM_RPM_Access;
+     RPM : RPM_File_Access;
      DC : Database_Description;
      DB : Database_Connection;
      Transaction : Boolean;
@@ -34,9 +33,8 @@ package body ARPM_Processors is
          exit;
        end if;
        if Is_File(To_POSIX_String(To_String(FileName))) then
-            MyRPM := Arpm_C_Bridge.Constructors.Create(To_String(FileName));
-         if Integer(MyRPM.Error) = 0 then
-            RPM := Arpm_C_Bridge.Convert(MyRPM);
+            RPM := ARPM_RPM_FIles.Constructors.Create(To_String(FileName));
+            RPM.Parse;
             try:
             begin
               Transaction := Start_Transaction(DB);
@@ -52,9 +50,7 @@ package body ARPM_Processors is
                 pragma Debug(Put_Line("Failed to Save " & To_String(RPM.Name)));
                 pragma Debug(Put_Line("Reason " & Ada.Exceptions.Exception_Information(SQL_Event)));
             end try;
-            ARPM_RPM_internals.Free(RPM);
-         end if;
-         Arpm_C_Bridge.Free(MyRPM);
+            ARPM_RPM_Files.Close(RPM);
        end if;
      end loop;
      pragma Debug(Put_Line("Commit..."));

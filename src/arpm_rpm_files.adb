@@ -26,6 +26,19 @@ package body Arpm_Rpm_Files is
      end Create;
    end Constructors;
 
+   function Name (This : in out RPM_File) return Unbounded_String is (This.Name); 
+   function Provides (This : in out RPM_File) return arpm_rpm_depends.rpm_depends_access is (This.Provides); 
+   function Requires (This : in out RPM_File) return arpm_rpm_depends.rpm_depends_access is (This.Requires); 
+   function Vendor (This : in out RPM_File) return Unbounded_String is (This.Vendor); 
+   function License (This : in out RPM_File) return Unbounded_String is (This.License); 
+   function Url (This : in out RPM_File) return Unbounded_String is (This.Url); 
+   function Description (This : in out RPM_File) return Unbounded_String is (This.Description); 
+   function Arch (This : in out RPM_File) return Unbounded_String is (This.Arch); 
+   function Summary (This : in out RPM_File) return Unbounded_String is (This.Summary); 
+   function Version (This : in out RPM_File) return Unbounded_String is (This.Version); 
+   function Release (This : in out RPM_File) return Unbounded_String is (This.Release); 
+   function Epoch (This : in out RPM_File) return Unbounded_String is (This.Epoch); 
+
    function htonl32(number : in Four_Byte_Number) return Four_Byte_Number;
      pragma Import(C, htonl32, "htonl");
    function htonl16(number : in Two_Byte_Number) return Two_Byte_Number;
