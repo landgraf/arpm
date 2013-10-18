@@ -488,14 +488,22 @@ package body Arpm_Rpm_Files is
        pragma Debug(Put_Line("RESULT ## SRPM: " & To_String(This.SRPM)));
        pragma Debug(Put_Line("RESULT ## Platform: " & To_String(This.Platform)));
        pragma Debug(Put_Line("RESULT ## RPM_Version: " & To_String(This.RPM_Version)));
-       for I in 1..This.Provides'Length loop
-         pragma Debug(Put_Line("RESULT ## Provides Name: " & To_String(This.Provides(I).Name) &
-            "; Version: " & To_String(This.Provides(I).Version)));
-       end loop;
-       for I in 1..This.Requires'Length loop
-         pragma Debug(Put_Line("RESULT ## Requires Name: " & To_String(This.Requires(I).Name) &
-            "; Version: " & To_String(This.Requires(I).Version)));
-       end loop;
+       if This.Provides /= null then 
+          for I in 1..This.Provides'Length loop
+            pragma Debug(Put_Line("RESULT ## Provides Name: " & To_String(This.Provides(I).Name) &
+               "; Version: " & To_String(This.Provides(I).Version)));
+          end loop;
+       else
+          pragma Debug(Put_Line("The package doesn't provide anything"));
+       end if;
+       if This.Requires /= null then
+          for I in 1..This.Requires'Length loop
+             pragma Debug(Put_Line("RESULT ## Requires Name: " & To_String(This.Requires(I).Name) &
+             "; Version: " & To_String(This.Requires(I).Version)));
+          end loop;
+       else
+          pragma Debug(Put_Line("The package doesn't require anything"));
+       end if;
 
    end Read_Payload;
 
